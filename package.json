@@ -1,0 +1,33 @@
+{
+  "name": "@openapi-generator-plus/typescript-express-passport-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.prod.json",
+    "clean": "rimraf dist",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "tsc --watch"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@openapi-generator-plus/handlebars-templates": "^0.4.1",
+    "@openapi-generator-plus/typescript-generator-common": "^0.7.2"
+  },
+  "peerDependencies": {
+    "@openapi-generator-plus/core": "^0.13.0"
+  },
+  "devDependencies": {
+    "@openapi-generator-plus/types": "^0.13.0",
+    "@types/jest": "^26.0.15",
+    "@typescript-eslint/eslint-plugin": "^4.6.1",
+    "@typescript-eslint/parser": "^4.6.1",
+    "eslint": "^7.12.1",
+    "eslint-plugin-jest": "^24.1.0",
+    "jest": "^26.6.2",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^26.4.3",
+    "typescript": "^4.0.5"
+  }
+}
