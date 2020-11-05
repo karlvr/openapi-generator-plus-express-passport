@@ -1,0 +1,43 @@
+/**
+ * {{{description}}}
+ * @export
+ * @interface {{className name}}
+ */
+export interface {{className name}} {{#if parentNativeType}}extends {{{parentNativeType}}} {{/if}}{
+{{#discriminator}}
+	{{name}}: {{{nativeType.wireType}}};
+	
+{{/discriminator}}
+{{#each discriminatorValues}}
+	{{model.discriminator.name}}: {{{value}}}
+
+{{/each}}
+{{#additionalPropertiesType}}
+	[key: string]: {{{additionalPropertiesType}}}{{#if properties}} | any{{/if}};
+
+{{/additionalPropertiesType}}
+{{#each properties}}
+	/**
+	 * {{{description}}}
+	 * @type {{safe '{'}}{{{nativeType}}}{{safe '}'}}
+	 * @memberof {{className ../name}}
+	 */
+	{{name}}{{^required}}?{{/required}}: {{{nativeType.wireType}}}{{#if nullable}} | null{{/if}};
+{{/each}}
+}
+{{#if models}}
+
+/**
+ * @export
+ * @namespace {{className name}}
+ */
+export namespace {{className name}} {
+{{#each models}}
+	{{#if (isEnum)}}
+	{{>modelEnum}}
+	{{else}}
+	{{>modelGeneric}}
+	{{/if}}
+{{/each}}
+}
+{{/if}}

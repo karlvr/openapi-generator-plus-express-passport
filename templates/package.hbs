@@ -1,0 +1,35 @@
+{
+	"name": "{{name}}",
+	{{#if private}}
+	"private": true,
+	{{/if}}
+	"version": "{{version}}",
+	"description": "API client for {{name}}",
+	"author": "@openapi-generator-plus/typescript-fetch-client-generator",
+	"keywords": [
+		"fetch",
+		"typescript",
+		"swagger",
+		"openapi",
+		"{{name}}"
+	],
+	"license": "UNLICENSED",
+	"main": "./dist/index.js",
+	"typings": "./dist/index.d.ts",
+	"scripts": {
+		"build": "tsc",
+		"prepare": "npm run build"
+	},
+	"dependencies": {
+		"portable-fetch": "^3.0.0"
+	},
+	"devDependencies": {
+		"@types/node": "^8.0.9",
+		"typescript": "^3.0"
+	{{#if repository}}
+	},
+	"publishConfig": {
+		"registry": "{{{repository}}}"
+	{{/if}}
+	}
+}

@@ -1,0 +1,59 @@
+{{>header}}
+
+import { Express } from 'express'
+import passport from 'passport'
+import * as t from './types'
+import * as v from '../validation'
+import { Api } from '../models'
+
+export default function(app: Express, impl: t.{{className name}}Api) {
+	{{#each operations}}
+	app.{{lowerCase httpMethod}}({{{stringLiteral fullPath}}}, {{!--
+	--}}{{#if securityRequirements}}passport.authenticate({{{stringLiteral securityRequirements.[0].scheme.scheme}}}, { {{#if securityRequirements.[0].scheme.vendorExtensions.x-session}}session: {{securityRequirements.[0].scheme.vendorExtensions.x-session}}, {{/if}}{{!-- --}}}), {{/if}}{{!--
+	--}}function (req, res) {
+		try {
+			{{#if securityRequirements}}
+			const __user = req.user
+			if (!__user) {
+				res.status(401)
+				res.send()
+				return
+			}
+			{{/if}}
+			impl.{{identifier name}}({{!--
+			--}}{{#each parameters}}{{>params/query}}{{>params/path}}{{>params/header}}{{>params/form}}{{#hasMore}}, {{/hasMore}}{{/each}}{{!--
+			--}}{{#if requestBody}}{{#if parameters}}, {{/if}}{{>params/body}}{{/if}}{{!--
+			--}}{{#if securityRequirements}}{{#or parameters requestBody}}, {{/or}}__user{{/if}}{{!--
+			--}}).then(function (response) {
+				{{#each responses}}
+				if (response.status === {{code}}) {
+					res.status({{code}})
+					{{#if headers}}
+					{{#each headers}}
+					res.header({{{stringLiteral name}}}, `${response.headers[{{{stringLiteral name}}}]}`)
+					{{/each}}
+					{{/if}}
+					{{#if nativeType}}
+					res.send(response.body)
+					{{else}}
+					res.send()
+					{{/if}}
+					return
+				}
+				{{/each}}
+
+				console.log('Unsupported response in {{identifier ../name}}.{{identifier name}}', response)
+				res.status(500)
+			}).catch(function (error) {
+				console.error('Unexpected error in {{identifier ../name}}.{{identifier name}}', error)
+				res.status(500)
+			})
+		} catch (error) {
+			/* Catch validation errors */
+			res.status(400)
+			res.send(error)
+		}
+	})
+
+	{{/each}}
+}

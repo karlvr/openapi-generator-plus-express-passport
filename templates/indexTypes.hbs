@@ -1,0 +1,11 @@
+{{>header}}
+
+{{#each groups}}
+import * as {{identifier name}} from './{{identifier name}}/types'
+{{/each}}
+
+export interface ApiImplementation {
+	{{#each groups}}
+	{{identifier name}}: {{identifier name}}.{{className name}}Api
+	{{/each}}
+}

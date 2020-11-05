@@ -1,0 +1,13 @@
+{{>header}}
+
+export namespace Api {
+{{#each models}}
+	{{#if (isEnum)}}
+	{{>modelEnum}}
+	{{else}}
+	{{>modelGeneric}}
+	{{/if}}
+
+{{/each}}
+}
+

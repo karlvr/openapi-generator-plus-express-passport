@@ -1,0 +1,152 @@
+{{>header}}
+
+import { Express } from 'express'
+import { Api } from './models'
+
+type TypeCheck<T> = (name: string, value: any) => T
+
+export function arrayTypeCheck<T>(next: TypeCheck<T>): TypeCheck<T[]> {
+	return function(name: string, value: any) {
+		return asArray(next, name, value)
+	}
+}
+
+export function asArray<T>(next: TypeCheck<T>, name: string, value: any): T[] {
+	if (typeof value !== 'object' || typeof value.length !== 'number') {
+		throw `Invalid type for ${name}: expected array got ${typeof value}`
+	}
+
+	const result: T[] = []
+	for (const el of value) {
+		result.push(next(name, el))
+	}
+	return result
+}
+
+export function asUndefinedOr<T>(next: TypeCheck<T>, name: string, value: any): T | undefined {
+	if (typeof value === 'undefined') {
+		return undefined
+	}
+	return next(name, value)
+}
+
+export function asNullOr<T>(next: TypeCheck<T>, name: string, value: any): T | null {
+	if (value === null) {
+		return null
+	}
+	return next(name, value)
+}
+
+export function asUndefinedOrNullOr<T>(next: TypeCheck<T>, name: string, value: any): T | undefined | null {
+	if (typeof value === 'undefined') {
+		return undefined
+	}
+	if (value === null) {
+		return null
+	}
+	return next(name, value)
+}
+
+export function asBoolean(name: string, value: any): boolean {
+	if (typeof value !== 'boolean') {
+		throw `Invalid type for ${name}: expected boolean got ${typeof value}`
+	}
+	return value
+}
+
+export function parseBoolean(name: string, value: string): boolean {
+	if (value === 'true') {
+		return true
+	} else if (value === 'false') {
+		return false
+	} else {
+		throw `Invalid value for ${name}: expected boolean got "${value}"`
+	}
+}
+
+export function asString(name: string, value: any): string {
+	if (typeof value !== 'string') {
+		throw `Invalid type for ${name}: expected string got ${typeof value}`
+	}
+	return value
+}
+
+export function parseString(name: string, value: any): string {
+	if (value === undefined) {
+		throw `Invalid value for ${name}: expected string got undefined`
+	}
+	if (typeof value === 'string') {
+		return value
+	}
+	if (typeof value === 'object' && typeof value.length === 'number') {
+		if (value.length > 0) {
+			return value[0]
+		}
+	}
+
+	throw `Invalid value for ${name}: expected string got ${typeof value}`
+}
+
+export function asInteger(name: string, value: any): number {
+	if (typeof value !== 'number') {
+		throw `Invalid type for ${name}: expected number got ${typeof value}`
+	}
+	if (isNaN(value)) {
+		throw `Invalid NaN for ${name}`
+	}
+	if (Math.floor(value) !== value) {
+		throw `Invalid value for ${name}: expected integer got "${value}"`
+	}
+	return value
+}
+
+export function parseInteger(name: string, value: any): number {
+	if (typeof value === 'object' && typeof value.length === 'number' && value.length > 0) {
+		value = value[0]
+	}
+	if (typeof value === 'string') {
+		if (value.indexOf('.') !== -1) {
+			throw `Invalid value for ${name}: expected integer got "${value}"`
+		}
+
+		const result = parseInt(value, 10)
+		if (isNaN(result)) {
+			throw `Invalid value for ${name}: expected integer got "${value}"`
+		}
+		return result
+	}
+	throw `Invalid value for ${name}: expected integer got ${typeof value}`
+}
+
+export function asNumber(name: string, value: any): number {
+	if (typeof value !== 'number') {
+		throw `Invalid type for ${name}: expected number got ${typeof value}`
+	}
+	if (isNaN(value)) {
+		throw `Invalid NaN for ${name}`
+	}
+	return value
+}
+
+export function parseNumber(name: string, value: any): number {
+	if (typeof value === 'object' && typeof value.length === 'number' && value.length > 0) {
+		value = value[0]
+	}
+	if (typeof value === 'string') {
+		const result = parseFloat(value)
+		if (isNaN(result)) {
+			throw `Invalid value for ${name}: expected float got "${value}"`
+		}
+		return result
+	}
+	throw `Invalid value for ${name}: expected number got ${typeof value}`
+}
+
+{{#each models}}
+{{#if (isEnum)}}
+{{>validationEnum}}
+{{else}}
+{{>validationGeneric}}
+{{/if}}
+
+{{/each}}

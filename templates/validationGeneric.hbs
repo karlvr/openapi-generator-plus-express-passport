@@ -1,0 +1,49 @@
+const {{constantName (concat nativeType 'RequestKeys')}} = [{{#each properties}}{{{stringLiteral name}}}{{#hasMore}}, {{/hasMore}}{{/each}}]
+
+export function asModel{{className nativeType}}(name: string, value: any): {{nativeType}} {
+	if (typeof value !== 'object' || value === undefined || value === null) {
+		throw `Invalid type for ${name}: expected object got ${typeof value}`
+	}
+
+	// TODO if we don't ignore unknown properties
+	const keys = Object.keys(value)
+	for (const key of keys) {
+		if ({{constantName (concat nativeType 'RequestKeys')}}.indexOf(key) === -1) {
+			// throw `Unexpected key: ${key}`
+			console.warn(`Unexpected key in {{nativeType}}): ${key}`)
+		}
+	}
+
+	const result: Partial<{{nativeType}}> = {}
+
+	{{#each properties}}
+	if (typeof value[{{{stringLiteral name}}}] !== '{{>frag/javascriptType}}'{{#unless required}} && typeof value[{{{stringLiteral name}}}] !== 'undefined'{{/unless}}) {
+		{{#if required}}
+		{{#if nullable}}
+		result[{{{stringLiteral name}}}] = asNullableOr({{>frag/validateType}}, `${name}.{{name}}`, value[{{{stringLiteral name}}}])
+		{{else}}
+		result[{{{stringLiteral name}}}] = {{>frag/validateType}}(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
+		{{/if}}
+		{{else}}
+		{{#if nullable}}
+		result[{{{stringLiteral name}}}] = asUndefinedOrNullOr({{>frag/validateType}}, `${name}.{{name}}`, value[{{{stringLiteral name}}}])
+		{{else}}
+		result[{{{stringLiteral name}}}] = asUndefinedOr({{>frag/validateType}}, `${name}.{{name}}`, value[{{{stringLiteral name}}}])
+		{{/if}}
+		{{/if}}
+	}
+	{{/each}}
+
+	return result as {{nativeType}}
+}
+{{#if models}}
+
+{{#each models}}
+{{#if (isEnum)}}
+{{>validationEnum}}
+{{else}}
+{{>validationGeneric}}
+{{/if}}
+
+{{/each}}
+{{/if}}

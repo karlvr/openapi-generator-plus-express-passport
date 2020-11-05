@@ -1,0 +1,7 @@
+{{#if (isBoolean)}}
+{{prefix}}asBoolean{{else if (isNumber)~}}
+{{#ifeq type 'integer'}}{{prefix}}asInteger{{else}}{{prefix}}asNumber{{/ifeq}}{{else if (isString)~}}
+{{prefix}}asString{{else if (isObject)~}}
+{{prefix}}asModel{{className model.nativeType}}{{else if (isArray)~}}
+{{prefix}}arrayTypeCheck({{>frag/validateType componentSchema prefix=prefix}}){{else if (isEnum)~}}
+{{prefix}}asEnum{{className model.nativeType}}{{/if}}

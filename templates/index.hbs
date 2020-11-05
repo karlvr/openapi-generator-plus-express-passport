@@ -1,0 +1,13 @@
+{{>header}}
+
+import { Express } from 'express'
+{{#each groups}}
+import {{identifier name}} from './{{identifier name}}'
+{{/each}}
+import * as t from './types'
+
+export default function(app: Express, impl: t.ApiImplementation) {
+	{{#each groups}}
+	{{identifier name}}(app, impl.{{identifier name}})
+	{{/each}}
+}

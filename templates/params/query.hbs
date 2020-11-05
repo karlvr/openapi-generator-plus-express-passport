@@ -1,0 +1,1 @@
+{{#if isQueryParam}}{{>frag/parseType prefix='v.'}}({{{stringLiteral (concat 'query.' name)}}}, req.query[{{{stringLiteral name}}}]){{/if}}

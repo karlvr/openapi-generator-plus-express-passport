@@ -1,0 +1,39 @@
+{{>header}}
+
+import { Express } from 'express'
+import { Api } from '../models'
+
+export interface {{className name}}Api {
+	{{#each operations}}
+	{{identifier name}}: ({{#each parameters}}{{identifier name}}: {{{nativeType}}}{{#unless required}} | undefined{{/unless}}{{#hasMore}}, {{/hasMore}}{{/each}}{{!--
+	--}}{{#if requestBody}}{{#if parameters}}, {{/if}}{{identifier requestBody.name}}: {{{requestBody.nativeType}}}{{#unless requestBody.required}} | undefined{{/unless}}{{/if}}{{!--
+	--}}{{#if securityRequirements}}{{#or requestBody parameters}}, {{/or}}__user: Express.User{{/if}}{{!--
+	--}}) => Promise<{{className name}}Response>
+	{{/each}}
+}
+
+{{#each operations}}
+export type {{className name}}Response = {{!--
+--}}{{#each responses}}{{className ../name}}{{code}}Response{{#hasMore}} |{{/hasMore}}{{/each}}
+
+{{#each responses}}
+export interface {{className ../name}}{{code}}Response {
+	status: {{code}}
+	{{#if nativeType}}
+	body: {{{nativeType}}}
+	{{else}}
+	body?: never
+	{{/if}}
+	{{#if headers}}
+	headers: {
+		{{#each headers}}
+		{{{stringLiteral name}}}: {{{nativeType}}}
+		{{/each}}
+	}
+	{{else}}
+	headers?: never
+	{{/if}}
+}
+
+{{/each}}
+{{/each}}

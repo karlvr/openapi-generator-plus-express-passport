@@ -1,0 +1,21 @@
+import { Express } from 'express'
+import * as t from './types'
+import { Api } from '../models'
+
+{{#each operations}}
+async function {{identifier name}}({{#each parameters}}{{identifier name}}: {{{nativeType}}}{{#unless required}} | undefined{{/unless}}{{#hasMore}}, {{/hasMore}}{{/each}}{{!--
+	--}}{{#if requestBody}}{{#if parameters}}, {{/if}}{{identifier requestBody.name}}: {{{requestBody.nativeType}}}{{#unless requestBody.required}} | undefined{{/unless}}{{/if}}{{!--
+	--}}{{#if securityRequirements}}{{#or requestBody parameters}}, {{/or}}__user: Express.User{{/if}}{{!--
+	--}}): Promise<t.{{className name}}Response> {
+	throw 'Unimplemented'
+}
+
+{{/each}}
+
+const api: t.{{className name}}Api = {
+	{{#each operations}}
+	{{identifier name}},
+	{{/each}}
+}
+
+export default api
