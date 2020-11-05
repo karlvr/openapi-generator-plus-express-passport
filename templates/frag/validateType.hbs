@@ -4,4 +4,7 @@
 {{prefix}}asString{{else if (isObject)~}}
 {{prefix}}asModel{{className model.nativeType}}{{else if (isArray)~}}
 {{prefix}}arrayTypeCheck({{>frag/validateType componentSchema prefix=prefix}}){{else if (isEnum)~}}
-{{prefix}}asEnum{{className model.nativeType}}{{/if}}
+{{prefix}}asEnum{{className model.nativeType}}{{else if (isDate)~}}
+{{prefix}}asDate{{else if (isDateTime)~}}
+{{prefix}}asDateTime{{else if (isTime)~}}
+{{prefix}}asTime{{/if}}

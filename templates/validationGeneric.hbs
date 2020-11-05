@@ -17,7 +17,7 @@ export function asModel{{className nativeType}}(name: string, value: any): {{nat
 	const result: Partial<{{nativeType}}> = {}
 
 	{{#each properties}}
-	if (typeof value[{{{stringLiteral name}}}] !== '{{>frag/javascriptType}}'{{#unless required}} && typeof value[{{{stringLiteral name}}}] !== 'undefined'{{/unless}}) {
+	if (typeof value[{{{stringLiteral name}}}] !== '{{>frag/jsonType}}'{{#unless required}} && typeof value[{{{stringLiteral name}}}] !== 'undefined'{{/unless}}) {
 		{{#if required}}
 		{{#if nullable}}
 		result[{{{stringLiteral name}}}] = asNullableOr({{>frag/validateType}}, `${name}.{{name}}`, value[{{{stringLiteral name}}}])

@@ -54,7 +54,7 @@ export function asBoolean(name: string, value: any): boolean {
 	return value
 }
 
-export function parseBoolean(name: string, value: string): boolean {
+export function parseBoolean(name: string, value: any): boolean {
 	if (value === 'true') {
 		return true
 	} else if (value === 'false') {
@@ -140,6 +140,27 @@ export function parseNumber(name: string, value: any): number {
 		return result
 	}
 	throw `Invalid value for ${name}: expected number got ${typeof value}`
+}
+
+export function asDate(name: string, value: any): Date {
+	if (typeof value !== 'string') {
+		throw `Invalid type for ${name}: expected string got ${typeof value}`
+	}
+	return new Date(value)
+}
+
+export function asDateTime(name: string, value: any): Date {
+	if (typeof value !== 'string') {
+		throw `Invalid type for ${name}: expected string got ${typeof value}`
+	}
+	return new Date(value)
+}
+
+export function asTime(name: string, value: any): Date {
+	if (typeof value !== 'string') {
+		throw `Invalid type for ${name}: expected string got ${typeof value}`
+	}
+	return new Date("1970-01-01T${value}")
 }
 
 {{#each models}}
