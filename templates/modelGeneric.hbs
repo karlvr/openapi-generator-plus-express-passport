@@ -22,7 +22,7 @@ export interface {{className name}} {{#if parentNativeType}}extends {{{parentNat
 	 * @type {{safe '{'}}{{{nativeType}}}{{safe '}'}}
 	 * @memberof {{className ../name}}
 	 */
-	{{name}}{{^required}}?{{/required}}: {{{nativeType.wireType}}}{{#if nullable}} | null{{/if}};
+	{{name}}{{^required}}?{{/required}}: {{{nativeType}}}{{#if nullable}} | null{{/if}};
 {{/each}}
 }
 {{#if models}}
