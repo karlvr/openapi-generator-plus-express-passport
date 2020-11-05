@@ -9,7 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "tsc --watch"
   },
-  "author": "",
+  "author": "Karl von Randow",
   "license": "Apache-2.0",
   "dependencies": {
     "@openapi-generator-plus/handlebars-templates": "^0.4.2",
