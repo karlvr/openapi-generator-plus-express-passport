@@ -47,6 +47,7 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 			}).catch(function (error) {
 				console.error('Unexpected error in {{identifier ../name}}.{{identifier name}}', error)
 				res.status(500)
+				res.send()
 			})
 		} catch (error) {
 			/* Catch validation errors */
