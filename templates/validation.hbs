@@ -8,40 +8,40 @@ type MapOf<T> = { [name: string]: T }
 
 export function arrayFromJson<T>(next: FromJsonFunction<T>): FromJsonFunction<T[]> {
 	return function(name: string, value: any) {
-		return asArray(next, name, value)
+		if (typeof value !== 'object' || typeof value.length !== 'number') {
+			throw `Invalid type for ${name}: expected array got ${typeof value}`
+		}
+	
+		const result: T[] = []
+		for (const el of value) {
+			result.push(next(name, el))
+		}
+		return result
 	}
+}
+
+export function arrayToJson<T>(next: FromJsonFunction<T>): FromJsonFunction<T[]> {
+	return arrayFromJson(next)
 }
 
 export function mapFromJson<T>(next: FromJsonFunction<T>): FromJsonFunction<MapOf<T>> {
 	return function(name: string, value: any) {
-		return asMap(next, name, value)
-	}
-}
-
-function asArray<T>(next: FromJsonFunction<T>, name: string, value: any): T[] {
-	if (typeof value !== 'object' || typeof value.length !== 'number') {
-		throw `Invalid type for ${name}: expected array got ${typeof value}`
-	}
-
-	const result: T[] = []
-	for (const el of value) {
-		result.push(next(name, el))
-	}
-	return result
-}
-
-function asMap<T>(next: FromJsonFunction<T>, name: string, value: any): MapOf<T> {
-	if (typeof value !== 'object') {
-		throw `Invalid type for ${name}: expected object got ${typeof value}`
-	}
-
-	const result: MapOf<T> = {}
-	for (const key in value) {
-		if (value.hasOwnProperty(key)) {
-			result[key] = value[key]
+		if (typeof value !== 'object') {
+			throw `Invalid type for ${name}: expected object got ${typeof value}`
 		}
+	
+		const result: MapOf<T> = {}
+		for (const key in value) {
+			if (value.hasOwnProperty(key)) {
+				result[key] = next(name, value[key])
+			}
+		}
+		return result
 	}
-	return result
+}
+
+export function mapToJson<T>(next: FromJsonFunction<T>): FromJsonFunction<MapOf<T>> {
+	return mapFromJson(next)
 }
 
 export function allowNull<T>(next: FromJsonFunction<T>): FromJsonFunction<T | null> {
@@ -81,6 +81,10 @@ export function unsupportedFromJson(name: string, value: any): unknown {
 	return value
 }
 
+export function unsupportedToJson(name: string, value: unknown): any {
+	return unsupportedFromJson(name, value)
+}
+
 export function parseUnsupported(name: string, value: any): unknown {
 	if (value === undefined) {
 		throw `Invalid value for ${name}: expected unknown got undefined`
@@ -93,6 +97,10 @@ export function booleanFromJson(name: string, value: any): boolean {
 		throw `Invalid type for ${name}: expected boolean got ${typeof value}`
 	}
 	return value
+}
+
+export function booleanToJson(name: string, value: boolean): any {
+	return booleanFromJson(name, value)
 }
 
 export function parseBoolean(name: string, value: any): boolean {
@@ -110,6 +118,10 @@ export function stringFromJson(name: string, value: any): string {
 		throw `Invalid type for ${name}: expected string got ${typeof value}`
 	}
 	return value
+}
+
+export function stringToJson(name: string, value: string): any {
+	return stringFromJson(name, value)
 }
 
 export function parseString(name: string, value: any): string {
@@ -141,6 +153,10 @@ export function integerFromJson(name: string, value: any): number {
 	return value
 }
 
+export function integerToJson(name: string, value: number): any {
+	return integerFromJson(name, value)
+}
+
 export function parseInteger(name: string, value: any): number {
 	if (typeof value === 'object' && typeof value.length === 'number' && value.length > 0) {
 		value = value[0]
@@ -169,6 +185,10 @@ export function numberFromJson(name: string, value: any): number {
 	return value
 }
 
+export function numberToJson(name: string, value: number): any {
+	return numberFromJson(name, value)
+}
+
 export function parseNumber(name: string, value: any): number {
 	if (typeof value === 'object' && typeof value.length === 'number' && value.length > 0) {
 		value = value[0]
@@ -190,6 +210,14 @@ export function dateFromJson(name: string, value: any): Date {
 	return new Date(value)
 }
 
+export function dateToJson(name: string, value: Date): any {
+	if (typeof value !== 'object' || typeof value.toISOString !== 'function') {
+		throw `Invalid type for ${name}: expected Date got ${typeof value}`
+	}
+	const dateTime = value.toISOString()
+	return dateTime.substring(0, dateTime.indexOf('T'))
+}
+
 export function dateTimeFromJson(name: string, value: any): Date {
 	if (typeof value !== 'string') {
 		throw `Invalid type for ${name}: expected string got ${typeof value}`
@@ -197,11 +225,26 @@ export function dateTimeFromJson(name: string, value: any): Date {
 	return new Date(value)
 }
 
+export function dateTimeToJson(name: string, value: Date): any {
+	if (typeof value !== 'object' || typeof value.toISOString !== 'function') {
+		throw `Invalid type for ${name}: expected Date got ${typeof value}`
+	}
+	return value.toISOString()
+}
+
 export function timeFromJson(name: string, value: any): Date {
 	if (typeof value !== 'string') {
 		throw `Invalid type for ${name}: expected string got ${typeof value}`
 	}
 	return new Date("1970-01-01T${value}")
+}
+
+export function timeToJson(name: string, value: Date): any {
+	if (typeof value !== 'object' || typeof value.toISOString !== 'function') {
+		throw `Invalid type for ${name}: expected Date got ${typeof value}`
+	}
+	const dateTime = value.toISOString()
+	return dateTime.substring(dateTime.indexOf('T') + 1)
 }
 
 /* Model conversion functions */

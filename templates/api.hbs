@@ -33,8 +33,8 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 					res.header({{{stringLiteral name}}}, `${response.headers[{{{stringLiteral name}}}]}`)
 					{{/each}}
 					{{/if}}
-					{{#if nativeType}}
-					res.send(response.body)
+					{{#if contents.[0]}}
+					res.send({{>frag/toJson contents.[0].schema prefix='v.'}}('response', response.body))
 					{{else}}
 					res.send()
 					{{/if}}

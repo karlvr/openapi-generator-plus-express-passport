@@ -1,4 +1,4 @@
-const {{constantName (concat nativeType 'RequestKeys')}} = [{{#each properties}}{{{stringLiteral name}}}{{#hasMore}}, {{/hasMore}}{{/each}}]
+const {{constantName (concat nativeType 'Keys')}} = [{{#each properties}}{{{stringLiteral name}}}{{#hasMore}}, {{/hasMore}}{{/each}}]
 
 export function model{{className nativeType}}FromJson(name: string, value: any): {{nativeType}} {
 	if (typeof value !== 'object' || value === undefined || value === null) {
@@ -8,7 +8,7 @@ export function model{{className nativeType}}FromJson(name: string, value: any):
 	// TODO if we don't ignore unknown properties
 	const keys = Object.keys(value)
 	for (const key of keys) {
-		if ({{constantName (concat nativeType 'RequestKeys')}}.indexOf(key) === -1) {
+		if ({{constantName (concat nativeType 'Keys')}}.indexOf(key) === -1) {
 			// throw `Unexpected key: ${key}`
 			console.warn(`Unexpected key in {{nativeType}}): ${key}`)
 		}
@@ -33,6 +33,41 @@ export function model{{className nativeType}}FromJson(name: string, value: any):
 	{{/each}}
 
 	return result as {{nativeType}}
+}
+
+export function model{{className nativeType}}ToJson(name: string, value: {{nativeType}}): any {
+	if (typeof value !== 'object' || value === undefined || value === null) {
+		throw `Invalid type for ${name}: expected object got ${typeof value}`
+	}
+
+	// TODO if we don't ignore unknown properties
+	const keys = Object.keys(value)
+	for (const key of keys) {
+		if ({{constantName (concat nativeType 'Keys')}}.indexOf(key) === -1) {
+			// throw `Unexpected key: ${key}`
+			console.warn(`Unexpected key in {{nativeType}}): ${key}`)
+		}
+	}
+
+	const result: any = {}
+
+	{{#each properties}}
+	{{#if required}}
+	{{#if nullable}}
+	result[{{{stringLiteral name}}}] = allowNull({{>frag/toJson}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
+	{{else}}
+	result[{{{stringLiteral name}}}] = {{>frag/toJson}}(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
+	{{/if}}
+	{{else}}
+	{{#if nullable}}
+	result[{{{stringLiteral name}}}] = allowNullOrUndefined({{>frag/toJson}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
+	{{else}}
+	result[{{{stringLiteral name}}}] = allowUndefined({{>frag/toJson}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
+	{{/if}}
+	{{/if}}
+	{{/each}}
+
+	return result
 }
 {{#if models}}
 
