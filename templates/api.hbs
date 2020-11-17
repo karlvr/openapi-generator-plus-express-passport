@@ -9,7 +9,7 @@ import { Api } from '../models'
 export default function(app: Express, impl: t.{{className name}}Api) {
 	{{#each operations}}
 	app.{{lowerCase httpMethod}}({{{stringLiteral (pathTemplate fullPath)}}}, {{!--
-	--}}{{#if securityRequirements}}passport.authenticate({{{stringLiteral securityRequirements.[0].scheme.scheme}}}, { {{#if securityRequirements.[0].scheme.vendorExtensions.x-session}}session: {{securityRequirements.[0].scheme.vendorExtensions.x-session}}, {{/if}}{{!-- --}}}), {{/if}}{{!--
+	--}}{{#if securityRequirements}}passport.authenticate({{{stringLiteral securityRequirements.[0].scheme.scheme}}}, { {{#ifdef securityRequirements.[0].scheme.vendorExtensions.x-session}}session: {{securityRequirements.[0].scheme.vendorExtensions.x-session}}, {{/ifdef}}{{!-- --}}}), {{/if}}{{!--
 	--}}function (req, res) {
 		try {
 			{{#if securityRequirements}}
@@ -47,6 +47,7 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 			}).catch(function (error) {
 				console.error('Unexpected error in {{identifier ../name}}.{{identifier name}}', error)
 				res.status(500)
+				res.send()
 			})
 		} catch (error) {
 			/* Catch validation errors */
