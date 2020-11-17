@@ -44,13 +44,6 @@ function asMap<T>(next: FromJsonFunction<T>, name: string, value: any): MapOf<T>
 	return result
 }
 
-export function asUndefinedOr<T>(next: FromJsonFunction<T>, name: string, value: any): T | undefined {
-	if (typeof value === 'undefined') {
-		return undefined
-	}
-	return next(name, value)
-}
-
 export function allowNull<T>(next: FromJsonFunction<T>): FromJsonFunction<T | null> {
 	return function(name: string, value: any) {
 		if (value === null) {
