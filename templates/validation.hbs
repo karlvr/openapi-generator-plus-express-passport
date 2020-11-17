@@ -3,15 +3,22 @@
 import { Express } from 'express'
 import { Api } from './models'
 
-type TypeCheck<T> = (name: string, value: any) => T
+type FromJsonFunction<T> = (name: string, value: any) => T
+type MapOf<T> = { [name: string]: T }
 
-export function arrayTypeCheck<T>(next: TypeCheck<T>): TypeCheck<T[]> {
+export function arrayFromJson<T>(next: FromJsonFunction<T>): FromJsonFunction<T[]> {
 	return function(name: string, value: any) {
 		return asArray(next, name, value)
 	}
 }
 
-export function asArray<T>(next: TypeCheck<T>, name: string, value: any): T[] {
+export function mapFromJson<T>(next: FromJsonFunction<T>): FromJsonFunction<MapOf<T>> {
+	return function(name: string, value: any) {
+		return asMap(next, name, value)
+	}
+}
+
+function asArray<T>(next: FromJsonFunction<T>, name: string, value: any): T[] {
 	if (typeof value !== 'object' || typeof value.length !== 'number') {
 		throw `Invalid type for ${name}: expected array got ${typeof value}`
 	}
@@ -23,31 +30,65 @@ export function asArray<T>(next: TypeCheck<T>, name: string, value: any): T[] {
 	return result
 }
 
-export function asUndefinedOr<T>(next: TypeCheck<T>, name: string, value: any): T | undefined {
+function asMap<T>(next: FromJsonFunction<T>, name: string, value: any): MapOf<T> {
+	if (typeof value !== 'object') {
+		throw `Invalid type for ${name}: expected object got ${typeof value}`
+	}
+
+	const result: MapOf<T> = {}
+	for (const key in value) {
+		if (value.hasOwnProperty(key)) {
+			result[key] = value[key]
+		}
+	}
+	return result
+}
+
+export function asUndefinedOr<T>(next: FromJsonFunction<T>, name: string, value: any): T | undefined {
 	if (typeof value === 'undefined') {
 		return undefined
 	}
 	return next(name, value)
 }
 
-export function asNullOr<T>(next: TypeCheck<T>, name: string, value: any): T | null {
-	if (value === null) {
-		return null
+export function allowNull<T>(next: FromJsonFunction<T>): FromJsonFunction<T | null> {
+	return function(name: string, value: any) {
+		if (value === null) {
+			return null
+		}
+		return next(name, value)
 	}
-	return next(name, value)
 }
 
-export function asUndefinedOrNullOr<T>(next: TypeCheck<T>, name: string, value: any): T | undefined | null {
-	if (typeof value === 'undefined') {
-		return undefined
+export function allowUndefined<T>(next: FromJsonFunction<T>): FromJsonFunction<T | undefined> {
+	return function(name: string, value: any) {
+		if (value === undefined) {
+			return undefined
+		}
+		return next(name, value)
 	}
-	if (value === null) {
-		return null
-	}
-	return next(name, value)
 }
 
-export function asBoolean(name: string, value: any): boolean {
+export function allowNullOrUndefined<T>(next: FromJsonFunction<T>): FromJsonFunction<T | null | undefined> {
+	return function(name: string, value: any) {
+		if (value === null) {
+			return null
+		}
+		if (value === undefined) {
+			return undefined
+		}
+		return next(name, value)
+	}
+}
+
+export function unsupportedFromJson(name: string, value: any): unknown {
+	if (value === undefined) {
+		throw `Invalid type for ${name}: expected unknown got undefined`
+	}
+	return value
+}
+
+export function booleanFromJson(name: string, value: any): boolean {
 	if (typeof value !== 'boolean') {
 		throw `Invalid type for ${name}: expected boolean got ${typeof value}`
 	}
@@ -64,7 +105,7 @@ export function parseBoolean(name: string, value: any): boolean {
 	}
 }
 
-export function asString(name: string, value: any): string {
+export function stringFromJson(name: string, value: any): string {
 	if (typeof value !== 'string') {
 		throw `Invalid type for ${name}: expected string got ${typeof value}`
 	}
@@ -87,7 +128,7 @@ export function parseString(name: string, value: any): string {
 	throw `Invalid value for ${name}: expected string got ${typeof value}`
 }
 
-export function asInteger(name: string, value: any): number {
+export function integerFromJson(name: string, value: any): number {
 	if (typeof value !== 'number') {
 		throw `Invalid type for ${name}: expected number got ${typeof value}`
 	}
@@ -118,7 +159,7 @@ export function parseInteger(name: string, value: any): number {
 	throw `Invalid value for ${name}: expected integer got ${typeof value}`
 }
 
-export function asNumber(name: string, value: any): number {
+export function numberFromJson(name: string, value: any): number {
 	if (typeof value !== 'number') {
 		throw `Invalid type for ${name}: expected number got ${typeof value}`
 	}
@@ -142,27 +183,28 @@ export function parseNumber(name: string, value: any): number {
 	throw `Invalid value for ${name}: expected number got ${typeof value}`
 }
 
-export function asDate(name: string, value: any): Date {
+export function dateFromJson(name: string, value: any): Date {
 	if (typeof value !== 'string') {
 		throw `Invalid type for ${name}: expected string got ${typeof value}`
 	}
 	return new Date(value)
 }
 
-export function asDateTime(name: string, value: any): Date {
+export function dateTimeFromJson(name: string, value: any): Date {
 	if (typeof value !== 'string') {
 		throw `Invalid type for ${name}: expected string got ${typeof value}`
 	}
 	return new Date(value)
 }
 
-export function asTime(name: string, value: any): Date {
+export function timeFromJson(name: string, value: any): Date {
 	if (typeof value !== 'string') {
 		throw `Invalid type for ${name}: expected string got ${typeof value}`
 	}
 	return new Date("1970-01-01T${value}")
 }
 
+/* Model conversion functions */
 {{#each models}}
 {{#if (isEnum)}}
 {{>validationEnum}}

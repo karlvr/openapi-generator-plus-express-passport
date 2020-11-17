@@ -2,6 +2,6 @@
 {{prefix}}parseBoolean{{else if (isNumber)~}}
 {{#ifeq type 'integer'}}{{prefix}}parseInteger{{else}}{{prefix}}parseNumber{{/ifeq}}{{else if (isString)~}}
 {{prefix}}parseString{{else if (isObject)~}}
-{{prefix}}{{!--TODO--}}asModel{{className nativeType}}{{else if (isArray)~}}
-{{prefix}}{{!--TODO--}}arrayTypeCheck({{>frag/validateType componentSchema prefix=prefix}}){{else if (isEnum)~}}
-{{prefix}}asEnum{{className nativeType}}{{/if}}
+{{prefix}}{{!--TODO--}}model{{className nativeType}}FromJson{{else if (isArray)~}}
+{{prefix}}{{!--TODO--}}arrayFromJson({{>frag/fromJson componentSchema prefix=prefix}}){{else if (isEnum)~}}
+{{prefix}}enum{{className nativeType}}FromJson{{/if}}
