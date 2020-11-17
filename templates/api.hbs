@@ -44,6 +44,7 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 
 				console.log('Unsupported response in {{identifier ../name}}.{{identifier name}}', response)
 				res.status(500)
+				res.send()
 			}).catch(function (error) {
 				console.error('Unexpected error in {{identifier ../name}}.{{identifier name}}', error)
 				res.status(500)
