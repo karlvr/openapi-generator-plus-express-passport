@@ -1,7 +1,9 @@
-{{#if (isBoolean)}}
+{{#unless required}}{{prefix}}allowUndefined({{/unless}}{{#if nullable}}{{prefix}}allowNull({{/if}}{{#if (isBoolean)~}}
 {{prefix}}parseBoolean{{else if (isNumber)~}}
 {{#ifeq type 'integer'}}{{prefix}}parseInteger{{else}}{{prefix}}parseNumber{{/ifeq}}{{else if (isString)~}}
 {{prefix}}parseString{{else if (isObject)~}}
 {{prefix}}{{!--TODO--}}model{{className nativeType}}FromJson{{else if (isArray)~}}
 {{prefix}}{{!--TODO--}}arrayFromJson({{>frag/fromJson componentSchema prefix=prefix}}){{else if (isEnum)~}}
-{{prefix}}enum{{className nativeType}}FromJson{{/if}}
+{{prefix}}enum{{className nativeType}}FromJson{{else~}}
+{{prefix}}parseUnsupported{{/if~}}
+{{#if nullable}}){{/if}}{{#unless required}}){{/unless}}

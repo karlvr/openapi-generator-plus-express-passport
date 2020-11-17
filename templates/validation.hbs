@@ -81,6 +81,13 @@ export function unsupportedFromJson(name: string, value: any): unknown {
 	return value
 }
 
+export function parseUnsupported(name: string, value: any): unknown {
+	if (value === undefined) {
+		throw `Invalid value for ${name}: expected unknown got undefined`
+	}
+	return value
+}
+
 export function booleanFromJson(name: string, value: any): boolean {
 	if (typeof value !== 'boolean') {
 		throw `Invalid type for ${name}: expected boolean got ${typeof value}`
