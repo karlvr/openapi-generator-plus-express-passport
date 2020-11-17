@@ -17,21 +17,19 @@ export function model{{className nativeType}}FromJson(name: string, value: any):
 	const result: Partial<{{nativeType}}> = {}
 
 	{{#each properties}}
-	if (typeof value[{{{stringLiteral name}}}] !== '{{>frag/jsonType}}'{{#unless required}} && typeof value[{{{stringLiteral name}}}] !== 'undefined'{{/unless}}) {
-		{{#if required}}
-		{{#if nullable}}
-		result[{{{stringLiteral name}}}] = allowNull({{>frag/fromJson}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
-		{{else}}
-		result[{{{stringLiteral name}}}] = {{>frag/fromJson}}(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
-		{{/if}}
-		{{else}}
-		{{#if nullable}}
-		result[{{{stringLiteral name}}}] = allowNullOrUndefined({{>frag/fromJson}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
-		{{else}}
-		result[{{{stringLiteral name}}}] = allowUndefined({{>frag/fromJson}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
-		{{/if}}
-		{{/if}}
-	}
+	{{#if required}}
+	{{#if nullable}}
+	result[{{{stringLiteral name}}}] = allowNull({{>frag/fromJson}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
+	{{else}}
+	result[{{{stringLiteral name}}}] = {{>frag/fromJson}}(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
+	{{/if}}
+	{{else}}
+	{{#if nullable}}
+	result[{{{stringLiteral name}}}] = allowNullOrUndefined({{>frag/fromJson}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
+	{{else}}
+	result[{{{stringLiteral name}}}] = allowUndefined({{>frag/fromJson}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
+	{{/if}}
+	{{/if}}
 	{{/each}}
 
 	return result as {{nativeType}}
