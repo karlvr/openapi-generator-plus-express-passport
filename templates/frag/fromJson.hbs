@@ -12,5 +12,5 @@ Output a reference to a FromJsonFunction function.
 {{prefix}}dateFromJson{{else if (isDateTime)~}}
 {{prefix}}dateTimeFromJson{{else if (isTime)~}}
 {{prefix}}timeFromJson{{else if (isMap)~}}
-{{prefix}}mapFromJson{{else~}}
+{{prefix}}mapFromJson({{>frag/fromJson componentSchema prefix=prefix}}){{else~}}
 {{prefix}}unsupportedFromJson{{/if}}
