@@ -1,4 +1,4 @@
-export function asEnum{{className nativeType}}(name: string, value: any): {{nativeType}} {
+export function enum{{className nativeType}}FromJson(name: string, value: any): {{nativeType}} {
 	if (typeof value !== 'string' || value === undefined || value === null) {
 		throw `Invalid type for ${name}: expected string got ${typeof value}`
 	}

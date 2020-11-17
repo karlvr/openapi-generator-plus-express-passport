@@ -13,6 +13,11 @@ const createGenerator: CodegenGeneratorConstructor<CodegenOptionsTypeScript> = (
 			return [path.resolve(__dirname, '../templates')]
 		},
 		additionalExportTemplates: async(outputPath, doc, hbs, rootContext, state) => {
+			/* Convert path template from OpenAPI to Express */
+			hbs.registerHelper('pathTemplate', function(value: string) {
+				return value.replace(/{(.*?)}/g, ':$1')
+			})
+
 			const relativeSourceOutputPath = state.options.relativeSourceOutputPath
 			// await emit('api', path.join(outputPath, relativeSourceOutputPath, 'api.ts'), { ...doc, ...state.options, ...rootContext }, true, hbs)
 			for (const group of doc.groups) {

@@ -9,4 +9,5 @@ string{{else if (isDate)~}}
 string{{else if (isDateTime)~}}
 string{{else if (isTime)~}}
 string{{else if (isMap)~}}
-object{{/if}}
+object{{else if (isFile)~}}
+object{{else}}unknown{{/if}}

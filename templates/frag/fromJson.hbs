@@ -1,0 +1,16 @@
+{{!--
+Output a reference to a FromJsonFunction function.
+@param prefix the import prefix for the functions
+--}}
+{{#if (isBoolean)}}
+{{prefix}}booleanFromJson{{else if (isNumber)~}}
+{{#ifeq type 'integer'}}{{prefix}}integerFromJson{{else}}{{prefix}}numberFromJson{{/ifeq}}{{else if (isString)~}}
+{{prefix}}stringFromJson{{else if (isObject)~}}
+{{prefix}}model{{className model.nativeType}}FromJson{{else if (isArray)~}}
+{{prefix}}arrayFromJson({{>frag/fromJson componentSchema prefix=prefix}}){{else if (isEnum)~}}
+{{prefix}}enum{{className model.nativeType}}FromJson{{else if (isDate)~}}
+{{prefix}}dateFromJson{{else if (isDateTime)~}}
+{{prefix}}dateTimeFromJson{{else if (isTime)~}}
+{{prefix}}timeFromJson{{else if (isMap)~}}
+{{prefix}}mapFromJson{{else~}}
+{{prefix}}unsupportedFromJson{{/if}}
