@@ -27,6 +27,18 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 			--}}).then(function (response) {
 				{{#each responses}}
 				if (response.status === {{code}}) {
+					{{#if contents.[0]}}
+					let body: any
+					try {
+						body = {{>frag/toJson contents.[0].schema prefix='v.'}}('response', response.body)
+					} catch (error) {
+						console.error('Invalid response body in {{identifier ../../name}}.{{identifier ../name}}', error)
+						res.status(500)
+						res.send()
+						return
+					}
+
+					{{/if}}
 					res.status({{code}})
 					{{#if headers}}
 					{{#each headers}}
@@ -34,7 +46,7 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 					{{/each}}
 					{{/if}}
 					{{#if contents.[0]}}
-					res.send({{>frag/toJson contents.[0].schema prefix='v.'}}('response', response.body))
+					res.send(body)
 					{{else}}
 					res.send()
 					{{/if}}
