@@ -1,1 +1,6 @@
 test
+src
+.eslintrc.js
+.nvmrc
+.vscode
+tsconfig.*
