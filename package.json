@@ -7,7 +7,6 @@
     "build": "tsc -p tsconfig.prod.json",
     "clean": "rimraf dist",
     "link-openapi-generator-plus": "npm link openapi-generator-plus $(cd node_modules && find @openapi-generator-plus -type d -depth 1 -prune) @openapi-generator-plus/typescript-express-passport-server-generator",
-    "test": "npx openapi-generator-plus -g @openapi-generator-plus/typescript-express-passport-server-generator -o test ./openapi.yml",
     "watch": "tsc --watch"
   },
   "author": "Karl von Randow",
