@@ -65,6 +65,12 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 				generatorClass: '@openapi-generator-plus/typescript-fetch-client-generator',
 			}
 		},
+		postProcessDocument: (doc) => {
+			/* Sort operations according to the order we need to declare them */
+			doc.groups.forEach(group => {
+				group.operations.sort(compareOperations)
+			})
+		},
 		generatorType: () => CodegenGeneratorType.CLIENT,
 		cleanPathPatterns: () => {
 			const result = base.cleanPathPatterns() || []
@@ -75,5 +81,38 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 	}
 }
 
-export default createGenerator
+/**
+ * Compare CodegenOperations so that they are sorted with the most specific paths first,
+ * in order to register them in the necessary order with Express.
+ * @param a 
+ * @param b 
+ */
+function compareOperations(a: CodegenOperation, b: CodegenOperation): number {
+	const aComponents = a.path.split('/')
+	const bComponents = b.path.split('/')
 
+	for (let i = 0; i < aComponents.length; i++) {
+		if (i >= bComponents.length) {
+			return 1
+		}
+		const aIsVar = aComponents[i].startsWith('{')
+		const bIsVar = bComponents[i].startsWith('{')
+		if (aIsVar && !bIsVar) {
+			return 1
+		} else if (!aIsVar && bIsVar) {
+			return -1
+		}
+
+		const compared = aComponents[i].localeCompare(bComponents[i])
+		if (compared !== 0) {
+			return compared
+		}
+	}
+
+	if (bComponents.length > aComponents.length) {
+		return -1
+	}
+	return 0
+}
+
+export default createGenerator
