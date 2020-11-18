@@ -12,15 +12,15 @@
   "author": "Karl von Randow",
   "license": "Apache-2.0",
   "dependencies": {
-    "@openapi-generator-plus/handlebars-templates": "^0.5.0",
-    "@openapi-generator-plus/typescript-generator-common": "^0.8.0"
+    "@openapi-generator-plus/handlebars-templates": "^0.5.1",
+    "@openapi-generator-plus/typescript-generator-common": "^0.9.0"
   },
   "peerDependencies": {
-    "@openapi-generator-plus/core": "^0.16.0"
+    "@openapi-generator-plus/core": "^0.17.1"
   },
   "devDependencies": {
-    "@openapi-generator-plus/core": "^0.16.1",
-    "@openapi-generator-plus/types": "^0.16.1",
+    "@openapi-generator-plus/core": "^0.17.0",
+    "@openapi-generator-plus/types": "^0.17.0",
     "@types/jest": "^26.0.15",
     "@typescript-eslint/eslint-plugin": "^4.7.0",
     "@typescript-eslint/parser": "^4.7.0",

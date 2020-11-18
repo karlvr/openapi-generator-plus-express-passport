@@ -1,4 +1,4 @@
-import { CodegenGeneratorConstructor, CodegenGeneratorType } from '@openapi-generator-plus/types'
+import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation } from '@openapi-generator-plus/types'
 import path from 'path'
 import { loadTemplates, emit } from '@openapi-generator-plus/handlebars-templates'
 import typescriptGenerator, { options as typescriptGeneratorOptions, TypeScriptGeneratorContext } from '@openapi-generator-plus/typescript-generator-common'
@@ -37,23 +37,21 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 			if (!operations.length) {
 				continue
 			}
-			await emit('api', path.join(outputPath, relativeSourceOutputPath, context.generator().toIdentifier(group.name), 'index.ts'), 
+			await emit('api', path.join(outputPath, relativeSourceOutputPath, 'api', context.generator().toIdentifier(group.name), 'index.ts'), 
 				{ ...rootContext, ...group, ...doc }, true, hbs)
-			await emit('apiTypes', path.join(outputPath, relativeSourceOutputPath, context.generator().toIdentifier(group.name), 'types.ts'), 
+			await emit('apiTypes', path.join(outputPath, relativeSourceOutputPath, 'api', context.generator().toIdentifier(group.name), 'types.ts'), 
 				{ ...rootContext, ...group, ...doc }, true, hbs)
-			await emit('apiImpl', path.join(outputPath, relativeSourceOutputPath, context.generator().toIdentifier(group.name), 'example.ts'), 
+			await emit('apiReadme', path.join(outputPath, relativeSourceOutputPath, 'api', context.generator().toIdentifier(group.name), 'README.md'), 
 				{ ...rootContext, ...group, ...doc }, true, hbs)
+
+			await emit('apiImpl', path.join(outputPath, relativeSourceOutputPath, 'impl', `${context.generator().toIdentifier(group.name)}.ts`), 
+				{ ...rootContext, ...group, ...doc }, false, hbs)
 		}
 
 		await emit('models', path.join(outputPath, relativeSourceOutputPath, 'models.ts'), { ...rootContext, ...doc }, true, hbs)
 		await emit('validation', path.join(outputPath, relativeSourceOutputPath, 'validation.ts'), { ...rootContext, ...doc }, true, hbs)
 		await emit('index', path.join(outputPath, relativeSourceOutputPath, 'index.ts'), { ...rootContext, ...doc }, true, hbs)
 		await emit('indexTypes', path.join(outputPath, relativeSourceOutputPath, 'types.ts'), { ...rootContext, ...doc }, true, hbs)
-		// await emit('runtime', path.join(outputPath, relativeSourceOutputPath, 'runtime.ts'), { ...rootContext, ...doc }, true, hbs)
-		// await emit('configuration', path.join(outputPath, relativeSourceOutputPath, 'configuration.ts'), { ...rootContext, ...doc }, true, hbs)
-		// await emit('custom.d', path.join(outputPath, relativeSourceOutputPath, 'custom.d.ts'), { ...rootContext, ...doc }, true, hbs)
-		// await emit('index', path.join(outputPath, relativeSourceOutputPath, 'index.ts'), { ...rootContext, ...doc }, true, hbs)
-		// await emit('README', path.join(outputPath, 'README.md'), { ...rootContext, ...doc }, true, hbs)
 	}
 
 	const base = typescriptGenerator(config, myContext)
@@ -68,6 +66,12 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 			}
 		},
 		generatorType: () => CodegenGeneratorType.CLIENT,
+		cleanPathPatterns: () => {
+			const result = base.cleanPathPatterns() || []
+			const relativeSourceOutputPath = generatorOptions.relativeSourceOutputPath
+			result.push(path.join(relativeSourceOutputPath, 'api', '**'))
+			return result
+		},
 	}
 }
 

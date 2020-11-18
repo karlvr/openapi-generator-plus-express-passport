@@ -1,0 +1,24 @@
+# {{name}}
+
+{{{md description}}}
+
+## Operations
+
+{{#each operations}}
+### {{name}}
+
+```http
+{{httpMethod}} {{fullPath}}
+```
+
+{{{md description}}}
+
+{{/each}}
+## Implementation
+
+This is an example of the API implementation to use to update the actual API implementation
+when the API structure has changed.
+
+```typescript
+{{>frag/apiImpl}}
+```
