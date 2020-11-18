@@ -1,1 +1,1 @@
-{{#with requestBody}}{{#ifeq consumes.[0].mimeType 'application/x-www-form-urlencoded'}}TODO{{else}}{{>frag/fromJson contents.[0].schema prefix='v.'}}('body', req.body){{/ifeq}}{{/with}}
+{{#with requestBody}}{{>frag/fromJson defaultContent.schema prefix='v.'}}('body', req.body){{/with}}
