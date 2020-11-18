@@ -3,8 +3,8 @@
 import { Express } from 'express'
 import passport from 'passport'
 import * as t from './types'
-import * as v from '../validation'
-import { Api } from '../models'
+import * as v from '../../validation'
+import { Api } from '../../models'
 
 export default function(app: Express, impl: t.{{className name}}Api) {
 	{{#each operations}}
