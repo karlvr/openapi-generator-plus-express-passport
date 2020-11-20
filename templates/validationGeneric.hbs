@@ -1,4 +1,4 @@
-const {{constantName (concat nativeType 'Keys')}} = [{{#each properties}}{{{stringLiteral name}}}{{#hasMore}}, {{/hasMore}}{{/each}}]
+const {{constantName (concat nativeType 'Keys')}}: string[] = [{{#each properties}}{{{stringLiteral name}}}{{#hasMore}}, {{/hasMore}}{{/each}}]
 
 export function model{{className nativeType}}FromJson(name: string, value: any): {{nativeType}} {
 	if (typeof value !== 'object' || value === undefined || value === null) {
