@@ -13,8 +13,35 @@ export function model{{className nativeType}}FromJson(name: string, value: any):
 			console.warn(`Unexpected key in {{nativeType}}): ${key}`)
 		}
 	}
+	{{#if discriminator}}
 
+	switch (value.{{discriminator.name}}) {
+		{{#each discriminatorValues}}
+		case {{{value}}}:
+			return {{>frag/fromJson model}}(name, value)
+		{{/each}}
+	}
+
+	throw `Invalid value for ${name}: didn't contain a known discriminator value: ${value.{{discriminator.name}}`
+	{{/if}}
+	{{#if implementors}}
+	{{#each implementors}}
+	try {
+		return {{>frag/fromJson .}}(name, value)
+	} catch (error) {
+
+	}
+	{{/each}}
+
+	throw `Invalid type for ${name}: didn't match any subtype`
+	{{else}}
+
+	{{#if parent}}
+	const result: Partial<{{nativeType}}> = {{>frag/fromJson parent}}(name, value)
+	{{else}}
 	const result: Partial<{{nativeType}}> = {}
+	{{/if}}
+	{{#if properties}}
 
 	{{#each properties}}
 	{{#if required}}
@@ -31,8 +58,10 @@ export function model{{className nativeType}}FromJson(name: string, value: any):
 	{{/if}}
 	{{/if}}
 	{{/each}}
+	{{/if}}
 
 	return result as {{nativeType}}
+	{{/if}}
 }
 
 export function model{{className nativeType}}ToJson(name: string, value: {{nativeType}}): any {
