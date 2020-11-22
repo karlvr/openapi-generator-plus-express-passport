@@ -1,6 +1,8 @@
 # {{name}}
 
+{{#if description}}
 {{{description}}}
+{{/if}}
 
 ## Operations
 
@@ -11,7 +13,9 @@
 {{httpMethod}} {{fullPath}}
 ```
 
+{{#if description}}
 {{{description}}}
+{{/if}}
 
 {{/each}}
 ## Implementation

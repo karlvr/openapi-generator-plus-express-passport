@@ -15,6 +15,8 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 		defaultNpmOptions: () => ({
 			name: 'typescript-fetch-api',
 			version: '0.0.1',
+			private: true,
+			repository: null,
 		}),
 		defaultTypeScriptOptions: () => ({
 			target: 'ES5',

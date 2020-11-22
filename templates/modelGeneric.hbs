@@ -2,30 +2,34 @@
 export type {{className name}} = {{{vendorExtensions.convert-to-literal-type}}}
 {{else}}
 /**
+ {{#if description}}
  * {{{description}}}
+ {{/if}}
  * @export
  * @interface {{className name}}
  */
 export interface {{className name}} {{#if parentNativeType}}extends {{{parentNativeType}}} {{/if}}{
-{{#discriminator}}
+{{#with discriminator}}
 	{{name}}: {{{nativeType.wireType}}};
 	
-{{/discriminator}}
+{{/with}}
 {{#each discriminatorValues}}
 	{{model.discriminator.name}}: {{{value}}}
 
 {{/each}}
-{{#additionalPropertiesType}}
-	[key: string]: {{{additionalPropertiesType}}}{{#if properties}} | any{{/if}};
+{{#if componentSchema}}
+	[key: string]: {{{componentSchema.nativeType}}}
 
-{{/additionalPropertiesType}}
+{{/if}}
 {{#each properties}}
 	/**
+	 {{#if description}}
 	 * {{{description}}}
+	 {{/if}}
 	 * @type {{safe '{'}}{{{nativeType}}}{{safe '}'}}
 	 * @memberof {{className ../name}}
 	 */
-	{{name}}{{^required}}?{{/required}}: {{{nativeType}}}{{#if nullable}} | null{{/if}};
+	{{name}}{{#unless required}}?{{/unless}}: {{{nativeType}}}{{#if nullable}} | null{{/if}};
 {{/each}}
 }
 {{/if}}

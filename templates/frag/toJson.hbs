@@ -6,9 +6,9 @@ Output a reference to a FromJsonFunction function.
 {{prefix}}booleanToJson{{else if (isNumber)~}}
 {{#ifeq type 'integer'}}{{prefix}}integerToJson{{else}}{{prefix}}numberToJson{{/ifeq}}{{else if (isString)~}}
 {{prefix}}stringToJson{{else if (isObject)~}}
-{{prefix}}model{{className model.nativeType}}ToJson{{else if (isArray)~}}
+{{prefix}}model{{className nativeType}}ToJson{{else if (isArray)~}}
 {{prefix}}arrayToJson({{>frag/toJson componentSchema prefix=prefix}}){{else if (isEnum)~}}
-{{prefix}}enum{{className model.nativeType}}ToJson{{else if (isDate)~}}
+{{prefix}}enum{{className nativeType}}ToJson{{else if (isDate)~}}
 {{prefix}}dateToJson{{else if (isDateTime)~}}
 {{prefix}}dateTimeToJson{{else if (isTime)~}}
 {{prefix}}timeToJson{{else if (isMap)~}}

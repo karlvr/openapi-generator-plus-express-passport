@@ -18,7 +18,7 @@ export function model{{className nativeType}}FromJson(name: string, value: any):
 	switch (value.{{discriminator.name}}) {
 		{{#each discriminatorValues}}
 		case {{{value}}}:
-			return {{>frag/fromJson model}}(name, value)
+			return {{>frag/fromJson model prefix=''}}(name, value)
 		{{/each}}
 	}
 
@@ -27,7 +27,7 @@ export function model{{className nativeType}}FromJson(name: string, value: any):
 	{{#if implementors}}
 	{{#each implementors}}
 	try {
-		return {{>frag/fromJson .}}(name, value)
+		return {{>frag/fromJson . prefix=''}}(name, value)
 	} catch (error) {
 
 	}
@@ -37,7 +37,7 @@ export function model{{className nativeType}}FromJson(name: string, value: any):
 	{{else}}
 
 	{{#if parent}}
-	const result: Partial<{{nativeType}}> = {{>frag/fromJson parent}}(name, value)
+	const result: Partial<{{nativeType}}> = {{>frag/fromJson parent prefix=''}}(name, value)
 	{{else}}
 	const result: Partial<{{nativeType}}> = {}
 	{{/if}}
@@ -46,15 +46,15 @@ export function model{{className nativeType}}FromJson(name: string, value: any):
 	{{#each properties}}
 	{{#if required}}
 	{{#if nullable}}
-	result[{{{stringLiteral name}}}] = allowNull({{>frag/fromJson}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
+	result[{{{stringLiteral name}}}] = allowNull({{>frag/fromJson prefix=''}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
 	{{else}}
-	result[{{{stringLiteral name}}}] = {{>frag/fromJson}}(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
+	result[{{{stringLiteral name}}}] = {{>frag/fromJson prefix=''}}(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
 	{{/if}}
 	{{else}}
 	{{#if nullable}}
-	result[{{{stringLiteral name}}}] = allowNullOrUndefined({{>frag/fromJson}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
+	result[{{{stringLiteral name}}}] = allowNullOrUndefined({{>frag/fromJson prefix=''}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
 	{{else}}
-	result[{{{stringLiteral name}}}] = allowUndefined({{>frag/fromJson}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
+	result[{{{stringLiteral name}}}] = allowUndefined({{>frag/fromJson prefix=''}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
 	{{/if}}
 	{{/if}}
 	{{/each}}
@@ -83,15 +83,15 @@ export function model{{className nativeType}}ToJson(name: string, value: {{nativ
 	{{#each properties}}
 	{{#if required}}
 	{{#if nullable}}
-	result[{{{stringLiteral name}}}] = allowNull({{>frag/toJson}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
+	result[{{{stringLiteral name}}}] = allowNull({{>frag/toJson prefix=''}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
 	{{else}}
-	result[{{{stringLiteral name}}}] = {{>frag/toJson}}(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
+	result[{{{stringLiteral name}}}] = {{>frag/toJson prefix=''}}(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
 	{{/if}}
 	{{else}}
 	{{#if nullable}}
-	result[{{{stringLiteral name}}}] = allowNullOrUndefined({{>frag/toJson}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
+	result[{{{stringLiteral name}}}] = allowNullOrUndefined({{>frag/toJson prefix=''}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
 	{{else}}
-	result[{{{stringLiteral name}}}] = allowUndefined({{>frag/toJson}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
+	result[{{{stringLiteral name}}}] = allowUndefined({{>frag/toJson prefix=''}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}])
 	{{/if}}
 	{{/if}}
 	{{/each}}
