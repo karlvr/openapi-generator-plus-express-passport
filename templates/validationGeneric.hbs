@@ -78,7 +78,11 @@ export function model{{className nativeType}}ToJson(name: string, value: {{nativ
 		}
 	}
 
+	{{#if parent}}
+	const result: any = {{>frag/toJson parent prefix=''}}(name, value)
+	{{else}}
 	const result: any = {}
+	{{/if}}
 
 	{{#each properties}}
 	{{#if required}}
