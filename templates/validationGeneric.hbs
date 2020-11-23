@@ -74,7 +74,7 @@ export function model{{className nativeType}}ToJson(name: string, value: {{nativ
 	{{constantName (concat nativeType 'Keys')}}.forEach(k => knownKeys[k] = true)
 
 	{{#if parent}}
-	const result: any = {{>frag/toJson parent prefix=''}}(name, value)
+	const result: any = {{>frag/toJson parent prefix=''}}(name, value, knownKeys)
 	{{else}}
 	const result: any = {}
 	{{/if}}
