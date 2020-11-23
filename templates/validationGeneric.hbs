@@ -106,14 +106,11 @@ export function model{{className nativeType}}ToJson(name: string, value: {{nativ
 
 	return result
 }
-{{#if models}}
-
 {{#each models}}
+
 {{#if (isEnum)}}
 {{>validationEnum}}
 {{else}}
 {{>validationGeneric}}
 {{/if}}
-
 {{/each}}
-{{/if}}
