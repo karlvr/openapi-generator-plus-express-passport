@@ -1,18 +1,11 @@
 const {{constantName (concat nativeType 'Keys')}}: string[] = [{{#each properties}}{{{stringLiteral name}}}{{#hasMore}}, {{/hasMore}}{{/each}}]
 
-export function model{{className nativeType}}FromJson(name: string, value: any): {{nativeType}} {
+export function model{{className nativeType}}FromJson(name: string, value: any, knownKeys: Record<string, boolean> = {}): {{nativeType}} {
 	if (typeof value !== 'object' || value === undefined || value === null) {
 		throw `Invalid type for ${name}: expected object got ${typeof value}`
 	}
 
-	// TODO if we don't ignore unknown properties
-	const keys = Object.keys(value)
-	for (const key of keys) {
-		if ({{constantName (concat nativeType 'Keys')}}.indexOf(key) === -1) {
-			// throw `Unexpected key: ${key}`
-			console.warn(`Unexpected key in {{nativeType}}): ${key}`)
-		}
-	}
+	{{constantName (concat nativeType 'Keys')}}.forEach(k => knownKeys[k] = true)
 	{{#if discriminator}}
 
 	switch (value.{{discriminator.name}}) {
@@ -37,7 +30,7 @@ export function model{{className nativeType}}FromJson(name: string, value: any):
 	{{else}}
 
 	{{#if parent}}
-	const result: Partial<{{nativeType}}> = {{>frag/fromJson parent prefix=''}}(name, value)
+	const result: Partial<{{nativeType}}> = {{>frag/fromJson parent prefix=''}}(name, value, knownKeys)
 	{{else}}
 	const result: Partial<{{nativeType}}> = {}
 	{{/if}}
@@ -60,23 +53,25 @@ export function model{{className nativeType}}FromJson(name: string, value: any):
 	{{/each}}
 	{{/if}}
 
+	/* Known keys */
+	// TODO if we don't ignore unknown properties
+	for (const key of Object.keys(value)) {
+		if (!knownKeys[key]) {
+			// throw `Unexpected key: ${key}`
+			console.warn(`Unexpected key in {{nativeType}}: ${key}`)
+		}
+	}
+
 	return result as {{nativeType}}
 	{{/if}}
 }
 
-export function model{{className nativeType}}ToJson(name: string, value: {{nativeType}}): any {
+export function model{{className nativeType}}ToJson(name: string, value: {{nativeType}}, knownKeys: Record<string, boolean> = {}): any {
 	if (typeof value !== 'object' || value === undefined || value === null) {
 		throw `Invalid type for ${name}: expected object got ${typeof value}`
 	}
 
-	// TODO if we don't ignore unknown properties
-	const keys = Object.keys(value)
-	for (const key of keys) {
-		if ({{constantName (concat nativeType 'Keys')}}.indexOf(key) === -1) {
-			// throw `Unexpected key: ${key}`
-			console.warn(`Unexpected key in {{nativeType}}): ${key}`)
-		}
-	}
+	{{constantName (concat nativeType 'Keys')}}.forEach(k => knownKeys[k] = true)
 
 	{{#if parent}}
 	const result: any = {{>frag/toJson parent prefix=''}}(name, value)
@@ -99,6 +94,15 @@ export function model{{className nativeType}}ToJson(name: string, value: {{nativ
 	{{/if}}
 	{{/if}}
 	{{/each}}
+
+	/* Known keys */
+	// TODO if we don't ignore unknown properties
+	for (const key of Object.keys(value)) {
+		if (!knownKeys[key]) {
+			// throw `Unexpected key: ${key}`
+			console.warn(`Unexpected key in {{nativeType}}: ${key}`)
+		}
+	}
 
 	return result
 }
