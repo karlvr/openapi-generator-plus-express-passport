@@ -14,7 +14,7 @@ export interface {{className name}}Api {
 
 {{#each operations}}
 export type {{className name}}Response = {{!--
---}}{{#each responses}}{{className ../name}}{{code}}Response{{#hasMore}} |{{/hasMore}}{{/each}}
+--}}{{#each responses}}{{className ../name}}{{code}}Response{{#hasMore}} | {{/hasMore}}{{/each}}
 
 {{#each responses}}
 export interface {{className ../name}}{{code}}Response {
