@@ -72,6 +72,28 @@ export function model{{className nativeType}}ToJson(name: string, value: {{nativ
 	}
 
 	{{constantName (concat nativeType 'Keys')}}.forEach(k => knownKeys[k] = true)
+	{{#if discriminator}}
+
+	switch (value.{{discriminator.name}}) {
+		{{#each discriminatorValues}}
+		case {{{value}}}:
+			return {{>frag/toJson model prefix=''}}(name, value)
+		{{/each}}
+	}
+
+	throw `Invalid value for ${name}: didn't contain a known discriminator value: ${value.{{discriminator.name}}`
+	{{/if}}
+	{{#if implementors}}
+	{{#each implementors}}
+	try {
+		return {{>frag/toJson . prefix=''}}(name, value)
+	} catch (error) {
+		
+	}
+	{{/each}}
+
+	throw `Invalid type for ${name}: didn't match any subtype`
+	{{else}}
 
 	{{#if parent}}
 	const result: any = {{>frag/toJson parent prefix=''}}(name, value, knownKeys)
@@ -105,6 +127,7 @@ export function model{{className nativeType}}ToJson(name: string, value: {{nativ
 	}
 
 	return result
+	{{/if}}
 }
 {{#each models}}
 
