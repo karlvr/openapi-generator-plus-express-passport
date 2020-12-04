@@ -19,8 +19,8 @@ export type {{className name}}Response = {{!--
 {{#each responses}}
 export interface {{className ../name}}{{code}}Response {
 	status: {{code}}
-	{{#if nativeType}}
-	body: {{{nativeType}}}
+	{{#if defaultContent.nativeType}}
+	body: {{{defaultContent.nativeType}}}
 	{{else}}
 	body?: never
 	{{/if}}
