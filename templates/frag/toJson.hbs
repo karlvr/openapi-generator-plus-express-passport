@@ -3,8 +3,9 @@ Output a reference to a FromJsonFunction function.
 @param prefix the import prefix for the functions
 --}}
 {{#if (isBoolean)}}
-{{prefix}}booleanToJson{{else if (isNumber)~}}
-{{#ifeq type 'integer'}}{{prefix}}integerToJson{{else}}{{prefix}}numberToJson{{/ifeq}}{{else if (isString)~}}
+{{prefix}}booleanToJson{{else if (isInteger)~}}
+{{prefix}}integerToJson{{else if (isNumber)~}}
+{{prefix}}numberToJson{{else if (isString)~}}
 {{prefix}}stringToJson{{else if (isObject)~}}
 {{prefix}}model{{className nativeType}}ToJson{{else if (isArray)~}}
 {{prefix}}arrayToJson({{>frag/toJson componentSchema prefix=prefix}}){{else if (isEnum)~}}

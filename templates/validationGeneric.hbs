@@ -129,7 +129,7 @@ export function model{{className nativeType}}ToJson(name: string, value: {{nativ
 	return result
 	{{/if}}
 }
-{{#each models}}
+{{#each schemas}}
 
 {{#if (isEnum)}}
 {{>validationEnum}}

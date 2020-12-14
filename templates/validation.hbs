@@ -248,7 +248,7 @@ export function timeToJson(name: string, value: Date): any {
 }
 
 /* Model conversion functions */
-{{#each models}}
+{{#each schemas}}
 {{#if (isEnum)}}
 {{>validationEnum}}
 {{else}}
