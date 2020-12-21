@@ -86,7 +86,7 @@ export function model{{className nativeType}}ToJson(name: string, value: {{nativ
 	{{#if implementors}}
 	{{#each implementors}}
 	try {
-		return {{>frag/toJson . prefix=''}}(name, value)
+		return {{>frag/toJson . prefix=''}}(name, value as {{{nativeType}}})
 	} catch (error) {
 		
 	}
