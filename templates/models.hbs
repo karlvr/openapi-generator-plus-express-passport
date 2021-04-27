@@ -1,7 +1,7 @@
 {{>header}}
 
 export namespace Api {
-{{#each schemas}}
+{{#each models}}
 	{{#if (isEnum)}}
 	{{>modelEnum}}
 	{{else}}

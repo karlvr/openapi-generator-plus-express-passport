@@ -1,7 +1,8 @@
-import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation } from '@openapi-generator-plus/types'
+import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation, isCodegenEnumSchema, isCodegenObjectSchema } from '@openapi-generator-plus/types'
 import path from 'path'
 import { loadTemplates, emit } from '@openapi-generator-plus/handlebars-templates'
 import typescriptGenerator, { options as typescriptGeneratorOptions, TypeScriptGeneratorContext } from '@openapi-generator-plus/typescript-generator-common'
+import * as idx from '@openapi-generator-plus/indexed-type'
 
 const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 	const myContext: TypeScriptGeneratorContext = {
@@ -50,7 +51,11 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 				{ ...rootContext, ...group, ...doc }, false, hbs)
 		}
 
-		await emit('models', path.join(outputPath, relativeSourceOutputPath, 'models.ts'), { ...rootContext, ...doc }, true, hbs)
+		await emit('models', path.join(outputPath, relativeSourceOutputPath, 'models.ts'), {
+			...rootContext,
+			...doc,
+			models: idx.filter(doc.schemas, schema => isCodegenObjectSchema(schema) || isCodegenEnumSchema(schema)), // TODO this quality will become part of the generator interface
+		}, true, hbs)
 		await emit('validation', path.join(outputPath, relativeSourceOutputPath, 'validation.ts'), { ...rootContext, ...doc }, true, hbs)
 		await emit('index', path.join(outputPath, relativeSourceOutputPath, 'index.ts'), { ...rootContext, ...doc }, true, hbs)
 		await emit('indexTypes', path.join(outputPath, relativeSourceOutputPath, 'types.ts'), { ...rootContext, ...doc }, true, hbs)
