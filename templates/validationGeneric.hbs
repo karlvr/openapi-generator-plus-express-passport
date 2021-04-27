@@ -84,15 +84,16 @@ export function model{{className nativeType}}ToJson(name: string, value: {{nativ
 	throw `Invalid value for ${name}: didn't contain a known discriminator value: ${value.{{discriminator.name}}`
 	{{/if}}
 	{{#if implementors}}
+	const errors = []
 	{{#each implementors}}
 	try {
 		return {{>frag/toJson . prefix=''}}(name, value as {{{nativeType}}})
 	} catch (error) {
-		
+		errors.push(error)
 	}
 	{{/each}}
 
-	throw `Invalid type for ${name}: didn't match any subtype`
+	throw `Invalid type for ${name}: didn't match any subtype. Preceding errors: ${errors.join('; ')}`
 	{{else}}
 
 	{{#if parent}}
