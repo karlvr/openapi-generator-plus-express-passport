@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@openapi-generator-plus/core": "^0.20.1",
+    "@openapi-generator-plus/testing": "^0.20.1",
     "@openapi-generator-plus/types": "^0.20.1",
     "@types/jest": "^26.0.19",
     "@typescript-eslint/eslint-plugin": "^4.10.0",
