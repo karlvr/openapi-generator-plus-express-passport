@@ -15,7 +15,7 @@ export function model{{className nativeType}}FromJson(name: string, value: any, 
 		{{/each}}
 	}
 
-	throw `Invalid value for ${name}: didn't contain a known discriminator value: ${value.{{discriminator.name}}`
+	throw `Invalid value for ${name}: didn't contain a known discriminator value: ${value.{{discriminator.name}}{{safe '}'}}`
 	{{/if}}
 	{{#if implementors}}
 	{{#each implementors}}
@@ -81,7 +81,7 @@ export function model{{className nativeType}}ToJson(name: string, value: {{nativ
 		{{/each}}
 	}
 
-	throw `Invalid value for ${name}: didn't contain a known discriminator value: ${value.{{discriminator.name}}`
+	throw `Invalid value for ${name}: didn't contain a known discriminator value: ${value.{{discriminator.name}}{{safe '}'}}`
 	{{/if}}
 	{{#if implementors}}
 	const errors = []
