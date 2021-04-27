@@ -10,6 +10,10 @@ for (const file of files) {
 	test(file, async() => {
 		const result = await prepare(path.join(basePath, file), {
 			...DEFAULT_CONFIG,
+			npm: {
+				...(DEFAULT_CONFIG.npm || {}),
+				name: path.basename(file),
+			},
 			includeTests: true,
 		})
 		await testGenerate(result, build, path.join('test-output', file))
