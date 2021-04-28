@@ -30,5 +30,4 @@ export async function build(basePath: string): Promise<void> {
 			}
 		)
 	})
-	
 }
