@@ -4,3 +4,5 @@ src
 .nvmrc
 .vscode
 tsconfig.*
+/__tests__
+/test-output
