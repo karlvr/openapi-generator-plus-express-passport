@@ -1,7 +1,17 @@
 {
   "name": "@openapi-generator-plus/typescript-express-passport-server-generator",
   "version": "1.5.2",
-  "description": "",
+  "description": "An OpenAPI Generator+ module for an Express + Passport API server in TypeScript",
+  "keywords": [
+    "openapi-generator-plus",
+    "openapi-generator-plus-generator",
+    "openapi",
+    "openapi-generator",
+    "typescript",
+    "express",
+    "passport",
+    "server"
+  ],
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.prod.json",
