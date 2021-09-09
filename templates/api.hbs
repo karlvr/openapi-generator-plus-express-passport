@@ -9,7 +9,7 @@ import { Api } from '../../models'
 export default function(app: Express, impl: t.{{className name}}Api) {
 	{{#each operations}}
 	app.{{lowerCase httpMethod}}({{{stringLiteral (pathTemplate fullPath)}}}, {{!--
-	--}}{{#if securityRequirements}}passport.authenticate({{{stringLiteral securityRequirements.[0].scheme.scheme}}}, { {{#ifdef securityRequirements.[0].scheme.vendorExtensions.x-session}}session: {{securityRequirements.[0].scheme.vendorExtensions.x-session}}, {{/ifdef}}{{!-- --}}}), {{/if}}{{!--
+	--}}{{#if securityRequirements}}passport.authenticate({{{stringLiteral securityRequirements.requirements.[0].schemes.[0].scheme.scheme}}}, { {{#ifdef securityRequirements.requirements.[0].schemes.[0].scheme.vendorExtensions.x-session}}session: {{securityRequirements.requirements.[0].schemes.[0].scheme.vendorExtensions.x-session}}, {{/ifdef}}{{!-- --}}}), {{/if}}{{!--
 	--}}function (req, res) {
 		try {
 			{{#if securityRequirements}}
