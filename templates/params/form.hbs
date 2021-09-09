@@ -1,1 +1,1 @@
-{{#if isFormParam}}{{>frag/parseType prefix='v.'}}({{{stringLiteral (concat 'form.' name)}}}, req.body[{{{stringLiteral name}}}]){{/if}}
+{{#if isFormParam}}{{>frag/parseType prefix='v.'}}({{{stringLiteral (concat 'form.' serializedName)}}}, req.body[{{{stringLiteral serializedName}}}]){{/if}}
