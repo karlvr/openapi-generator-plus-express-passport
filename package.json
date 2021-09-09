@@ -16,34 +16,35 @@
   "scripts": {
     "build": "tsc -p tsconfig.prod.json",
     "clean": "rimraf dist",
-    "link-openapi-generator-plus": "npm link openapi-generator-plus $(cd node_modules && find @openapi-generator-plus -type d -depth 1 -prune) @openapi-generator-plus/typescript-express-passport-server-generator",
-    "prepublish": "npm run build",
+    "link-openapi-generator-plus": "pnpm link --global openapi-generator-plus $(cd node_modules && find @openapi-generator-plus -type d -depth 1 -prune) @openapi-generator-plus/typescript-express-passport-server-generator",
+    "prepublish": "pnpm run build",
     "test": "jest",
     "watch": "tsc --watch"
   },
   "author": "Karl von Randow",
   "license": "Apache-2.0",
   "dependencies": {
-    "@openapi-generator-plus/handlebars-templates": "^0.14.1",
-    "@openapi-generator-plus/indexed-type": "^0.1.5",
-    "@openapi-generator-plus/typescript-generator-common": "^0.19.0"
+    "@openapi-generator-plus/handlebars-templates": "^0.19.0",
+    "@openapi-generator-plus/indexed-type": "^0.1.6",
+    "@openapi-generator-plus/typescript-generator-common": "^0.22.2"
   },
   "peerDependencies": {
-    "@openapi-generator-plus/core": "^0.29.1"
+    "@openapi-generator-plus/core": "^0.34.0"
   },
   "devDependencies": {
-    "@openapi-generator-plus/core": "^0.29.1",
-    "@openapi-generator-plus/generator-common": "^0.14.1",
-    "@openapi-generator-plus/testing": "^0.29.1",
-    "@openapi-generator-plus/types": "^0.29.0",
+    "@changesets/cli": "^2.17.0",
+    "@openapi-generator-plus/core": "^0.34.0",
+    "@openapi-generator-plus/generator-common": "^0.18.0",
+    "@openapi-generator-plus/testing": "^0.31.4",
+    "@openapi-generator-plus/types": "^0.33.0",
     "@types/jest": "^27.0.1",
-    "@typescript-eslint/eslint-plugin": "^4.29.2",
-    "@typescript-eslint/parser": "^4.29.2",
+    "@typescript-eslint/eslint-plugin": "^4.31.0",
+    "@typescript-eslint/parser": "^4.31.0",
     "eslint": "^7.32.0",
     "eslint-plugin-jest": "^24.4.0",
-    "jest": "^27.0.6",
+    "jest": "^27.1.1",
     "rimraf": "^3.0.2",
     "ts-jest": "^27.0.5",
-    "typescript": "^4.3.5"
+    "typescript": "^4.4.2"
   }
 }

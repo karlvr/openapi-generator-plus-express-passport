@@ -1,4 +1,4 @@
-import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation, isCodegenEnumSchema, isCodegenObjectSchema } from '@openapi-generator-plus/types'
+import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation, isCodegenEnumSchema, isCodegenObjectSchema, isCodegenAnyOfSchema, isCodegenInterfaceSchema, isCodegenOneOfSchema } from '@openapi-generator-plus/types'
 import path from 'path'
 import { loadTemplates, emit } from '@openapi-generator-plus/handlebars-templates'
 import typescriptGenerator, { options as typescriptGeneratorOptions, TypeScriptGeneratorContext } from '@openapi-generator-plus/typescript-generator-common'
@@ -14,7 +14,7 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 			return [path.resolve(__dirname, '../templates')]
 		},
 		defaultNpmOptions: () => ({
-			name: 'typescript-fetch-api',
+			name: 'typescript-express-passport-server',
 			version: '0.0.1',
 			private: true,
 			repository: null,
@@ -34,7 +34,6 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 		})
 
 		const relativeSourceOutputPath = generatorOptions.relativeSourceOutputPath
-		// await emit('api', path.join(outputPath, relativeSourceOutputPath, 'api.ts'), { ...rootContext, ...doc }, true, hbs)
 		for (const group of doc.groups) {
 			const operations = group.operations
 			if (!operations.length) {
@@ -54,7 +53,7 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 		await emit('models', path.join(outputPath, relativeSourceOutputPath, 'models.ts'), {
 			...rootContext,
 			...doc,
-			models: idx.filter(doc.schemas, schema => isCodegenObjectSchema(schema) || isCodegenEnumSchema(schema)), // TODO this quality will become part of the generator interface
+			schemas: idx.filter(doc.schemas, schema => isCodegenObjectSchema(schema) || isCodegenEnumSchema(schema) || isCodegenOneOfSchema(schema) || isCodegenAnyOfSchema(schema) || isCodegenInterfaceSchema(schema)),
 		}, true, hbs)
 		await emit('validation', path.join(outputPath, relativeSourceOutputPath, 'validation.ts'), { ...rootContext, ...doc }, true, hbs)
 		await emit('index', path.join(outputPath, relativeSourceOutputPath, 'index.ts'), { ...rootContext, ...doc }, true, hbs)
@@ -69,7 +68,7 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 			return {
 				...base.templateRootContext(),
 				...generatorOptions,
-				generatorClass: '@openapi-generator-plus/typescript-fetch-client-generator',
+				generatorClass: '@openapi-generator-plus/typescript-express-passport-server-generator',
 			}
 		},
 		postProcessDocument: (doc) => {
@@ -78,7 +77,7 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 				group.operations.sort(compareOperations)
 			})
 		},
-		generatorType: () => CodegenGeneratorType.CLIENT,
+		generatorType: () => CodegenGeneratorType.SERVER,
 		cleanPathPatterns: () => {
 			const result = base.cleanPathPatterns() || []
 			const relativeSourceOutputPath = generatorOptions.relativeSourceOutputPath

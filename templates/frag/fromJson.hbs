@@ -3,15 +3,31 @@ Output a reference to a FromJsonFunction function.
 @param prefix the import prefix for the functions
 --}}
 {{#if (isBoolean)}}
-{{prefix}}booleanFromJson{{else if (isInteger)~}}
-{{prefix}}integerFromJson{{else if (isNumber)~}}
-{{prefix}}numberFromJson{{else if (isString)~}}
-{{prefix}}stringFromJson{{else if (isObject)~}}
-{{prefix}}model{{className nativeType}}FromJson{{else if (isArray)~}}
-{{prefix}}arrayFromJson({{>frag/fromJson componentSchema prefix=prefix}}){{else if (isEnum)~}}
-{{prefix}}enum{{className nativeType}}FromJson{{else if (isDate)~}}
-{{prefix}}dateFromJson{{else if (isDateTime)~}}
-{{prefix}}dateTimeFromJson{{else if (isTime)~}}
-{{prefix}}timeFromJson{{else if (isMap)~}}
-{{prefix}}mapFromJson({{>frag/fromJson componentSchema prefix=prefix}}){{else~}}
-{{prefix}}unsupportedFromJson{{/if}}
+{{prefix}}booleanFromJson
+{{~else if (isInteger)~}}
+{{prefix}}integerFromJson
+{{~else if (isNumber)~}}
+{{prefix}}numberFromJson
+{{~else if (isString)~}}
+{{prefix}}stringFromJson
+{{~else if (isObject)~}}
+{{prefix}}model{{className nativeType.parentType}}FromJson
+{{~else if (isArray)~}}
+{{prefix}}arrayFromJson({{>frag/fromJson componentSchema prefix=prefix}})
+{{~else if (isEnum)~}}
+{{prefix}}enum{{className nativeType.parentType}}FromJson
+{{~else if (isDate)~}}
+{{prefix}}dateFromJson
+{{~else if (isDateTime)~}}
+{{prefix}}dateTimeFromJson
+{{~else if (isTime)~}}
+{{prefix}}timeFromJson
+{{~else if (isMap)~}}
+{{prefix}}mapFromJson({{>frag/fromJson componentSchema prefix=prefix}})
+{{~else if (isInterface)~}}
+{{prefix}}model{{className nativeType.parentType}}FromJson
+{{~else if (isOneOf)~}}
+{{prefix}}oneOf{{className nativeType.parentType}}FromJson
+{{~else~}}
+{{prefix}}unsupportedFromJson
+{{~/if}}

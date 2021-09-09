@@ -1,0 +1,50 @@
+export function oneOf{{className nativeType.parentType}}FromJson(name: string, value: any): {{nativeType}} {
+	{{#if discriminator}}
+	const discriminatorValue = value.{{discriminator.name}}
+	switch (value.{{discriminator.name}}) {
+		{{#each discriminator.references}}
+		case {{{value}}}:
+			return {{>frag/fromJson model prefix=''}}(name, value)
+		{{/each}}
+	}
+
+	throw `Invalid value for ${name}: didn't contain a known discriminator value: ${discriminatorValue}`
+	{{else}}
+	const errors: any[] = []
+	{{#each composes}}
+	try {
+		return {{>frag/fromJson . prefix=''}}(name, value as {{nativeType}})
+	} catch (error) {
+		errors.push(error)
+	}
+	{{/each}}
+	
+	throw `Failed to parse JSON for any member of ${name}: ${errors.join('\n')}`
+	{{/if}}
+}
+
+export function oneOf{{className nativeType.parentType}}ToJson(name: string, value: {{nativeType}}): {{nativeType}} {
+	{{#if discriminator}}
+	const discriminatorValue = value.{{discriminator.name}}
+	switch (value.{{discriminator.name}}) {
+		{{#each discriminator.references}}
+		case {{{value}}}:
+			return {{>frag/toJson model prefix=''}}(name, value)
+		{{/each}}
+	}
+
+	throw `Invalid value for ${name}: didn't contain a known discriminator value: ${discriminatorValue}`
+	{{else}}
+	const errors: any[] = []
+	{{#each composes}}
+	try {
+		return {{>frag/toJson . prefix=''}}(name, value as {{nativeType}})
+	} catch (error) {
+		errors.push(error)
+	}
+	{{/each}}
+
+	throw `Failed to create JSON for any member of ${name}: ${errors.join('\n')}`
+	{{/if}}
+}
+{{>nestedValidation}}

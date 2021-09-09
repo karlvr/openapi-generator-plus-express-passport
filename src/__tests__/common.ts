@@ -22,11 +22,11 @@ export async function build(basePath: string): Promise<void> {
 				cwd: basePath,
 			},
 			function(error, stdout, stderr) {
-				if (!error) {
+				if (error) {
+					reject(new Error(`${error.cmd || '<unknown>'} exited with code ${error.code || 'unknown'}:\n ${stdout || stderr}`))
+				} else {
 					resolve()
-					return
 				}
-				reject(`Failed to build ${basePath}:\n${stdout}`)
 			}
 		)
 	})

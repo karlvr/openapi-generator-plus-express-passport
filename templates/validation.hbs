@@ -248,11 +248,4 @@ export function timeToJson(name: string, value: Date): any {
 }
 
 /* Model conversion functions */
-{{#each schemas}}
-{{#if (isEnum)}}
-{{>validationEnum}}
-{{else}}
-{{>validationGeneric}}
-{{/if}}
-
-{{/each}}
+{{>nestedValidation}}

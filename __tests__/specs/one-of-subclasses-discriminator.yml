@@ -27,6 +27,10 @@ components:
       properties:
         petType:
           type: string
+        name:
+          type: string
+        size:
+          type: integer
       discriminator:
         propertyName: petType
     Cat:
@@ -35,8 +39,10 @@ components:
       - type: object
         # all other properties specific to a `Cat`
         properties:
-          name:
+          colour:
             type: string
+            enum:
+              - grey
     Dog:
       allOf:
       - $ref: '#/components/schemas/Pet'
