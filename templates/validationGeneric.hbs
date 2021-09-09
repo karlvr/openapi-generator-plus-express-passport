@@ -14,15 +14,15 @@ function model{{className nativeType.parentType}}FromJsonContent(name: string, v
 	{{#each properties}}
 	{{#if required}}
 	{{#if nullable}}
-		{{{stringLiteral name}}}: allowNull({{>frag/fromJson prefix=''}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}]),
+		{{{stringLiteral serializedName}}}: allowNull({{>frag/fromJson prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{else}}
-		{{{stringLiteral name}}}: {{>frag/fromJson prefix=''}}(`${name}.{{name}}`, value[{{{stringLiteral name}}}]),
+		{{{stringLiteral serializedName}}}: {{>frag/fromJson prefix=''}}(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{/if}}
 	{{else}}
 	{{#if nullable}}
-		{{{stringLiteral name}}}: allowNullOrUndefined({{>frag/fromJson prefix=''}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}]),
+		{{{stringLiteral serializedName}}}: allowNullOrUndefined({{>frag/fromJson prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{else}}
-		{{{stringLiteral name}}}: allowUndefined({{>frag/fromJson prefix=''}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}]),
+		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/fromJson prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{/if}}
 	{{/if}}
 	{{/each}}
@@ -48,15 +48,15 @@ function model{{className nativeType.parentType}}ToJsonContent(name: string, val
 	{{#each properties}}
 	{{#if required}}
 	{{#if nullable}}
-		{{{stringLiteral name}}}: allowNull({{>frag/toJson prefix=''}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}]),
+		{{{stringLiteral serializedName}}}: allowNull({{>frag/toJson prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{else}}
-		{{{stringLiteral name}}}: {{>frag/toJson prefix=''}}(`${name}.{{name}}`, value[{{{stringLiteral name}}}]),
+		{{{stringLiteral serializedName}}}: {{>frag/toJson prefix=''}}(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{/if}}
 	{{else}}
 	{{#if nullable}}
-		{{{stringLiteral name}}}: allowNullOrUndefined({{>frag/toJson prefix=''}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}]),
+		{{{stringLiteral serializedName}}}: allowNullOrUndefined({{>frag/toJson prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{else}}
-		{{{stringLiteral name}}}: allowUndefined({{>frag/toJson prefix=''}})(`${name}.{{name}}`, value[{{{stringLiteral name}}}]),
+		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/toJson prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{/if}}
 	{{/if}}
 	{{/each}}
