@@ -13,7 +13,7 @@ Output a reference to a FromJsonFunction function.
 {{~else if (isObject)~}}
 {{prefix}}model{{className nativeType.parentType}}ToJson
 {{~else if (isArray)~}}
-{{prefix}}arrayToJson({{>frag/toJson componentSchema prefix=prefix}})
+{{prefix}}arrayToJson({{>frag/toJson component prefix=prefix}})
 {{~else if (isEnum)~}}
 {{prefix}}enum{{className nativeType.parentType}}ToJson
 {{~else if (isDate)~}}
@@ -23,7 +23,7 @@ Output a reference to a FromJsonFunction function.
 {{~else if (isTime)~}}
 {{prefix}}timeToJson
 {{~else if (isMap)~}}
-{{prefix}}mapToJson({{>frag/toJson componentSchema prefix=prefix}})
+{{prefix}}mapToJson({{>frag/toJson component prefix=prefix}})
 {{~else if (isInterface)~}}
 {{prefix}}model{{className nativeType.parentType}}ToJson
 {{~else if (isOneOf)~}}
