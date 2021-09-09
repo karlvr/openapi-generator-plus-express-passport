@@ -1,5 +1,11 @@
 # @openapi-generator-plus/typescript-express-passport-server-generator
 
+## 2.1.1
+
+### Patch Changes
+
+- aec96f1: Fix use of serializedName for parameters
+
 ## 2.1.0
 
 ### Minor Changes
