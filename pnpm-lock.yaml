@@ -8,7 +8,7 @@ specifiers:
   '@openapi-generator-plus/indexed-type': ^0.1.6
   '@openapi-generator-plus/testing': ^0.31.4
   '@openapi-generator-plus/types': ^0.33.0
-  '@openapi-generator-plus/typescript-generator-common': ^0.22.2
+  '@openapi-generator-plus/typescript-generator-common': ^0.22.3
   '@types/jest': ^27.0.1
   '@typescript-eslint/eslint-plugin': ^4.31.0
   '@typescript-eslint/parser': ^4.31.0
@@ -22,7 +22,7 @@ specifiers:
 dependencies:
   '@openapi-generator-plus/handlebars-templates': 0.19.0_147a31c6627b0779bafb83db34ffa849
   '@openapi-generator-plus/indexed-type': 0.1.6
-  '@openapi-generator-plus/typescript-generator-common': 0.22.2_147a31c6627b0779bafb83db34ffa849
+  '@openapi-generator-plus/typescript-generator-common': 0.22.3_147a31c6627b0779bafb83db34ffa849
 
 devDependencies:
   '@changesets/cli': 2.17.0
@@ -939,8 +939,8 @@ packages:
       openapi-types: 9.3.0
     dev: true
 
-  /@openapi-generator-plus/typescript-generator-common/0.22.2_147a31c6627b0779bafb83db34ffa849:
-    resolution: {integrity: sha512-ady/KEAecNdFVTEhz/sMxe5qLC2KWjE9wOwIpIrTnejyrid472N4++fC6IDoMAabjwn8Qhi8PMvPEm0ln6jpzw==}
+  /@openapi-generator-plus/typescript-generator-common/0.22.3_147a31c6627b0779bafb83db34ffa849:
+    resolution: {integrity: sha512-4irCSpagbJqUxf7M79/36h12WmBSjYPbXgU2BaXQUThb9rliHymOR9dPTwcd22wG5w2kyBwgGZsAYSYQVi6Zjw==}
     dependencies:
       '@openapi-generator-plus/generator-common': 0.18.0_147a31c6627b0779bafb83db34ffa849
       '@openapi-generator-plus/handlebars-templates': 0.19.0_147a31c6627b0779bafb83db34ffa849

@@ -34,14 +34,14 @@ function model{{className nativeType.parentType}}FromJsonContent(name: string, v
 	return result
 }
 
-function model{{className nativeType.parentType}}ToJsonContent(name: string, value: {{nativeType}}, knownKeys: Record<string, boolean> = {}): {{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.name}}}>{{else}}{{nativeType}}{{/if}} {
+function model{{className nativeType.parentType}}ToJsonContent(name: string, value: {{nativeType}}, knownKeys: Record<string, boolean> = {}): ToJson<{{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.name}}}>{{else}}{{nativeType}}{{/if}}> {
 	if (typeof value !== 'object' || value === undefined || value === null) {
 		throw `Invalid type for ${name}: expected object got ${typeof value}`
 	}
 
 	{{constantName (concat nativeType 'Keys')}}.forEach(k => knownKeys[k] = true)
 	
-	const result: {{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.name}}}>{{else}}{{nativeType}}{{/if}} = {
+	const result: ToJson<{{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.name}}}>{{else}}{{nativeType}}{{/if}}> = {
 	{{#each parents}}
 		...{{>frag/toJson . prefix=''}}Content(name, value, knownKeys),
 	{{/each}}
@@ -96,7 +96,7 @@ export function model{{className nativeType.parentType}}FromJson(name: string, v
 	{{/if}}
 }
 
-export function model{{className nativeType.parentType}}ToJson(name: string, value: {{nativeType}}): {{nativeType}} {
+export function model{{className nativeType.parentType}}ToJson(name: string, value: {{nativeType}}): ToJson<{{nativeType}}> {
 	{{#if discriminator}}
 	const discriminatorValue = value.{{discriminator.name}}
 	switch (value.{{discriminator.name}}) {
@@ -109,7 +109,7 @@ export function model{{className nativeType.parentType}}ToJson(name: string, val
 	throw `Invalid value for ${name}: didn't contain a known discriminator value: ${discriminatorValue}`
 	{{else}}
 	const knownKeys: Record<string, boolean> = {}
-	const result: {{nativeType}} = model{{className nativeType.parentType}}ToJsonContent(name, value, knownKeys)
+	const result: ToJson<{{nativeType}}> = model{{className nativeType.parentType}}ToJsonContent(name, value, knownKeys)
 
 	/* Known keys */
 	// TODO if we don't ignore unknown properties

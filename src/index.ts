@@ -1,7 +1,7 @@
-import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation, isCodegenEnumSchema, isCodegenObjectSchema, isCodegenAnyOfSchema, isCodegenInterfaceSchema, isCodegenOneOfSchema } from '@openapi-generator-plus/types'
+import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation, isCodegenEnumSchema, isCodegenObjectSchema, isCodegenAnyOfSchema, isCodegenInterfaceSchema, isCodegenOneOfSchema, CodegenSchemaType } from '@openapi-generator-plus/types'
 import path from 'path'
 import { loadTemplates, emit } from '@openapi-generator-plus/handlebars-templates'
-import typescriptGenerator, { options as typescriptGeneratorOptions, TypeScriptGeneratorContext } from '@openapi-generator-plus/typescript-generator-common'
+import typescriptGenerator, { options as typescriptGeneratorOptions, TypeScriptGeneratorContext, DateApproach } from '@openapi-generator-plus/typescript-generator-common'
 import * as idx from '@openapi-generator-plus/indexed-type'
 
 const createGenerator: CodegenGeneratorConstructor = (config, context) => {
@@ -83,6 +83,15 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 			const relativeSourceOutputPath = generatorOptions.relativeSourceOutputPath
 			result.push(path.join(relativeSourceOutputPath, 'api', '**'))
 			return result
+		},
+		toNativeType: (options) => {
+			const { schemaType } = options
+			if (schemaType === CodegenSchemaType.DATETIME && generatorOptions.dateApproach === DateApproach.Native) {
+				// TODO we need to override the default date type in typescript-generator-common which has a serialized type of string
+				return new context.NativeType('Date')
+			} else {
+				return base.toNativeType(options)
+			}
 		},
 	}
 }
