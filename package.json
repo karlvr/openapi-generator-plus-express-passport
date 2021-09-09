@@ -1,6 +1,6 @@
 {
   "name": "@openapi-generator-plus/typescript-express-passport-server-generator",
-  "version": "1.5.3",
+  "version": "2.0.0",
   "description": "An OpenAPI Generator+ module for an Express + Passport API server in TypeScript",
   "keywords": [
     "openapi-generator-plus",
@@ -17,7 +17,8 @@
     "build": "tsc -p tsconfig.prod.json",
     "clean": "rimraf dist",
     "link-openapi-generator-plus": "pnpm link --global openapi-generator-plus $(cd node_modules && find @openapi-generator-plus -type d -depth 1 -prune) @openapi-generator-plus/typescript-express-passport-server-generator",
-    "prepublish": "pnpm run build",
+    "release": "pnpm clean && pnpm build && pnpm test && pnpx changeset publish && pnpm install",
+    "release:version": "pnpm changeset version && pnpm install",
     "test": "jest",
     "watch": "tsc --watch"
   },
@@ -46,5 +47,8 @@
     "rimraf": "^3.0.2",
     "ts-jest": "^27.0.5",
     "typescript": "^4.4.2"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
