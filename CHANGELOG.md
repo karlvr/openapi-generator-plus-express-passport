@@ -1,5 +1,11 @@
 # @openapi-generator-plus/typescript-express-passport-server-generator
 
+## 2.2.0
+
+### Minor Changes
+
+- d82c4b1: Support readOnly and writeOnly
+
 ## 2.1.1
 
 ### Patch Changes
