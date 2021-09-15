@@ -12,6 +12,7 @@ function model{{className nativeType.parentType}}FromJsonContent(name: string, v
 		...{{>frag/fromJson . prefix=''}}Content(name, value, knownKeys),
 	{{/each}}
 	{{#each properties}}
+	{{#unless readOnly}}
 	{{#if required}}
 	{{#if nullable}}
 		{{{stringLiteral serializedName}}}: allowNull({{>frag/fromJson prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
@@ -25,6 +26,7 @@ function model{{className nativeType.parentType}}FromJsonContent(name: string, v
 		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/fromJson prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{/if}}
 	{{/if}}
+	{{/unless}}
 	{{/each}}
 	{{#each discriminatorValues}}
 		{{{stringLiteral model.discriminator.name}}}: {{{value}}},
@@ -46,6 +48,7 @@ function model{{className nativeType.parentType}}ToJsonContent(name: string, val
 		...{{>frag/toJson . prefix=''}}Content(name, value, knownKeys),
 	{{/each}}
 	{{#each properties}}
+	{{#unless writeOnly}}
 	{{#if required}}
 	{{#if nullable}}
 		{{{stringLiteral serializedName}}}: allowNull({{>frag/toJson prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
@@ -59,6 +62,7 @@ function model{{className nativeType.parentType}}ToJsonContent(name: string, val
 		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/toJson prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{/if}}
 	{{/if}}
+	{{/unless}}
 	{{/each}}
 	{{#each discriminatorValues}}
 		{{{stringLiteral model.discriminator.name}}}: {{{value}}},
