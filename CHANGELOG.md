@@ -1,5 +1,11 @@
 # @openapi-generator-plus/typescript-express-passport-server-generator
 
+## 2.2.2
+
+### Patch Changes
+
+- 59ea543: Fix datetime and time regex to allow any number of digits for milliseconds
+
 ## 2.2.1
 
 ### Patch Changes
