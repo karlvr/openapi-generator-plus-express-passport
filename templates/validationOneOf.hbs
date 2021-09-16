@@ -23,7 +23,7 @@ export function oneOf{{className nativeType.parentType}}FromJson(name: string, v
 	{{/if}}
 }
 
-export function oneOf{{className nativeType.parentType}}ToJson(name: string, value: {{nativeType}}): {{nativeType}} {
+export function oneOf{{className nativeType.parentType}}ToJson(name: string, value: {{nativeType}}): ToJson<{{nativeType}}> {
 	{{#if discriminator}}
 	const discriminatorValue = value.{{discriminator.name}}
 	switch (value.{{discriminator.name}}) {
