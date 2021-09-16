@@ -1,4 +1,4 @@
-const {{constantName (concat nativeType 'Keys')}}: string[] = [{{#each properties}}{{{stringLiteral name}}}{{#hasMore}}, {{/hasMore}}{{/each}}]
+const {{constantName (concat nativeType 'Keys')}}: string[] = [{{#each properties}}{{{stringLiteral serializedName}}}{{#hasMore}}, {{/hasMore}}{{/each}}]
 
 function model{{className nativeType.parentType}}FromJsonContent(name: string, value: any, knownKeys: Record<string, boolean> = {}): {{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.name}}}>{{else}}{{nativeType}}{{/if}} {
 	if (typeof value !== 'object' || value === undefined || value === null) {
