@@ -1,5 +1,13 @@
 # @openapi-generator-plus/typescript-express-passport-server-generator
 
+## 2.2.1
+
+### Patch Changes
+
+- e675db3: Fix missing use of serializedName in the known keys for an object
+- 5d29760: Use a native return type instead of any for enum...ToJson functions
+- 5efb295: Fix return type on oneOf...ToJson validation functions
+
 ## 2.2.0
 
 ### Minor Changes
