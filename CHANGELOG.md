@@ -1,5 +1,11 @@
 # @openapi-generator-plus/typescript-express-passport-server-generator
 
+## 2.3.0
+
+### Minor Changes
+
+- ba395fd: Upgrade to latest core and pass all tests
+
 ## 2.2.3
 
 ### Patch Changes
