@@ -1,1 +1,5 @@
-{{#with requestBody}}{{>frag/fromJson defaultContent.schema prefix='v.'}}('body', req.body){{/with}}
+{{#with requestBody}}
+{{#if defaultContent.schema}}
+__body()
+{{~/if}}
+{{/with}}

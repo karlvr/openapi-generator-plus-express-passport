@@ -8,66 +8,97 @@ import { Api } from '../../models'
 
 export default function(app: Express, impl: t.{{className name}}Api) {
 	{{#each operations}}
-	app.{{lowerCase httpMethod}}({{{stringLiteral (pathTemplate fullPath)}}}, {{!--
-	--}}{{#if securityRequirements}}passport.authenticate({{{stringLiteral securityRequirements.requirements.[0].schemes.[0].scheme.scheme}}}, { {{#ifdef securityRequirements.requirements.[0].schemes.[0].scheme.vendorExtensions.x-session}}session: {{securityRequirements.requirements.[0].schemes.[0].scheme.vendorExtensions.x-session}}, {{/ifdef}}{{!-- --}}}), {{/if}}{{!--
-	--}}function (req, res) {
-		try {
-			{{#if securityRequirements}}
-			const __user = req.user
-			if (!__user) {
-				res.status(401)
-				res.send()
-				return
-			}
-			{{/if}}
-			impl.{{identifier name}}({{!--
-			--}}{{#each parameters}}{{>params/query}}{{>params/path}}{{>params/header}}{{>params/form}}{{#hasMore}}, {{/hasMore}}{{/each}}{{!--
-			--}}{{#if requestBody}}{{#if parameters}}, {{/if}}{{>params/body}}{{/if}}{{!--
-			--}}{{#if securityRequirements}}{{#or parameters requestBody}}, {{/or}}__user{{/if}}{{!--
-			--}}).then(function (response) {
-				{{#each responses}}
-				if (response.status === {{code}}) {
-					{{#if defaultContent}}
-					let body: any
-					try {
-						body = {{>frag/toJson defaultContent.schema prefix='v.'}}('response', response.body)
-					} catch (error) {
-						console.error('Invalid response body in {{identifier ../../name}}.{{identifier ../name}}', error)
-						res.status(500)
-						res.send()
-						return
-					}
-
-					{{/if}}
-					res.status({{code}})
-					{{#if headers}}
-					{{#each headers}}
-					res.header({{{stringLiteral name}}}, `${response.headers[{{{stringLiteral name}}}]}`)
-					{{/each}}
-					{{/if}}
-					{{#if defaultContent}}
-					res.send(body)
-					{{else}}
+	app.{{lowerCase httpMethod}}(
+		{{{stringLiteral (pathTemplate fullPath)}}},
+		{{>frag/apiSecurityRequirements}}
+		function (req, res) {
+			try {
+				{{#if securityRequirements}}
+				const __user = req.user
+				if (!__user) {
+					res.status(401)
 					res.send()
-					{{/if}}
 					return
 				}
-				{{/each}}
+				{{/if}}
+				{{#if requestBody.defaultContent.schema}}
+				function __body() {
+					const __contentType = req.get('Content-Type')
+					const __mimeType = __contentType ? __contentType.replace(/;.*/, '') : undefined
 
-				console.log('Unsupported response in {{identifier ../name}}.{{identifier name}}', response)
-				res.status(500)
-				res.send()
-			}).catch(function (error) {
-				console.error('Unexpected error in {{identifier ../name}}.{{identifier name}}', error.stack || error)
-				res.status(500)
-				res.send()
-			})
-		} catch (error) {
-			/* Catch validation errors */
-			res.status(400)
-			res.send(error)
+					{{#with requestBody}}
+					{{#each contents}}
+					if (__mimeType === '{{{mediaType.mimeType}}}') {
+						{{#unless schema}}
+						return undefined
+						{{else}}
+						{{#ifmatch mediaType.mimeType '/json'}}
+						return {{>frag/fromJson schema prefix='v.'}}('body', req.body)
+						{{else if (isBinary schema)}}
+						return req.body as Buffer
+						{{else if (isString schema)}}
+						return req.body as string
+						{{else}}
+						return req.body; /* Unsupported mimeType */
+						{{/ifmatch}}
+						{{/unless}}
+					}
+					{{/each}}
+					{{/with}}
+					console.error(`Invalid request content type: ${__contentType}`)
+					throw new Error(`Invalid request content type: ${__contentType}`)
+				}
+
+				{{/if}}
+				impl.{{identifier name}}({{!--
+				--}}{{#each parameters}}{{>params/query}}{{>params/path}}{{>params/header}}{{>params/form}}{{>params/cookie}}{{#hasMore}}, {{/hasMore}}{{/each}}{{!--
+				--}}{{#if requestBody.nativeType}}{{#if parameters}}, {{/if}}{{>params/body}}{{/if}}{{!--
+				--}}{{#if securityRequirements}}{{#or parameters requestBody}}, {{/or}}__user{{/if}}{{!--
+				--}}).then(function (response) {
+					{{#each responses}}
+					if (response.status === {{code}}) {
+						{{#if defaultContent.schema}}
+						let body: any
+						try {
+							body = {{>frag/toJson defaultContent.schema prefix='v.'}}('response', response.body)
+						} catch (error) {
+							console.error('Invalid response body in {{identifier ../../name}}.{{identifier ../name}}', error)
+							res.status(500)
+							res.send()
+							return
+						}
+
+						{{/if}}
+						res.status({{code}})
+						{{#if headers}}
+						{{#each headers}}
+						res.header({{{stringLiteral name}}}, `${response.headers[{{{stringLiteral name}}}]}`)
+						{{/each}}
+						{{/if}}
+						{{#if defaultContent.schema}}
+						res.send(body)
+						{{else}}
+						res.send()
+						{{/if}}
+						return
+					}
+					{{/each}}
+
+					console.log('Unsupported response in {{identifier ../name}}.{{identifier name}}', response)
+					res.status(500)
+					res.send()
+				}).catch(function (error) {
+					console.error('Unexpected error in {{identifier ../name}}.{{identifier name}}', error.stack || error)
+					res.status(500)
+					res.send()
+				})
+			} catch (error) {
+				/* Catch validation errors */
+				res.status(400)
+				res.send(error)
+			}
 		}
-	})
+	)
 
 	{{/each}}
 }

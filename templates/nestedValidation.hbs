@@ -10,5 +10,7 @@
 {{>validationOneOf}}
 {{else if (isInterface)}}
 {{>validationInterface}}
+{{else}}
+{{warn (concat 'Unsupported schema type: ' schemaType)}}
 {{/if}}
 {{/each}}

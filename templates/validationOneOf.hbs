@@ -3,8 +3,8 @@ export function oneOf{{className nativeType.parentType}}FromJson(name: string, v
 	const discriminatorValue = value.{{discriminator.name}}
 	switch (value.{{discriminator.name}}) {
 		{{#each discriminator.references}}
-		case {{{value}}}:
-			return {{>frag/fromJson model prefix=''}}(name, value)
+		case {{{literalValue}}}:
+			return {{>frag/fromJson schema prefix=''}}(name, value)
 		{{/each}}
 	}
 
@@ -25,11 +25,11 @@ export function oneOf{{className nativeType.parentType}}FromJson(name: string, v
 
 export function oneOf{{className nativeType.parentType}}ToJson(name: string, value: {{nativeType}}): ToJson<{{nativeType}}> {
 	{{#if discriminator}}
-	const discriminatorValue = value.{{discriminator.name}}
-	switch (value.{{discriminator.name}}) {
+	const discriminatorValue = value.{{discriminator.serializedName}}
+	switch (discriminatorValue) {
 		{{#each discriminator.references}}
-		case {{{value}}}:
-			return {{>frag/toJson model prefix=''}}(name, value)
+		case {{{literalValue}}}:
+			return {{>frag/toJson schema prefix=''}}(name, value)
 		{{/each}}
 	}
 

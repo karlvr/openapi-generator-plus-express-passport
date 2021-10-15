@@ -137,6 +137,21 @@ export function stringToJson(name: string, value: string): any {
 	return stringFromJson(name, value)
 }
 
+export function binaryFromJson(name: string, value: any): Buffer {
+	if (typeof value !== 'string') {
+		throw `Invalid type for ${name}: expected string got ${typeof value}`
+	}
+	return new Buffer(value, 'base64')
+}
+
+export function binaryToJson(name: string, value: string | Buffer): string {
+	if (typeof value === 'string') {
+		return value
+	} else {
+		return value.toString('base64')
+	}
+}
+
 export function parseString(name: string, value: any): string {
 	if (value === undefined) {
 		throw `Invalid value for ${name}: expected string got undefined`
@@ -226,6 +241,10 @@ export function dateFromJson(name: string, value: any): string {
 	return value
 }
 
+export function parseDate(name: string, value: any): string {
+	return dateFromJson(name, value)
+}
+
 export function dateToJson(name: string, value: string): string {
 	return dateFromJson(name, value)
 }
@@ -242,6 +261,10 @@ export function dateTimeFromJson(name: string, value: any): {{#ifeq dateApproach
 	{{else}}
 	return value
 	{{/ifeq}}
+}
+
+export function parseDateTime(name: string, value: any): {{#ifeq dateApproach 'native'}}Date{{else}}string{{/ifeq}} {
+	return dateTimeFromJson(name, value)
 }
 
 export function dateTimeToJson(name: string, value: {{#ifeq dateApproach 'native'}}Date{{else}}string{{/ifeq}}): string {
@@ -263,6 +286,10 @@ export function timeFromJson(name: string, value: any): string {
 		throw `Invalid value for ${name}: expected valid time string got "${value}"`
 	}
 	return value
+}
+
+export function parseTime(name: string, value: any): string {
+	return timeFromJson(name, value)
 }
 
 export function timeToJson(name: string, value: string): string {

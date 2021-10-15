@@ -20,7 +20,7 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 			repository: null,
 		}),
 		defaultTypeScriptOptions: () => ({
-			target: 'ES5',
+			target: 'ES2015',
 			libs: ['$target', 'DOM'],
 		}),
 	}
@@ -71,11 +71,22 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 				generatorClass: '@openapi-generator-plus/typescript-express-passport-server-generator',
 			}
 		},
-		postProcessDocument: (doc) => {
+		postProcessDocument: (doc, helper) => {
 			/* Sort operations according to the order we need to declare them */
 			doc.groups.forEach(group => {
 				group.operations.sort(compareOperations)
 			})
+
+			if (base.postProcessDocument) {
+				base.postProcessDocument(doc, helper)
+			}
+		},
+		postProcessSchema: (model, helper) => {
+			if (base.postProcessSchema) {
+				// HACK: we call the base but _don't_ return its value so we don't remove oneOf and anyOf
+				// as we still need to generate validations for them
+				base.postProcessSchema(model, helper)
+			}
 		},
 		generatorType: () => CodegenGeneratorType.SERVER,
 		cleanPathPatterns: () => {
@@ -89,6 +100,8 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 			if (schemaType === CodegenSchemaType.DATETIME && generatorOptions.dateApproach === DateApproach.Native) {
 				// TODO we need to override the default date type in typescript-generator-common which has a serialized type of string
 				return new context.NativeType('Date')
+			} else if (schemaType === CodegenSchemaType.BINARY) {
+				return new context.NativeType('string | Buffer')
 			} else {
 				return base.toNativeType(options)
 			}

@@ -1,10 +1,32 @@
-{{#unless required}}{{prefix}}allowUndefined({{/unless}}{{#if nullable}}{{prefix}}allowNull({{/if}}{{#if (isBoolean)~}}
-{{prefix}}parseBoolean{{else if (isInteger)~}}
-{{prefix}}parseInteger{{else if (isNumber)~}}
-{{prefix}}parseNumber{{else if (isString)~}}
-{{prefix}}parseString{{else if (isObject)~}}
-{{prefix}}{{!--TODO--}}model{{className nativeType}}FromJson{{else if (isArray)~}}
-{{prefix}}{{!--TODO--}}arrayFromJson({{>frag/fromJson componentSchema prefix=prefix}}){{else if (isEnum)~}}
-{{prefix}}enum{{className nativeType}}FromJson{{else~}}
+{{!--
+Parse input
+@param <this> CodegenSchemaUsage
+--}}
+{{#unless required}}
+{{prefix}}allowUndefined(
+{{~/unless}}
+{{#if (isBoolean)~}}
+{{prefix}}parseBoolean
+{{~else if (isInteger)~}}
+{{prefix}}parseInteger
+{{~else if (isNumber)~}}
+{{prefix}}parseNumber
+{{~else if (isString)~}}
+{{prefix}}parseString
+{{~else if (isDate)~}}
+{{prefix}}parseDate
+{{~else if (isTime)~}}
+{{prefix}}parseTime
+{{~else if (isDateTime)~}}
+{{prefix}}parseDateTime
+{{~else if (isObject)~}}
+{{prefix}}{{!--TODO--}}model{{className nativeType}}FromJson
+{{~else if (isArray)~}}
+{{prefix}}{{!--TODO--}}arrayFromJson({{>frag/fromJson schema.component.schema prefix=prefix}})
+{{~else if (isEnum)~}}
+{{prefix}}enum{{className nativeType}}FromJson
+{{~else~}}
 {{prefix}}parseUnsupported{{/if~}}
-{{#if nullable}}){{/if}}{{#unless required}}){{/unless}}
+{{#unless required}}
+)
+{{~/unless}}

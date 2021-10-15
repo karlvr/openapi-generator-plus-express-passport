@@ -1,5 +1,6 @@
 {{!--
 Output a reference to a FromJsonFunction function.
+@param <this> CodegenSchema
 @param prefix the import prefix for the functions
 --}}
 {{#if (isBoolean)}}
@@ -10,10 +11,12 @@ Output a reference to a FromJsonFunction function.
 {{prefix}}numberToJson
 {{~else if (isString)~}}
 {{prefix}}stringToJson
+{{~else if (isBinary)~}}
+{{prefix}}binaryToJson
 {{~else if (isObject)~}}
 {{prefix}}model{{className nativeType.parentType}}ToJson
 {{~else if (isArray)~}}
-{{prefix}}arrayToJson({{>frag/toJson component prefix=prefix}})
+{{prefix}}arrayToJson({{>frag/toJson component.schema prefix=prefix}})
 {{~else if (isEnum)~}}
 {{prefix}}enum{{className nativeType.parentType}}ToJson
 {{~else if (isDate)~}}
@@ -23,7 +26,7 @@ Output a reference to a FromJsonFunction function.
 {{~else if (isTime)~}}
 {{prefix}}timeToJson
 {{~else if (isMap)~}}
-{{prefix}}mapToJson({{>frag/toJson component prefix=prefix}})
+{{prefix}}mapToJson({{>frag/toJson component.schema prefix=prefix}})
 {{~else if (isInterface)~}}
 {{prefix}}model{{className nativeType.parentType}}ToJson
 {{~else if (isOneOf)~}}
