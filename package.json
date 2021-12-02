@@ -25,28 +25,28 @@
   "author": "Karl von Randow",
   "license": "Apache-2.0",
   "dependencies": {
-    "@openapi-generator-plus/core": "^0.41.3",
-    "@openapi-generator-plus/generator-common": "^0.25.1",
-    "@openapi-generator-plus/handlebars-templates": "^0.27.0",
+    "@openapi-generator-plus/core": "^0.42.0",
+    "@openapi-generator-plus/generator-common": "^0.26.0",
+    "@openapi-generator-plus/handlebars-templates": "^0.27.2",
     "@openapi-generator-plus/indexed-type": "^0.1.6",
-    "@openapi-generator-plus/testing": "^0.41.0",
-    "@openapi-generator-plus/types": "^0.41.2",
-    "@openapi-generator-plus/typescript-generator-common": "^0.25.6",
-    "openapi-generator-plus": "^0.41.2"
+    "@openapi-generator-plus/testing": "^0.42.0",
+    "@openapi-generator-plus/types": "^0.42.0",
+    "@openapi-generator-plus/typescript-generator-common": "^0.25.7",
+    "openapi-generator-plus": "^0.42.0"
   },
   "peerDependencies": {
-    "@openapi-generator-plus/core": "^0.41.3"
+    "@openapi-generator-plus/core": "^0.42.0"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.17.0",
-    "@types/jest": "^27.0.2",
-    "@typescript-eslint/eslint-plugin": "^5.0.0",
-    "@typescript-eslint/parser": "^5.0.0",
-    "eslint": "^8.0.1",
-    "eslint-plugin-jest": "^25.0.5",
-    "jest": "^27.2.5",
+    "@changesets/cli": "^2.18.1",
+    "@types/jest": "^27.0.3",
+    "@typescript-eslint/eslint-plugin": "^5.5.0",
+    "@typescript-eslint/parser": "^5.5.0",
+    "eslint": "^8.3.0",
+    "eslint-plugin-jest": "^25.3.0",
+    "jest": "^27.4.3",
     "rimraf": "^3.0.2",
-    "ts-jest": "^27.0.5",
+    "ts-jest": "^27.0.7",
     "typescript": "^4.4.4"
   },
   "publishConfig": {
