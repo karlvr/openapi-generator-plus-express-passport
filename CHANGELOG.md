@@ -1,5 +1,11 @@
 # @openapi-generator-plus/typescript-express-passport-server-generator
 
+## 2.4.0
+
+### Minor Changes
+
+- 6558990: Upgrade openapi-generator-plus dependencies
+
 ## 2.3.0
 
 ### Minor Changes
