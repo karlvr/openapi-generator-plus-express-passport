@@ -20,6 +20,16 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 					res.send()
 					return
 				}
+				{{#ifvex 'x-scopes'}}
+				// At least one of the scopes from the operation needs to be in the user claims to continue
+				const scopes = [{{#each vendorExtensions.x-scopes}}'{{this}}'{{#unless @last}},{{/unless}}{{/each}}]
+				const isAuthorized = scopes.map((scope) => scope in __user).some((e) => e === true)
+				if (!isAuthorized) {
+					res.status(403)
+					res.send()
+					return
+				}
+				{{/ifvex}}
 				{{/if}}
 				{{#if requestBody.defaultContent.schema}}
 				function __body() {
