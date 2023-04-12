@@ -1,5 +1,12 @@
 # @openapi-generator-plus/typescript-express-passport-server-generator
 
+## 2.7.0
+
+### Minor Changes
+
+- aed074b: Upgrade openapi-generator-plus core
+- 669268e: Fix custom header names
+
 ## 2.6.0
 
 ### Minor Changes
