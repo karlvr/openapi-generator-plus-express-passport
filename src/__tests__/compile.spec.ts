@@ -1,5 +1,5 @@
 import { testGenerate } from '@openapi-generator-plus/generator-common/dist/testing'
-import { build, prepare, DEFAULT_CONFIG } from './common'
+import { compile, prepare, DEFAULT_CONFIG } from './common'
 import fs from 'fs'
 import path from 'path'
 
@@ -15,7 +15,7 @@ describe('compile test cases', () => {
 					},
 					includeTests: true,
 				})
-				await testGenerate(result, { postProcess: build, testName: file })
+				await testGenerate(result, { postProcess: compile, testName: file })
 			})
 		}
 	}

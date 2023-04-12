@@ -1,12 +1,11 @@
 import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation, isCodegenEnumSchema, isCodegenObjectSchema, isCodegenAnyOfSchema, isCodegenInterfaceSchema, isCodegenOneOfSchema, CodegenSchemaType } from '@openapi-generator-plus/types'
 import path from 'path'
 import { loadTemplates, emit } from '@openapi-generator-plus/handlebars-templates'
-import typescriptGenerator, { options as typescriptGeneratorOptions, TypeScriptGeneratorContext, DateApproach } from '@openapi-generator-plus/typescript-generator-common'
+import typescriptGenerator, { options as typescriptCommonOptions, TypeScriptGeneratorContext, chainTypeScriptGeneratorContext, DateApproach } from '@openapi-generator-plus/typescript-generator-common'
 import * as idx from '@openapi-generator-plus/indexed-type'
 
 const createGenerator: CodegenGeneratorConstructor = (config, context) => {
-	const myContext: TypeScriptGeneratorContext = {
-		...context,
+	const myContext: TypeScriptGeneratorContext = chainTypeScriptGeneratorContext(context, {
 		loadAdditionalTemplates: async(hbs) => {
 			await loadTemplates(path.resolve(__dirname, '../templates'), hbs)
 		},
@@ -23,9 +22,9 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 			target: 'ES2015',
 			libs: ['$target', 'DOM'],
 		}),
-	}
+	})
 
-	const generatorOptions = typescriptGeneratorOptions(config, myContext)
+	const generatorOptions = typescriptCommonOptions(config, myContext)
 
 	myContext.additionalExportTemplates = async(outputPath, doc, hbs, rootContext) => {
 		/* Convert path template from OpenAPI to Express */

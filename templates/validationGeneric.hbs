@@ -45,7 +45,7 @@ function model{{className nativeType.parentType}}ToJsonContent(name: string, val
 	
 	const result: ToJson<{{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}}> = {
 	{{#each parents}}
-		...{{>frag/toJson . prefix=''}}Content(name, value, knownKeys),
+		...{{>frag/toJson . prefix=''}}Content(name, value as unknown as {{{nativeType}}}, knownKeys),
 	{{/each}}
 	{{#each properties}}
 	{{#unless writeOnly}}

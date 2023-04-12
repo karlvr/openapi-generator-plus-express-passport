@@ -14,10 +14,10 @@ export async function prepare(spec: string, config?: CodegenConfig): Promise<Cod
 	return createCodegenResult(path.resolve(__dirname, spec), config || DEFAULT_CONFIG, createGenerator)
 }
 
-export async function build(basePath: string): Promise<void> {
+export async function compile(basePath: string): Promise<void> {
 	return new Promise(function(resolve, reject) {
 		exec(
-			'npm install 2>&1',
+			'pnpm install 2>&1',
 			{
 				cwd: basePath,
 			},
