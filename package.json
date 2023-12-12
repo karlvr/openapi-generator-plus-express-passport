@@ -1,6 +1,6 @@
 {
-  "name": "@openapi-generator-plus/typescript-express-passport-server-generator",
-  "version": "2.7.0",
+  "name": "@bvolders/typescript-express-passport-server-generator",
+  "version": "2.7.1",
   "description": "An OpenAPI Generator+ module for an Express + Passport API server in TypeScript",
   "keywords": [
     "openapi-generator-plus",
@@ -55,6 +55,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/karlvr/openapi-generator-plus-express-passport.git"
+    "url": "git+https://github.com/bvolders/openapi-generator-plus-express-passport.git"
   }
 }
