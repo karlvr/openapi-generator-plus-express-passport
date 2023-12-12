@@ -1,4 +1,6 @@
-const {{constantName (concat nativeType 'Keys')}}: string[] = [{{#each properties}}{{{stringLiteral serializedName}}}{{#hasMore}}, {{/hasMore}}{{/each}}]
+const {{constantName (concat nativeType 'Keys')}}: string[] = [
+            {{#each properties}}{{{stringLiteral serializedName}}}{{#hasMore}}, {{/hasMore}}{{/each}}
+            {{#if discriminator}},{{{stringLiteral discriminator.serializedName}}}{{/if}}]
 
 function model{{className nativeType.parentType}}FromJsonContent(name: string, value: any, knownKeys: Record<string, boolean> = {}): {{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}} {
 	if (typeof value !== 'object' || value === undefined || value === null) {
@@ -92,7 +94,7 @@ export function model{{className nativeType.parentType}}FromJson(name: string, v
 	for (const key of Object.keys(value)) {
 		if (!knownKeys[key]) {
 			// throw `Unexpected key: ${key}`
-			console.warn(`Unexpected key in {{nativeType}}: ${key}`)
+			console.debug(`Unexpected key in {{nativeType}}: ${key}`)
 		}
 	}
 
@@ -120,7 +122,7 @@ export function model{{className nativeType.parentType}}ToJson(name: string, val
 	for (const key of Object.keys(value)) {
 		if (!knownKeys[key]) {
 			// throw `Unexpected key: ${key}`
-			console.warn(`Unexpected key in {{nativeType}}: ${key}`)
+			console.debug(`Unexpected key in {{nativeType}}: ${key}`)
 		}
 	}
 
