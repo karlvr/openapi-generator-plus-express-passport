@@ -56,6 +56,7 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 				--}}{{#if securityRequirements}}{{#or parameters requestBody}}, {{/or}}__user{{/if}}{{!--
 				--}}).then(function (response) {
 					{{#each responses}}
+					{{#unless isCatchAll}}
 					if (response.status === {{code}}) {
 						{{#if defaultContent.schema}}
 						let body: any
@@ -82,11 +83,41 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 						{{/if}}
 						return
 					}
+					{{/unless}}
 					{{/each}}
 
+					{{#if catchAllResponse}}
+					/* Catch-all response */
+					{{#with catchAllResponse}}
+					{{#if defaultContent.schema}}
+					let body: any
+					try {
+						body = {{>frag/toJson defaultContent.schema prefix='v.'}}('response', response.body)
+					} catch (error) {
+						console.error('Invalid response body in {{identifier ../../name}}.{{identifier ../name}}', error)
+						res.status(500)
+						res.send()
+						return
+					}
+
+					{{/if}}
+					res.status(response.actualStatus)
+					{{#if headers}}
+					{{#each headers}}
+					res.header({{{stringLiteral serializedName}}}, `${response.headers[{{{stringLiteral name}}}]}`)
+					{{/each}}
+					{{/if}}
+					{{#if defaultContent.schema}}
+					res.send(body)
+					{{else}}
+					res.send()
+					{{/if}}
+					{{/with}}
+					{{else}}
 					console.log('Unsupported response in {{identifier ../name}}.{{identifier name}}', response)
 					res.status(500)
 					res.send()
+					{{/if}}
 				}).catch(function (error) {
 					console.error('Unexpected error in {{identifier ../name}}.{{identifier name}}', error.stack || error)
 					res.status(500)
