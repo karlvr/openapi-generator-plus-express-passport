@@ -2,9 +2,16 @@
 
 import { Express } from 'express'
 import { Api } from './models'
+import { ApiOptions } from './types'
 
 type FromJsonFunction<T> = (name: string, value: any) => T
 type MapOf<T> = { [name: string]: T }
+
+let __options: ApiOptions | undefined
+
+export function setValidationOptions(options: ApiOptions | undefined) {
+	__options = options
+}
 
 /**
  * A conditional type to convert an interface model to the equivalent JSON model.

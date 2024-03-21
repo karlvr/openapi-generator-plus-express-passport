@@ -5,8 +5,11 @@ import { Express } from 'express'
 import {{identifier name}} from './api/{{identifier name}}'
 {{/each}}
 import * as t from './types'
+import { setValidationOptions } from './validation'
 
-export default function(app: Express, impl: t.ApiImplementation) {
+export default function(app: Express, impl: t.ApiImplementation, options?: t.ApiOptions) {
+	setValidationOptions(options)
+	
 	{{#each groups}}
 	{{identifier name}}(app, impl.{{identifier name}})
 	{{/each}}

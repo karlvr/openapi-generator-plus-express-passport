@@ -88,11 +88,11 @@ export function model{{className nativeType.parentType}}FromJson(name: string, v
 	const result: {{nativeType}} = model{{className nativeType.parentType}}FromJsonContent(name, value, knownKeys)
 
 	/* Known keys */
-	// TODO if we don't ignore unknown properties
-	for (const key of Object.keys(value)) {
-		if (!knownKeys[key]) {
-			// throw `Unexpected key: ${key}`
-			console.warn(`Unexpected key in {{nativeType}}: ${key}`)
+	if (__options?.failOnUnknownProperties) {
+		for (const key of Object.keys(value)) {
+			if (!knownKeys[key]) {
+				throw `Unexpected key in {{nativeType}}: ${key}`
+			}
 		}
 	}
 
@@ -116,11 +116,11 @@ export function model{{className nativeType.parentType}}ToJson(name: string, val
 	const result: ToJson<{{nativeType}}> = model{{className nativeType.parentType}}ToJsonContent(name, value, knownKeys)
 
 	/* Known keys */
-	// TODO if we don't ignore unknown properties
-	for (const key of Object.keys(value)) {
-		if (!knownKeys[key]) {
-			// throw `Unexpected key: ${key}`
-			console.warn(`Unexpected key in {{nativeType}}: ${key}`)
+	if (__options?.failOnUnknownProperties) {
+		for (const key of Object.keys(value)) {
+			if (!knownKeys[key]) {
+				throw `Unexpected key in {{nativeType}}: ${key}`
+			}
 		}
 	}
 
