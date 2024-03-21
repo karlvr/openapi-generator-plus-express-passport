@@ -4,7 +4,7 @@ src
 .nvmrc
 .vscode
 CHANGELOG.md
-tsconfig.*
+/tsconfig.*
 /.changeset
 /__tests__
 /jest.config.js
