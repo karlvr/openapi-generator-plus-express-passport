@@ -1,5 +1,14 @@
 {{#each securityRequirements.requirements}}
 {{#each schemes}}
-passport.authenticate({{#if scheme.scheme}}{{{stringLiteral scheme.scheme}}}{{else}}{{{stringLiteral scheme.name}}}{{/if}}, {{safe '{'}}{{#ifvex 'x-session' scheme}} session: {{scheme.vendorExtensions.x-session}}, {{/ifvex}}{{safe '}'}}),
+passport.authenticate(
+	{{#if scheme.scheme}}{{{stringLiteral scheme.scheme}}}{{else}}{{{stringLiteral scheme.name}}}{{/if}},
+	{{safe '{'}}
+{{#ifvex 'x-session' scheme}}
+		session: {{scheme.vendorExtensions.x-session}},
+{{else ifeq scheme.scheme 'bearer'}}
+		/* Bearer auth scheme doesn't require sessions */
+		session: false,
+{{/ifvex}}
+	{{safe '}'}}),
 {{/each}}
 {{/each}}
