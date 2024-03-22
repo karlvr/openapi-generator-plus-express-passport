@@ -1,5 +1,18 @@
 # @openapi-generator-plus/typescript-express-passport-server-generator
 
+## 2.8.0
+
+### Minor Changes
+
+- b32ffcc: Default to `{ session: false }` for bearer auth scheme
+- e899a8a: Add options to control whether to error on unexpected properties
+- e4d2e20: Update core libraries and support catch-all responses
+
+### Patch Changes
+
+- cb18a89: Fix missing tsconfig template
+- 1dfaef0: Upgrade parent generator to avoid overwriting package.json
+
 ## 2.7.0
 
 ### Minor Changes
