@@ -1,4 +1,4 @@
-import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation, isCodegenEnumSchema, isCodegenObjectSchema, isCodegenAnyOfSchema, isCodegenInterfaceSchema, isCodegenOneOfSchema, CodegenSchemaType } from '@openapi-generator-plus/types'
+import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation, isCodegenEnumSchema, isCodegenObjectSchema, isCodegenAnyOfSchema, isCodegenInterfaceSchema, isCodegenOneOfSchema, CodegenSchemaType, CodegenMediaType } from '@openapi-generator-plus/types'
 import path from 'path'
 import { loadTemplates, emit } from '@openapi-generator-plus/handlebars-templates'
 import typescriptGenerator, { options as typescriptCommonOptions, TypeScriptGeneratorContext, chainTypeScriptGeneratorContext, DateApproach } from '@openapi-generator-plus/typescript-generator-common'
@@ -30,6 +30,10 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 		/* Convert path template from OpenAPI to Express */
 		hbs.registerHelper('pathTemplate', function(value: string) {
 			return value.replace(/{(.*?)}/g, ':$1')
+		})
+
+		hbs.registerHelper('mediaType', function(value: CodegenMediaType): string {
+			return `\`${value.mediaType.replace(/\*/g, '${string}')}\``
 		})
 
 		const relativeSourceOutputPath = generatorOptions.relativeSourceOutputPath
