@@ -76,6 +76,9 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 						res.header({{{stringLiteral serializedName}}}, `${response.headers[{{{stringLiteral name}}}]}`)
 						{{/each}}
 						{{/if}}
+						{{#if defaultContent}}
+						res.set('Content-Type', {{{stringLiteral defaultContent.mediaType.mediaType}}})
+						{{/if}}
 						{{#if defaultContent.schema}}
 						res.send(body)
 						{{else}}
