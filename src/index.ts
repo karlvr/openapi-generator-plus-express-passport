@@ -1,4 +1,4 @@
-import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation, isCodegenEnumSchema, isCodegenObjectSchema, isCodegenAnyOfSchema, isCodegenInterfaceSchema, isCodegenOneOfSchema, CodegenSchemaType, CodegenMediaType } from '@openapi-generator-plus/types'
+import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation, isCodegenEnumSchema, isCodegenObjectSchema, isCodegenAnyOfSchema, isCodegenInterfaceSchema, isCodegenOneOfSchema, CodegenSchemaType, CodegenMediaType, CodegenContent } from '@openapi-generator-plus/types'
 import path from 'path'
 import { loadTemplates, emit } from '@openapi-generator-plus/handlebars-templates'
 import typescriptGenerator, { options as typescriptCommonOptions, TypeScriptGeneratorContext, chainTypeScriptGeneratorContext, DateApproach } from '@openapi-generator-plus/typescript-generator-common'
@@ -34,6 +34,10 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 
 		hbs.registerHelper('mediaType', function(value: CodegenMediaType): string {
 			return `\`${value.mediaType.replace(/\*/g, '${string}')}\``
+		})
+
+		hbs.registerHelper('isJson', function(value: CodegenContent): boolean {
+			return !!value.mediaType.mimeType.match('\\bjson$')
 		})
 
 		const relativeSourceOutputPath = generatorOptions.relativeSourceOutputPath

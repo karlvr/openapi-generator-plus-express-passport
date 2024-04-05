@@ -61,7 +61,11 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 						{{#if defaultContent.schema}}
 						let body: any
 						try {
+							{{#if (isJson defaultContent)}}
 							body = {{>frag/toJson defaultContent.schema prefix='v.'}}('response', response.body)
+							{{else}}
+							body = response.body
+							{{/if}}
 						} catch (error) {
 							console.error('Invalid response body in {{identifier ../../name}}.{{identifier ../name}}', error)
 							res.status(500)
