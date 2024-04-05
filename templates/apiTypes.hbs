@@ -25,6 +25,9 @@ export interface {{className (concat ../name '_' code)}}Response {
 	status: '{{code}}'
 	actualStatus: number
 	{{/unless}}
+	{{#if defaultContent.mediaType.wildcard}}
+	mediaType: {{{mediaType defaultContent.mediaType}}}
+	{{/if}}
 	{{#if defaultContent.nativeType}}
 	body: {{{defaultContent.nativeType}}}
 	{{else}}
