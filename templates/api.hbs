@@ -137,6 +137,7 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 			} catch (error) {
 				/* Catch validation errors */
 				res.status(400)
+				res.type('text/plain; charset=utf-8')
 				res.send(error)
 			}
 		}
