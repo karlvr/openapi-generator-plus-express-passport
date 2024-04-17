@@ -1,4 +1,5 @@
 {{#each schemas}}
+	{{#unless (isMultipartSchemaPart .)}}
 	{{#if (isEnum)}}
 	{{>modelEnum}}
 	{{else if (isObject)}}
@@ -11,4 +12,5 @@
 	{{>modelInterface}}
 	{{/if}}
 
+	{{/unless}}
 {{/each}}

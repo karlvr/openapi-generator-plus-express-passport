@@ -1,4 +1,4 @@
-import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation, isCodegenEnumSchema, isCodegenObjectSchema, isCodegenAnyOfSchema, isCodegenInterfaceSchema, isCodegenOneOfSchema, CodegenSchemaType, CodegenMediaType, CodegenContent } from '@openapi-generator-plus/types'
+import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation, isCodegenEnumSchema, isCodegenObjectSchema, isCodegenAnyOfSchema, isCodegenInterfaceSchema, isCodegenOneOfSchema, CodegenSchemaType, CodegenMediaType, CodegenContent, CodegenSchema, CodegenProperties } from '@openapi-generator-plus/types'
 import path from 'path'
 import { loadTemplates, emit } from '@openapi-generator-plus/handlebars-templates'
 import typescriptGenerator, { options as typescriptCommonOptions, TypeScriptGeneratorContext, chainTypeScriptGeneratorContext, DateApproach } from '@openapi-generator-plus/typescript-generator-common'
@@ -40,6 +40,45 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 			return !!value.mediaType.mimeType.match('\\bjson$')
 		})
 
+		hbs.registerHelper('logger', function(value: unknown): boolean {
+			console.log(value)
+			return true
+		})
+
+		hbs.registerHelper('isAnyOperationSupportMultipart', function(operations: CodegenOperation[]): boolean {
+			return Object.values(operations).some(op => op.requestBody?.defaultContent.mediaType.mimeType === 'multipart/form-data')
+		})
+
+		hbs.registerHelper('isOperationSupportsMultipart', function(value: CodegenOperation): boolean {
+			return value.requestBody?.defaultContent.mediaType.mimeType === 'multipart/form-data'
+		})
+
+		hbs.registerHelper('isContentSupportsMultipart', function(value: CodegenContent): boolean {
+			return value.mediaType.mimeType === 'multipart/form-data'
+		})
+
+		hbs.registerHelper('isMultipartSchema', function(value: CodegenSchema): boolean {
+			return value.nativeType.nativeType.endsWith('.MultipartFormData')
+		})
+
+		hbs.registerHelper('isMultipartSchemaPart', function(value: CodegenSchema): boolean {
+			return !!value.nativeType.serializedType.match('\\b.MultipartFormData.*Part$')
+		})
+
+		hbs.registerHelper('isRequestRequired', function(value: CodegenOperation): boolean {
+			return value.requestBody?.required || (value.requestBody?.defaultContent?.mediaType.mimeType === 'multipart/form-data')
+		})
+
+		hbs.registerHelper('filterMultipartFiles', function(properties: CodegenProperties): CodegenProperties {
+			const result: CodegenProperties = {}
+			for (const prop in properties) {
+				if (properties[prop].nativeType.serializedType.match('\\b.MultipartFormData.*Part$')) {
+					result[prop] = properties[prop]
+				}
+			}
+			return result
+		})
+
 		const relativeSourceOutputPath = generatorOptions.relativeSourceOutputPath
 		for (const group of doc.groups) {
 			const operations = group.operations
@@ -55,6 +94,14 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 
 			await emit('apiImpl', path.join(outputPath, relativeSourceOutputPath, 'impl', `${context.generator().toIdentifier(group.name)}.ts`), 
 				{ ...rootContext, ...group, ...doc }, false, hbs)
+
+			for (const operation of operations) {
+				if (operation.requestBody?.defaultContent.mediaType.mediaType === 'multipart/form-data') {
+					await emit('apiMultipartHelper', path.join(outputPath, relativeSourceOutputPath, 'impl/helpers', `${context.generator().toIdentifier(group.name)}MultipartHelper.ts`),
+						{ ...rootContext, ...group, ...doc }, false, hbs)
+					break
+				}
+			}
 		}
 
 		await emit('models', path.join(outputPath, relativeSourceOutputPath, 'models.ts'), {

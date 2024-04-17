@@ -1,3 +1,4 @@
+{{#unless (isMultipartSchema .)}}
 const {{constantName (concat nativeType 'Keys')}}: string[] = [{{#each properties}}{{{stringLiteral serializedName}}}{{#hasMore}}, {{/hasMore}}{{/each}}]
 
 function model{{className nativeType.parentType}}FromJsonContent(name: string, value: any, knownKeys: Record<string, boolean> = {}): {{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}} {
@@ -128,3 +129,4 @@ export function model{{className nativeType.parentType}}ToJson(name: string, val
 	{{/if}}
 }
 {{>nestedValidation}}
+{{/unless}}

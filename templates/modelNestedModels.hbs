@@ -5,6 +5,17 @@
  * @namespace {{className name}}
  */
 export namespace {{className name}} {
+{{#if (isMultipartSchema .)}}
+    export interface Body {
+    {{#each properties}}
+        {{#unless (isMultipartSchemaPart .)}}
+        {{>frag/propertyDocumentation memberOf=../name}}
+        {{#if readOnly}}readonly {{/if}}{{{quoteInvalidIdentifier serializedName}}}{{#unless required}}?{{/unless}}: {{{nativeType.serializedType}}};
+        {{/unless}}
+    {{/each}}
+    }
+
+{{/if}}
 {{>nestedModels}}
 }
 {{/if}}

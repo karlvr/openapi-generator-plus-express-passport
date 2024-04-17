@@ -2,6 +2,11 @@
 export type {{className name}} = {{{vendorExtensions.convert-to-literal-type}}}
 {{else}}
 {{>frag/schemaDocumentation}}
+{{#if (isMultipartSchema .)}}
+export interface {{className name}} extends Request {
+	body: MultipartFormData.Body;
+}
+{{else}}
 export interface {{className name}}{{#if parents}} extends {{#each parents}}{{>frag/extends extends=nativeType.parentType}}{{#hasMore}}, {{/hasMore}}{{/each}}{{/if}}{{!--
 --}}{{#if implements}}{{#unless parents}} extends{{else}},{{/unless}} {{#each implements}}{{>frag/extends extends=nativeType}}{{#hasMore}}, {{/hasMore}}{{/each}}{{/if}} {
 {{>frag/discriminator}}
@@ -18,5 +23,6 @@ export interface {{className name}}{{#if parents}} extends {{#each parents}}{{>f
 	{{#if readOnly}}readonly {{/if}}{{{quoteInvalidIdentifier serializedName}}}{{#unless required}}?{{/unless}}: {{{nativeType.serializedType}}};
 {{/each}}
 }
+{{/if}}
 {{/ifvex}}
 {{>modelNestedModels}}
