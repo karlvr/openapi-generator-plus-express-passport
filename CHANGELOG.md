@@ -1,5 +1,17 @@
 # @openapi-generator-plus/typescript-express-passport-server-generator
 
+## 2.9.0
+
+### Minor Changes
+
+- 0bc4e2b: Set Content-Type header on 400 errors.
+- 5466d05: Set Content-Type header on responses.
+- 4738a59: Support responses with wildcard media subtype.
+
+### Patch Changes
+
+- 0cb7d51: Update core for wildcard subtypes
+
 ## 2.8.0
 
 ### Minor Changes
