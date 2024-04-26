@@ -1,5 +1,11 @@
 # @openapi-generator-plus/typescript-express-passport-server-generator
 
+## 2.9.1
+
+### Patch Changes
+
+- a54551f: Move parentheses onto new line.
+
 ## 2.9.0
 
 ### Minor Changes
