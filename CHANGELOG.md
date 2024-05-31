@@ -1,5 +1,11 @@
 # @openapi-generator-plus/typescript-express-passport-server-generator
 
+## 2.10.1
+
+### Patch Changes
+
+- 47debf7: Fix API key authentication not requiring a session
+
 ## 2.10.0
 
 ### Minor Changes
