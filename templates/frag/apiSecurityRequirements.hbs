@@ -8,7 +8,7 @@ passport.authenticate(
 {{else ifeq scheme.scheme 'bearer'}}
 		/* Bearer auth scheme doesn't require sessions */
 		session: false,
-{{else ifeq scheme.scheme 'apiKey'}}
+{{else ifeq scheme.type 'apiKey'}}
 		/* API key auth scheme doesn't require sessions */
 		session: false,
 {{/ifvex}}
