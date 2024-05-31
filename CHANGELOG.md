@@ -1,5 +1,11 @@
 # @openapi-generator-plus/typescript-express-passport-server-generator
 
+## 2.10.0
+
+### Minor Changes
+
+- 2a64ced: Change authentication strategies to use the name from the API spec rather than the scheme name
+
 ## 2.9.1
 
 ### Patch Changes
