@@ -1,0 +1,11 @@
+{{!--
+Determine the correct value to pass from a multipart property to the FromJsonFunction.
+@param <this> CodegenProperty or CodegenSchema
+--}}
+{{#if (isFileSchema .)}}
+value
+{{~else if (isSchemaSupportsMultipart .)~}}
+value.files[{{{stringLiteral serializedName}}}]
+{{~else~}}
+value.body[{{{stringLiteral serializedName}}}]
+{{~/if}}

@@ -1,6 +1,6 @@
 {{>header}}
 
-import { Express } from 'express'
+import { Express, Request } from 'express'
 import { Api } from './models'
 import { ApiOptions } from './types'
 
@@ -148,7 +148,7 @@ export function binaryFromJson(name: string, value: any): Buffer {
 	if (typeof value !== 'string') {
 		throw `Invalid type for ${name}: expected string got ${typeof value}`
 	}
-	return new Buffer(value, 'base64')
+	return Buffer.from(value, 'base64')
 }
 
 export function binaryToJson(name: string, value: string | Buffer): string {
@@ -301,6 +301,10 @@ export function parseTime(name: string, value: any): string {
 
 export function timeToJson(name: string, value: string): string {
 	return timeFromJson(name, value)
+}
+
+export function fileFromMultipart(name: string, value: Express.Multer.File[]): any {
+	return value[0]
 }
 
 /* Model conversion functions */

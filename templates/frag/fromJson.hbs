@@ -13,8 +13,10 @@ Output a reference to a FromJsonFunction function.
 {{prefix}}stringFromJson
 {{~else if (isBinary)~}}
 {{prefix}}binaryFromJson
+{{~else if (isFile)~}}
+{{prefix}}fileFromMultipart
 {{~else if (isObject)~}}
-{{prefix}}model{{className nativeType.parentType}}FromJson
+{{prefix}}model{{className nativeType.parentType}}From{{#if (isSchemaSupportsMultipart .)}}MultipartFormData{{else}}Json{{/if}}
 {{~else if (isArray)~}}
 {{prefix}}arrayFromJson({{>frag/fromJson component.schema prefix=prefix}})
 {{~else if (isEnum)~}}

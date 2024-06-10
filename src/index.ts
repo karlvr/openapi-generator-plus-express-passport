@@ -1,4 +1,4 @@
-import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation, isCodegenEnumSchema, isCodegenObjectSchema, isCodegenAnyOfSchema, isCodegenInterfaceSchema, isCodegenOneOfSchema, CodegenSchemaType, CodegenMediaType, CodegenContent } from '@openapi-generator-plus/types'
+import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation, isCodegenEnumSchema, isCodegenObjectSchema, isCodegenAnyOfSchema, isCodegenInterfaceSchema, isCodegenOneOfSchema, CodegenSchemaType, CodegenMediaType, CodegenContent, CodegenSchema, CodegenProperties, CodegenProperty, CodegenObjectLikeSchemas, isCodegenSchemaUsage, isCodegenOperation } from '@openapi-generator-plus/types'
 import path from 'path'
 import { loadTemplates, emit } from '@openapi-generator-plus/handlebars-templates'
 import typescriptGenerator, { options as typescriptCommonOptions, TypeScriptGeneratorContext, chainTypeScriptGeneratorContext, DateApproach } from '@openapi-generator-plus/typescript-generator-common'
@@ -40,6 +40,38 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 			return !!value.mediaType.mimeType.match('\\bjson$')
 		})
 
+		hbs.registerHelper('hasOperationSupportingMultipart', function(value: CodegenOperation | CodegenOperation[]): boolean {
+			if (isCodegenOperation(value)) {
+				return value.requestBody?.defaultContent.mediaType.mimeType === 'multipart/form-data'
+			}
+
+			for (const op of value) {
+				if (op.requestBody?.defaultContent.mediaType.mimeType === 'multipart/form-data') return true
+			}
+			return false
+		})
+
+		hbs.registerHelper('isSchemaSupportsMultipart', function(value: CodegenSchema): boolean {
+			return !!value.nativeType.toString().match('Api\\.(\\w+)\\.MultipartFormData(\\.\\w*)?')
+		})
+
+		hbs.registerHelper('isFileSchema', function(value: CodegenProperty): boolean {
+			return value.schema.schemaType === CodegenSchemaType.FILE
+		})
+
+		hbs.registerHelper('getFileProperties', function(properties: CodegenObjectLikeSchemas[]): CodegenProperties {
+			const result: CodegenProperties = {}
+			for (const prop in properties) {
+				const property = properties[prop]
+				if (isCodegenSchemaUsage(property) && isCodegenObjectSchema(property.schema)) {
+					if (property.schema.properties) {
+						result[prop] = property.schema.properties['value']
+					}
+				}
+			}
+			return result
+		})
+
 		const relativeSourceOutputPath = generatorOptions.relativeSourceOutputPath
 		for (const group of doc.groups) {
 			const operations = group.operations
@@ -55,6 +87,14 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 
 			await emit('apiImpl', path.join(outputPath, relativeSourceOutputPath, 'impl', `${context.generator().toIdentifier(group.name)}.ts`), 
 				{ ...rootContext, ...group, ...doc }, false, hbs)
+
+			for (const operation of operations) {
+				if (operation.requestBody?.defaultContent.mediaType.mediaType === 'multipart/form-data') {
+					await emit('apiMultipartHelper', path.join(outputPath, relativeSourceOutputPath, 'impl/helpers', `${context.generator().toIdentifier(group.name)}MultipartHelper.ts`),
+						{ ...rootContext, ...group, ...doc }, false, hbs)
+					break
+				}
+			}
 		}
 
 		await emit('models', path.join(outputPath, relativeSourceOutputPath, 'models.ts'), {
@@ -107,6 +147,8 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 			if (schemaType === CodegenSchemaType.DATETIME && generatorOptions.dateApproach === DateApproach.Native) {
 				// TODO we need to override the default date type in typescript-generator-common which has a serialized type of string
 				return new context.NativeType('Date')
+			} else if (schemaType === CodegenSchemaType.FILE) {
+				return new context.NativeType('Express.Multer.File')
 			} else if (schemaType === CodegenSchemaType.BINARY) {
 				return new context.NativeType('string | Buffer')
 			} else {

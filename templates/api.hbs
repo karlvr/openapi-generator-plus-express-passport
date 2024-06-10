@@ -1,9 +1,13 @@
 {{>header}}
 
-import { Express } from 'express'
+import { Express, Request, Response } from 'express'
 import passport from 'passport'
+import multer from 'multer'
 import * as t from './types'
 import * as v from '../../validation'
+{{#if (hasOperationSupportingMultipart operations)}}
+import * as f from '../../impl/helpers/{{lowerCase name}}MultipartHelper'
+{{/if}}
 import { Api } from '../../models'
 
 export default function(app: Express, impl: t.{{className name}}Api) {
@@ -11,7 +15,11 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 	app.{{lowerCase httpMethod}}(
 		{{{stringLiteral (pathTemplate fullPath)}}},
 		{{>frag/apiSecurityRequirements}}
-		function (req, res) {
+		{{#if (hasOperationSupportingMultipart .)}}
+		f.upload.fields([{{#with (getFileProperties requestBody.defaultContent.schema.properties)}}{{#each this}}{name: {{{stringLiteral @key}}}, maxCount: 1}{{#hasMore}}, {{/hasMore}}{{/each}}{{/with}}]),
+		f.PostLogWithId.handleUpload,
+		{{/if}}
+		function (req: Request, res: Response) {
 			try {
 				{{#if securityRequirements}}
 				const __user = req.user
@@ -32,7 +40,9 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 						{{#unless schema}}
 						return undefined
 						{{else}}
-						{{#ifmatch mediaType.mimeType '/json'}}
+						{{#ifmatch mediaType.mimeType 'multipart/form-data'}}
+						return {{>frag/fromJson schema prefix='v.'}}('body', req)
+						{{else if (ifmatch mediaType.mimeType '/json')}}
 						return {{>frag/fromJson schema prefix='v.'}}('body', req.body)
 						{{else if (isBinary schema)}}
 						return req.body as Buffer

@@ -1,0 +1,18 @@
+import { Request, Response, NextFunction } from 'express'
+import multer from 'multer'
+import { Api } from '../../models'
+
+export const upload = multer({storage: multer.memoryStorage()})
+
+{{#each operations}}
+{{#if (hasOperationSupportingMultipart .)}}
+export namespace {{className name}} {
+    /* Middleware entry point */
+    export async function handleUpload(req: Request, res: Response, next: NextFunction) {
+        // Your code here
+        next()
+    }
+}
+
+{{/if}}
+{{/each}}

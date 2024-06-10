@@ -1,6 +1,6 @@
 const {{constantName (concat nativeType 'Keys')}}: string[] = [{{#each properties}}{{{stringLiteral serializedName}}}{{#hasMore}}, {{/hasMore}}{{/each}}]
 
-function model{{className nativeType.parentType}}FromJsonContent(name: string, value: any, knownKeys: Record<string, boolean> = {}): {{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}} {
+function model{{className nativeType.parentType}}From{{#if (isSchemaSupportsMultipart .)}}MultipartFormData{{else}}Json{{/if}}Content(name: string, value: any, knownKeys: Record<string, boolean> = {}): {{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}} {
 	if (typeof value !== 'object' || value === undefined || value === null) {
 		throw `Invalid type for ${name}: expected object got ${typeof value}`
 	}
@@ -11,6 +11,27 @@ function model{{className nativeType.parentType}}FromJsonContent(name: string, v
 	{{#each parents}}
 		...{{>frag/fromJson . prefix=''}}Content(name, value, knownKeys),
 	{{/each}}
+	{{#if (isSchemaSupportsMultipart .)}}
+	{{!-- Process multipart schema start --}}
+	{{#each properties}}
+	{{#unless readOnly}}
+	{{#if required}}
+	{{#if nullable}}
+		{{{stringLiteral serializedName}}}: allowNull({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, {{>frag/parseMultipartValue .}}),
+	{{else}}
+		{{{stringLiteral serializedName}}}: {{>frag/fromJson schema prefix=''}}(`${name}.{{serializedName}}`, {{>frag/parseMultipartValue .}}),
+	{{/if}}
+	{{else}}
+	{{#if nullable}}
+		{{{stringLiteral serializedName}}}: allowNullOrUndefined({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, {{>frag/parseMultipartValue .}}),
+	{{else}}
+		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, {{>frag/parseMultipartValue .}}),
+	{{/if}}
+	{{/if}}
+	{{/unless}}
+	{{/each}}
+	{{!-- Process multipart schema end --}}
+	{{else}}
 	{{#each properties}}
 	{{#unless readOnly}}
 	{{#if required}}
@@ -28,6 +49,7 @@ function model{{className nativeType.parentType}}FromJsonContent(name: string, v
 	{{/if}}
 	{{/unless}}
 	{{/each}}
+	{{/if}}
 	{{#each discriminatorValues}}
 		{{{stringLiteral schema.discriminator.serializedName}}}: {{{literalValue}}},
 	{{/each}}
@@ -36,6 +58,7 @@ function model{{className nativeType.parentType}}FromJsonContent(name: string, v
 	return result
 }
 
+{{#unless (isSchemaSupportsMultipart .)}}
 function model{{className nativeType.parentType}}ToJsonContent(name: string, value: {{nativeType}}, knownKeys: Record<string, boolean> = {}): ToJson<{{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}}> {
 	if (typeof value !== 'object' || value === undefined || value === null) {
 		throw `Invalid type for ${name}: expected object got ${typeof value}`
@@ -71,8 +94,9 @@ function model{{className nativeType.parentType}}ToJsonContent(name: string, val
 
 	return result
 }
+{{/unless}}
 
-export function model{{className nativeType.parentType}}FromJson(name: string, value: any): {{nativeType}} {
+export function model{{className nativeType.parentType}}From{{#if (isSchemaSupportsMultipart .)}}MultipartFormData{{else}}Json{{/if}}(name: string, value: any): {{nativeType}} {
 	{{#if discriminator}}
 	const discriminatorValue = value.{{discriminator.serializedName}}
 	switch (discriminatorValue) {
@@ -85,7 +109,7 @@ export function model{{className nativeType.parentType}}FromJson(name: string, v
 	throw `Invalid value for ${name}: didn't contain a known discriminator value: ${discriminatorValue}`
 	{{else}}
 	const knownKeys: Record<string, boolean> = {}
-	const result: {{nativeType}} = model{{className nativeType.parentType}}FromJsonContent(name, value, knownKeys)
+	const result: {{nativeType}} = model{{className nativeType.parentType}}From{{#if (isSchemaSupportsMultipart .)}}MultipartFormData{{else}}Json{{/if}}Content(name, value, knownKeys)
 
 	/* Known keys */
 	if (__options?.failOnUnknownProperties) {
@@ -100,6 +124,7 @@ export function model{{className nativeType.parentType}}FromJson(name: string, v
 	{{/if}}
 }
 
+{{#unless (isSchemaSupportsMultipart .)}}
 export function model{{className nativeType.parentType}}ToJson(name: string, value: {{nativeType}}): ToJson<{{nativeType}}> {
 	{{#if discriminator}}
 	const discriminatorValue = value.{{discriminator.serializedName}}
@@ -127,4 +152,5 @@ export function model{{className nativeType.parentType}}ToJson(name: string, val
 	return result
 	{{/if}}
 }
+{{/unless}}
 {{>nestedValidation}}
