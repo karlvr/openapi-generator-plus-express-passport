@@ -2,9 +2,9 @@
 Determine the correct value to pass from a multipart property to the FromJsonFunction.
 @param <this> CodegenProperty or CodegenSchema
 --}}
-{{#if (isFileSchema .)}}
+{{#if (isFile schema)}}
 value
-{{~else if (isSchemaSupportsMultipart .)~}}
+{{~else if (isMetadataSchema schema)~}}
 value.files[{{{stringLiteral serializedName}}}]
 {{~else~}}
 value.body[{{{stringLiteral serializedName}}}]

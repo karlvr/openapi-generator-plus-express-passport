@@ -2,6 +2,10 @@
 
 {{#if (isEnum)}}
 {{>validationEnum}}
+{{else if (isMultipartSchema .)}}
+{{>validationMultipart}}
+{{else if (isMetadataSchema .)}}
+{{>validationMultipart}}
 {{else if (isObject)}}
 {{>validationGeneric}}
 {{else if (isOneOf)}}

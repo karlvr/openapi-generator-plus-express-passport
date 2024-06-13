@@ -1,4 +1,4 @@
-import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation, isCodegenEnumSchema, isCodegenObjectSchema, isCodegenAnyOfSchema, isCodegenInterfaceSchema, isCodegenOneOfSchema, CodegenSchemaType, CodegenMediaType, CodegenContent, CodegenSchema, CodegenProperties, CodegenProperty, CodegenObjectLikeSchemas, isCodegenSchemaUsage, isCodegenOperation } from '@openapi-generator-plus/types'
+import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation, isCodegenEnumSchema, isCodegenObjectSchema, isCodegenAnyOfSchema, isCodegenInterfaceSchema, isCodegenOneOfSchema, CodegenSchemaType, CodegenMediaType, CodegenContent, CodegenSchema, CodegenProperties, CodegenObjectLikeSchemas, isCodegenSchemaUsage, isCodegenOperation, CodegenSchemaPurpose } from '@openapi-generator-plus/types'
 import path from 'path'
 import { loadTemplates, emit } from '@openapi-generator-plus/handlebars-templates'
 import typescriptGenerator, { options as typescriptCommonOptions, TypeScriptGeneratorContext, chainTypeScriptGeneratorContext, DateApproach } from '@openapi-generator-plus/typescript-generator-common'
@@ -46,17 +46,19 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 			}
 
 			for (const op of value) {
-				if (op.requestBody?.defaultContent.mediaType.mimeType === 'multipart/form-data') return true
+				if (op.requestBody?.defaultContent.mediaType.mimeType === 'multipart/form-data') { 
+					return true
+				}
 			}
 			return false
 		})
 
-		hbs.registerHelper('isSchemaSupportsMultipart', function(value: CodegenSchema): boolean {
-			return !!value.nativeType.toString().match('Api\\.(\\w+)\\.MultipartFormData(\\.\\w*)?')
+		hbs.registerHelper('isMultipartSchema', function(value: CodegenSchema): boolean {
+			return value.originalName === 'multipart/form-data'
 		})
 
-		hbs.registerHelper('isFileSchema', function(value: CodegenProperty): boolean {
-			return value.schema.schemaType === CodegenSchemaType.FILE
+		hbs.registerHelper('isMetadataSchema', function(value: CodegenSchema): boolean {
+			return value.purpose === CodegenSchemaPurpose.METADATA
 		})
 
 		hbs.registerHelper('getFileProperties', function(properties: CodegenObjectLikeSchemas[]): CodegenProperties {
