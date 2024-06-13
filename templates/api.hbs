@@ -41,7 +41,7 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 						return undefined
 						{{else}}
 						{{#ifmatch mediaType.mimeType 'multipart/form-data'}}
-						return {{>frag/fromJson schema prefix='v.'}}('body', req)
+						return {{>frag/fromMultipart schema prefix='v.'}}('body', req)
 						{{else if (ifmatch mediaType.mimeType '/json')}}
 						return {{>frag/fromJson schema prefix='v.'}}('body', req.body)
 						{{else if (isBinary schema)}}

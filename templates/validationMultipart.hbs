@@ -1,6 +1,6 @@
 const {{constantName (concat nativeType 'Keys')}}: string[] = [{{#each properties}}{{{stringLiteral serializedName}}}{{#hasMore}}, {{/hasMore}}{{/each}}]
 
-function model{{className nativeType.parentType}}FromJsonContent(name: string, value: any, knownKeys: Record<string, boolean> = {}): {{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}} {
+function model{{className nativeType.parentType}}FromMultipartFormDataContent(name: string, value: any, knownKeys: Record<string, boolean> = {}): {{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}} {
 	if (typeof value !== 'object' || value === undefined || value === null) {
 		throw `Invalid type for ${name}: expected object got ${typeof value}`
 	}
@@ -15,15 +15,15 @@ function model{{className nativeType.parentType}}FromJsonContent(name: string, v
 	{{#unless readOnly}}
 	{{#if required}}
 	{{#if nullable}}
-		{{{stringLiteral serializedName}}}: allowNull({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
+		{{{stringLiteral serializedName}}}: allowNull({{>frag/fromMultipart schema prefix=''}})(`${name}.{{serializedName}}`, {{>frag/parseMultipartValue .}}),
 	{{else}}
-		{{{stringLiteral serializedName}}}: {{>frag/fromJson schema prefix=''}}(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
+		{{{stringLiteral serializedName}}}: {{>frag/fromMultipart schema prefix=''}}(`${name}.{{serializedName}}`, {{>frag/parseMultipartValue .}}),
 	{{/if}}
 	{{else}}
 	{{#if nullable}}
-		{{{stringLiteral serializedName}}}: allowNullOrUndefined({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
+		{{{stringLiteral serializedName}}}: allowNullOrUndefined({{>frag/fromMultipart schema prefix=''}})(`${name}.{{serializedName}}`, {{>frag/parseMultipartValue .}}),
 	{{else}}
-		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
+		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/fromMultipart schema prefix=''}})(`${name}.{{serializedName}}`, {{>frag/parseMultipartValue .}}),
 	{{/if}}
 	{{/if}}
 	{{/unless}}
@@ -72,7 +72,7 @@ function model{{className nativeType.parentType}}ToJsonContent(name: string, val
 	return result
 }
 
-export function model{{className nativeType.parentType}}FromJson(name: string, value: any): {{nativeType}} {
+export function model{{className nativeType.parentType}}FromMultipartFormData(name: string, value: any): {{nativeType}} {
 	{{#if discriminator}}
 	const discriminatorValue = value.{{discriminator.serializedName}}
 	switch (discriminatorValue) {
@@ -85,7 +85,7 @@ export function model{{className nativeType.parentType}}FromJson(name: string, v
 	throw `Invalid value for ${name}: didn't contain a known discriminator value: ${discriminatorValue}`
 	{{else}}
 	const knownKeys: Record<string, boolean> = {}
-	const result: {{nativeType}} = model{{className nativeType.parentType}}FromJsonContent(name, value, knownKeys)
+	const result: {{nativeType}} = model{{className nativeType.parentType}}FromMultipartFormDataContent(name, value, knownKeys)
 
 	/* Known keys */
 	if (__options?.failOnUnknownProperties) {
