@@ -17,7 +17,7 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 		{{>frag/apiSecurityRequirements}}
 		{{#if (hasOperationSupportingMultipart .)}}
 		f.upload.fields([{{#with (getFileProperties requestBody.defaultContent.schema.properties)}}{{#each this}}{name: {{{stringLiteral @key}}}, maxCount: 1}{{#hasMore}}, {{/hasMore}}{{/each}}{{/with}}]),
-		f.PostLogWithId.handleUpload,
+		f.{{className name}}.handleUpload,
 		{{/if}}
 		function (req: Request, res: Response) {
 			try {
