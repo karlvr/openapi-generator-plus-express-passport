@@ -45,12 +45,7 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 				return value.requestBody?.defaultContent.mediaType.mimeType === 'multipart/form-data'
 			}
 
-			for (const op of value) {
-				if (op.requestBody?.defaultContent.mediaType.mimeType === 'multipart/form-data') { 
-					return true
-				}
-			}
-			return false
+			return containsMultipartOperation(value)
 		})
 
 		hbs.registerHelper('isMultipartSchema', function(value: CodegenSchema): boolean {
@@ -90,12 +85,9 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 			await emit('apiImpl', path.join(outputPath, relativeSourceOutputPath, 'impl', `${context.generator().toIdentifier(group.name)}.ts`), 
 				{ ...rootContext, ...group, ...doc }, false, hbs)
 
-			for (const operation of operations) {
-				if (operation.requestBody?.defaultContent.mediaType.mediaType === 'multipart/form-data') {
-					await emit('apiMultipartHelper', path.join(outputPath, relativeSourceOutputPath, 'impl/helpers', `${context.generator().toIdentifier(group.name)}MultipartHelper.ts`),
-						{ ...rootContext, ...group, ...doc }, false, hbs)
-					break
-				}
+			if (containsMultipartOperation(operations)) {
+				await emit('apiMultipartHelper', path.join(outputPath, relativeSourceOutputPath, 'impl/helpers', `${context.generator().toIdentifier(group.name)}MultipartHelper.ts`),
+					{ ...rootContext, ...group, ...doc }, false, hbs)
 			}
 		}
 
@@ -192,6 +184,19 @@ function compareOperations(a: CodegenOperation, b: CodegenOperation): number {
 		return -1
 	}
 	return 0
+}
+
+/**
+ * Loop over an array of CodegenOperation and return true if it contains an operation with a multipart/form-data request.
+ * @param operations
+ */
+function containsMultipartOperation(operations: CodegenOperation[]): boolean {
+	for (const operation of operations) {
+		if (operation.requestBody?.defaultContent.mediaType.mimeType === 'multipart/form-data') { 
+			return true
+		}
+	}
+	return false
 }
 
 export default createGenerator
