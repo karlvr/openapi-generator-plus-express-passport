@@ -303,8 +303,25 @@ export function timeToJson(name: string, value: string): string {
 	return timeFromJson(name, value)
 }
 
-export function fileFromMultipart(name: string, value: Express.Multer.File[]): any {
-	return value[0]
+export function arrayFromMultipart<T>(next: FromJsonFunction<T>): FromJsonFunction<T[]> {
+	return function(name: string, value: any) {
+		if (typeof value !== 'object' || typeof value.length !== 'number') {
+			throw `Invalid type for ${name}: expected array got ${typeof value}`
+		}
+	
+		const result: T[] = []
+		for (const el of value) {
+			result.push(next(name, el))
+		}
+		return result
+	}
+}
+
+export function fileFromMultipart(name: string, value: Express.Multer.File[] | Express.Multer.File): any {
+	if (Array.isArray(value)) {
+		return value[0]
+	}
+	return value
 }
 
 /* Model conversion functions */

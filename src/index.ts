@@ -1,4 +1,4 @@
-import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation, isCodegenEnumSchema, isCodegenObjectSchema, isCodegenAnyOfSchema, isCodegenInterfaceSchema, isCodegenOneOfSchema, CodegenSchemaType, CodegenMediaType, CodegenContent, CodegenSchema, CodegenProperties, CodegenObjectLikeSchemas, isCodegenSchemaUsage, isCodegenOperation, CodegenSchemaPurpose } from '@openapi-generator-plus/types'
+import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation, isCodegenEnumSchema, isCodegenObjectSchema, isCodegenAnyOfSchema, isCodegenInterfaceSchema, isCodegenOneOfSchema, CodegenSchemaType, CodegenMediaType, CodegenContent, CodegenSchema, CodegenObjectLikeSchemas, isCodegenSchemaUsage, isCodegenOperation, CodegenSchemaPurpose, isCodegenArraySchema } from '@openapi-generator-plus/types'
 import path from 'path'
 import { loadTemplates, emit } from '@openapi-generator-plus/handlebars-templates'
 import typescriptGenerator, { options as typescriptCommonOptions, TypeScriptGeneratorContext, chainTypeScriptGeneratorContext, DateApproach } from '@openapi-generator-plus/typescript-generator-common'
@@ -56,18 +56,36 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 			return value.purpose === CodegenSchemaPurpose.METADATA
 		})
 
-		hbs.registerHelper('getFileProperties', function(properties: CodegenObjectLikeSchemas[]): CodegenProperties {
-			const result: CodegenProperties = {}
+		hbs.registerHelper('getFileProperties', function(properties: CodegenObjectLikeSchemas[]): FileProperty[] {
+			const results: FileProperty[] = []
 			for (const prop in properties) {
 				const property = properties[prop]
-				if (isCodegenSchemaUsage(property) && isCodegenObjectSchema(property.schema)) {
-					if (property.schema.properties) {
-						result[prop] = property.schema.properties['value']
-					}
+				if (!isCodegenSchemaUsage(property)) {
+					continue
+				}
+
+				if (!(property.schema.purpose === CodegenSchemaPurpose.METADATA)) {
+					continue
+				}
+
+				if (isCodegenObjectSchema(property.schema) && property.schema.properties) {
+					results.push({
+						name: prop,
+						minCount: null,
+						maxCount: null,
+					})
+				} else if (isCodegenArraySchema(property.schema) && property.schema.component) {
+					results.push({
+						name: prop,
+						minCount: property.schema.minItems,
+						maxCount: property.schema.maxItems,
+					})
 				}
 			}
-			return result
+
+			return results
 		})
+
 
 		const relativeSourceOutputPath = generatorOptions.relativeSourceOutputPath
 		for (const group of doc.groups) {
@@ -197,6 +215,18 @@ function containsMultipartOperation(operations: CodegenOperation[]): boolean {
 		}
 	}
 	return false
+}
+
+/**
+ * An interface representing file properties in a multipart/form-data request.
+ */
+type FileProperty = {
+	/** Name of the file property. */
+	name: string
+	/** Minimum number of files if the property is an array of files. */
+	minCount: number | null
+	/** Maximum number of files if the property is an array of files. */
+	maxCount: number | null
 }
 
 export default createGenerator

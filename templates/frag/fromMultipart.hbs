@@ -18,7 +18,7 @@ Output a reference to a FromJsonFunction function.
 {{~else if (isObject)~}}
 {{prefix}}model{{className nativeType.parentType}}FromMultipartFormData
 {{~else if (isArray)~}}
-{{prefix}}arrayFromJson({{>frag/fromJson component.schema prefix=prefix}})
+{{prefix}}arrayFromMultipart({{>frag/fromMultipart component.schema prefix=prefix}})
 {{~else if (isEnum)~}}
 {{prefix}}enum{{className nativeType.parentType}}FromJson
 {{~else if (isDate)~}}

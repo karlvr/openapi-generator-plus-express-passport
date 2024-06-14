@@ -16,7 +16,7 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 		{{{stringLiteral (pathTemplate fullPath)}}},
 		{{>frag/apiSecurityRequirements}}
 		{{#if (hasOperationSupportingMultipart .)}}
-		f.upload.fields([{{#with (getFileProperties requestBody.defaultContent.schema.properties)}}{{#each this}}{name: {{{stringLiteral @key}}}, maxCount: 1}{{#hasMore}}, {{/hasMore}}{{/each}}{{/with}}]),
+		f.upload.fields([{{#with (getFileProperties requestBody.defaultContent.schema.properties)}}{{#each this}}{ name: {{{stringLiteral name}}}, maxCount: {{#if maxCount}}{{{maxCount}}}{{else}}1{{/if}} }{{#hasMore}}, {{/hasMore}}{{/each}}{{/with}}]),
 		f.{{className name}}.handleUpload,
 		{{/if}}
 		function (req: Request, res: Response) {
