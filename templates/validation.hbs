@@ -1,6 +1,6 @@
 {{>header}}
 
-import { Express, Request } from 'express'
+import { Express, Request, Response, NextFunction } from 'express'
 import { Api } from './models'
 import { ApiOptions } from './types'
 
@@ -314,6 +314,17 @@ export function arrayFromMultipart<T>(next: FromJsonFunction<T>): FromJsonFuncti
 			result.push(next(name, el))
 		}
 		return result
+	}
+}
+
+export function verifyMinimumFiles(fieldName: string, minFileCount: number): (req: Request, res: Response, next: NextFunction) => void {
+	return function(req: Request, res: Response, next: NextFunction) {
+		const files = (req.files as { [fieldname: string]: Express.Multer.File[] })[fieldName]
+		if (!files || files.length < minFileCount) {
+			res.status(400).send(`The field '${fieldName}' requires a minimum of ${minFileCount} file(s)`)
+			return
+		}
+		next()
 	}
 }
 
