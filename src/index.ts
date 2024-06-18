@@ -86,7 +86,6 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 			return results
 		})
 
-
 		const relativeSourceOutputPath = generatorOptions.relativeSourceOutputPath
 		for (const group of doc.groups) {
 			const operations = group.operations

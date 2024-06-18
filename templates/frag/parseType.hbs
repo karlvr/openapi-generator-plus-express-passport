@@ -22,7 +22,11 @@ Parse input
 {{~else if (isObject)~}}
 {{prefix}}{{!--TODO--}}model{{className nativeType}}FromJson
 {{~else if (isArray)~}}
+{{#if schema.component.nullable}}
+{{prefix}}{{!--TODO--}}arrayFromJsonWithNullable({{>frag/fromJson schema.component.schema prefix=prefix}})
+{{~else~}}
 {{prefix}}{{!--TODO--}}arrayFromJson({{>frag/fromJson schema.component.schema prefix=prefix}})
+{{/if}}
 {{~else if (isEnum)~}}
 {{prefix}}enum{{className nativeType}}FromJson
 {{~else~}}

@@ -40,8 +40,30 @@ export function arrayFromJson<T>(next: FromJsonFunction<T>): FromJsonFunction<T[
 	}
 }
 
+export function arrayFromJsonWithNullable<T>(next: FromJsonFunction<T | null>): FromJsonFunction<(T | null)[]> {
+	return function(name: string, value: any) {
+		if (typeof value !== 'object' || typeof value.length !== 'number') {
+			throw `Invalid type for ${name}: expected array got ${typeof value}`
+		}
+	
+		const result: (T | null)[] = []
+		for (const el of value) {
+			if (value === null) {
+				result.push(null)
+			} else {
+				result.push(next(name, el))
+			}
+		}
+		return result
+	}
+}
+
 export function arrayToJson<T>(next: FromJsonFunction<T>): FromJsonFunction<T[]> {
 	return arrayFromJson(next)
+}
+
+export function arrayToJsonWithNullable<T>(next: FromJsonFunction<T | null>): FromJsonFunction<(T | null)[]> {
+	return arrayFromJsonWithNullable(next)
 }
 
 export function mapFromJson<T>(next: FromJsonFunction<T>): FromJsonFunction<MapOf<T>> {
@@ -317,10 +339,28 @@ export function arrayFromMultipart<T>(next: FromJsonFunction<T>): FromJsonFuncti
 	}
 }
 
+export function arrayFromMultipartWithNullable<T>(next: FromJsonFunction<T | null>): FromJsonFunction<(T | null)[]> {
+	return function(name: string, value: any) {
+		if (typeof value !== 'object' || typeof value.length !== 'number') {
+			throw `Invalid type for ${name}: expected array got ${typeof value}`
+		}
+	
+		const result: (T | null)[] = []
+		for (const el of value) {
+			if (value === null) {
+				result.push(null)
+			} else {
+				result.push(next(name, el))
+			}
+		}
+		return result
+	}
+}
+
 export function verifyMinimumFiles(fieldName: string, minFileCount: number): (req: Request, res: Response, next: NextFunction) => void {
 	return function(req: Request, res: Response, next: NextFunction) {
 		const files = (req.files as { [fieldname: string]: Express.Multer.File[] })[fieldName]
-		if (!files || files.length < minFileCount) {
+		if (files && files.length < minFileCount) {
 			res.status(400).send(`The field '${fieldName}' requires a minimum of ${minFileCount} file(s)`)
 			return
 		}
