@@ -18,10 +18,10 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 		{{#if (hasOperationSupportingMultipart .)}}
 		{{#with (getFileProperties requestBody.defaultContent.schema.properties)}}
 		(req, res, next) => {
-			f.upload.fields([{{#each this}}{ name: {{{stringLiteral name}}}, maxCount: {{#if maxCount}}{{{maxCount}}}{{else}}1{{/if}} }{{#hasMore}}, {{/hasMore}}{{/each}}])(req, res, (error) => {
+			const fileFields = [{{#each this}}{ name: {{{stringLiteral name}}}, maxCount: {{#if maxCount}}{{{maxCount}}}{{else}}1{{/if}} }{{#hasMore}}, {{/hasMore}}{{/each}}]
+			f.upload.fields(fileFields)(req, res, (error) => {
 				if (error?.code === 'LIMIT_UNEXPECTED_FILE') {
-					res.status(400).send(`You have exceeded the maximum number of files allowed for the field '${error.field}'`)
-					return
+					res.status(400).send(`The field '${error.field}' allows a maximum of ${(fileFields.find(f => f.name === error.field))!.maxCount} file(s)`)
 				} else {
 					next(error)
 				}
