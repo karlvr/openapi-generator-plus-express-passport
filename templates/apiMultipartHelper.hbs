@@ -4,13 +4,15 @@ import { Api } from '../../models'
 
 export const upload = multer({storage: multer.memoryStorage()})
 
+export namespace {{className name}} {
 {{#each operations}}
 {{#if (hasOperationSupportingMultipart .)}}
-export namespace {{className name}} {
-    /* Middleware entry point */
-    export async function handleUpload(req: Request, res: Response, next: NextFunction) {
-        // Your code here
-        next()
+    export namespace {{className name}} {
+        /** Special handling for uploads to the {{{name}}} operation. */
+        export async function handleUpload(req: Request, res: Response, next: NextFunction) {
+            // Your code here
+            next()
+        }
     }
 }
 

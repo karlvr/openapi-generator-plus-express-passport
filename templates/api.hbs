@@ -31,7 +31,7 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 		{{#if minCount}}v.verifyMinimumFiles({{{stringLiteral name}}}, {{{minCount}}}),{{/if}}
 		{{/each}}
 		{{/with}}
-		f.{{className name}}.handleUpload,
+		f.{{className ../name}}.{{className name}}.handleUpload,
 		{{/if}}
 		function (req: Request, res: Response) {
 			try {
