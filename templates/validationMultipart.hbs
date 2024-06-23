@@ -15,15 +15,15 @@ function model{{className nativeType.parentType}}FromMultipartFormDataContent(na
 	{{#unless readOnly}}
 	{{#if required}}
 	{{#if nullable}}
-		{{{stringLiteral serializedName}}}: allowNull({{>frag/fromMultipart schema prefix=''}})(`${name}.{{serializedName}}`, {{>frag/parseMultipartValue .}}),
+		{{{stringLiteral serializedName}}}: allowNull({{>frag/fromMultipart schema prefix=''}})(`${name}.{{serializedName}}`, {{>frag/extractMultipartValue .}}),
 	{{else}}
-		{{{stringLiteral serializedName}}}: {{>frag/fromMultipart schema prefix=''}}(`${name}.{{serializedName}}`, {{>frag/parseMultipartValue .}}),
+		{{{stringLiteral serializedName}}}: {{>frag/fromMultipart schema prefix=''}}(`${name}.{{serializedName}}`, {{>frag/extractMultipartValue .}}),
 	{{/if}}
 	{{else}}
 	{{#if nullable}}
-		{{{stringLiteral serializedName}}}: allowNullOrUndefined({{>frag/fromMultipart schema prefix=''}})(`${name}.{{serializedName}}`, {{>frag/parseMultipartValue .}}),
+		{{{stringLiteral serializedName}}}: allowNullOrUndefined({{>frag/fromMultipart schema prefix=''}})(`${name}.{{serializedName}}`, {{>frag/extractMultipartValue .}}),
 	{{else}}
-		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/fromMultipart schema prefix=''}})(`${name}.{{serializedName}}`, {{>frag/parseMultipartValue .}}),
+		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/fromMultipart schema prefix=''}})(`${name}.{{serializedName}}`, {{>frag/extractMultipartValue .}}),
 	{{/if}}
 	{{/if}}
 	{{/unless}}

@@ -4,6 +4,18 @@ import { loadTemplates, emit } from '@openapi-generator-plus/handlebars-template
 import typescriptGenerator, { options as typescriptCommonOptions, TypeScriptGeneratorContext, chainTypeScriptGeneratorContext, DateApproach } from '@openapi-generator-plus/typescript-generator-common'
 import * as idx from '@openapi-generator-plus/indexed-type'
 
+/**
+ * An interface representing properties for uploading files in a multipart/form-data request.
+ */
+interface FileUploadProperty {
+	/** Name of the file upload property. */
+	name: string
+	/** Minimum number of files required if the property takes an array of files. */
+	minCount: number | null
+	/** Maximum number of files required if the property takes an array of files. */
+	maxCount: number | null
+}
+
 const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 	const myContext: TypeScriptGeneratorContext = chainTypeScriptGeneratorContext(context, {
 		loadAdditionalTemplates: async(hbs) => {
@@ -56,8 +68,8 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 			return value.purpose === CodegenSchemaPurpose.METADATA
 		})
 
-		hbs.registerHelper('getFileProperties', function(properties: CodegenObjectLikeSchemas[]): FileProperty[] {
-			const results: FileProperty[] = []
+		hbs.registerHelper('getFileUploadProperties', function(properties: CodegenObjectLikeSchemas[]): FileUploadProperty[] {
+			const results: FileUploadProperty[] = []
 			for (const prop in properties) {
 				const property = properties[prop]
 				if (!isCodegenSchemaUsage(property)) {
@@ -214,18 +226,6 @@ function containsMultipartOperation(operations: CodegenOperation[]): boolean {
 		}
 	}
 	return false
-}
-
-/**
- * An interface representing file properties in a multipart/form-data request.
- */
-type FileProperty = {
-	/** Name of the file property. */
-	name: string
-	/** Minimum number of files if the property is an array of files. */
-	minCount: number | null
-	/** Maximum number of files if the property is an array of files. */
-	maxCount: number | null
 }
 
 export default createGenerator
