@@ -362,17 +362,18 @@ export function verifyMinimumFiles(fieldName: string, minFileCount: number): (re
 		const files = (req.files as { [fieldname: string]: Express.Multer.File[] })[fieldName]
 		if (files && files.length < minFileCount) {
 			res.status(400).send(`The field '${fieldName}' requires a minimum of ${minFileCount} file(s)`)
-			return
+		} else {
+			next()
 		}
-		next()
 	}
 }
 
 export function fileFromMultipart(name: string, value: Express.Multer.File[] | Express.Multer.File): any {
 	if (Array.isArray(value)) {
 		return value[0]
+	} else {
+		return value
 	}
-	return value
 }
 
 /* Model conversion functions */

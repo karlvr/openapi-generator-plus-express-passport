@@ -54,10 +54,10 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 
 		hbs.registerHelper('hasOperationSupportingMultipart', function(value: CodegenOperation | CodegenOperation[]): boolean {
 			if (isCodegenOperation(value)) {
-				return value.requestBody?.defaultContent.mediaType.mimeType === 'multipart/form-data'
+				return containsMultipartOperation([value])
+			} else {
+				return containsMultipartOperation(value)
 			}
-
-			return containsMultipartOperation(value)
 		})
 
 		hbs.registerHelper('isMultipartSchema', function(value: CodegenSchema): boolean {
@@ -76,7 +76,7 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 					continue
 				}
 
-				if (!(property.schema.purpose === CodegenSchemaPurpose.METADATA)) {
+				if (property.schema.purpose !== CodegenSchemaPurpose.METADATA) {
 					continue
 				}
 
