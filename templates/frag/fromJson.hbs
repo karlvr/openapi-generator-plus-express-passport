@@ -18,11 +18,7 @@ Output a reference to a function to transform the JSON input value to a JavaScri
 {{~else if (isObject)~}}
 {{prefix}}model{{className nativeType.parentType}}FromJson
 {{~else if (isArray)~}}
-{{#if component.nullable}}
-{{prefix}}arrayFromJsonWithNullable({{>frag/fromJson component.schema prefix=prefix}})
-{{~else~}}
-{{prefix}}arrayFromJson({{>frag/fromJson component.schema prefix=prefix}})
-{{/if}}
+{{prefix}}arrayFromJson{{#if component.nullable}}WithNullable{{/if}}({{>frag/fromJson component.schema prefix=prefix}})
 {{~else if (isEnum)~}}
 {{prefix}}enum{{className nativeType.parentType}}FromJson
 {{~else if (isDate)~}}
