@@ -61,7 +61,7 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 		})
 
 		hbs.registerHelper('isMultipartSchema', function(value: CodegenSchema): boolean {
-			return value.originalName === 'multipart/form-data'
+			return !!value.contentMediaType?.mimeType.match('^multipart/.*')
 		})
 
 		hbs.registerHelper('isMetadataSchema', function(value: CodegenSchema): boolean {
@@ -221,7 +221,7 @@ function compareOperations(a: CodegenOperation, b: CodegenOperation): number {
  */
 function containsMultipartOperation(operations: CodegenOperation[]): boolean {
 	for (const operation of operations) {
-		if (operation.requestBody?.defaultContent.mediaType.mimeType === 'multipart/form-data') { 
+		if (operation.requestBody?.defaultContent.mediaType.mimeType.match('^multipart/.*')) {
 			return true
 		}
 	}

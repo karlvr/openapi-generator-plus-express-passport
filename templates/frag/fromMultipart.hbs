@@ -16,7 +16,7 @@ Output a reference to a function to transform the multipart input value to a Jav
 {{~else if (isFile)~}}
 {{prefix}}fileFromMultipart
 {{~else if (isObject)~}}
-{{prefix}}model{{className nativeType.parentType}}FromMultipartFormData
+{{prefix}}model{{className nativeType.parentType}}FromMultipart
 {{~else if (isArray)~}}
 {{prefix}}arrayFromMultipart{{#if component.nullable}}WithNullable{{/if}}({{>frag/fromMultipart component.schema prefix=prefix}})
 {{~else if (isEnum)~}}

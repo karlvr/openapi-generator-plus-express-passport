@@ -1,6 +1,6 @@
 const {{constantName (concat nativeType 'Keys')}}: string[] = [{{#each properties}}{{{stringLiteral serializedName}}}{{#hasMore}}, {{/hasMore}}{{/each}}]
 
-function model{{className nativeType.parentType}}FromMultipartFormDataContent(name: string, value: any, knownKeys: Record<string, boolean> = {}): {{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}} {
+function model{{className nativeType.parentType}}FromMultipartContent(name: string, value: {{#ifeq purpose 'REQUEST_BODY'}}Express.Request{{else}}any{{/ifeq}}, knownKeys: Record<string, boolean> = {}): {{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}} {
 	if (typeof value !== 'object' || value === undefined || value === null) {
 		throw `Invalid type for ${name}: expected object got ${typeof value}`
 	}
@@ -49,7 +49,7 @@ export function model{{className nativeType.parentType}}FromMultipart(name: stri
 	throw `Invalid value for ${name}: didn't contain a known discriminator value: ${discriminatorValue}`
 	{{else}}
 	const knownKeys: Record<string, boolean> = {}
-	const result: {{nativeType}} = model{{className nativeType.parentType}}FromMultipartFormDataContent(name, value, knownKeys)
+	const result: {{nativeType}} = model{{className nativeType.parentType}}FromMultipartContent(name, value, knownKeys)
 
 	/* Known keys */
 	if (__options?.failOnUnknownProperties) {
