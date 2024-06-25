@@ -36,43 +36,7 @@ function model{{className nativeType.parentType}}FromMultipartFormDataContent(na
 	return result
 }
 
-function model{{className nativeType.parentType}}ToJsonContent(name: string, value: {{nativeType}}, knownKeys: Record<string, boolean> = {}): ToJson<{{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}}> {
-	if (typeof value !== 'object' || value === undefined || value === null) {
-		throw `Invalid type for ${name}: expected object got ${typeof value}`
-	}
-
-	{{constantName (concat nativeType 'Keys')}}.forEach(k => knownKeys[k] = true)
-	
-	const result: ToJson<{{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}}> = {
-	{{#each parents}}
-		...{{>frag/toJson . prefix=''}}Content(name, value as unknown as {{{nativeType}}}, knownKeys),
-	{{/each}}
-	{{#each properties}}
-	{{#unless writeOnly}}
-	{{#if required}}
-	{{#if nullable}}
-		{{{stringLiteral serializedName}}}: allowNull({{>frag/toJson schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
-	{{else}}
-		{{{stringLiteral serializedName}}}: {{>frag/toJson schema prefix=''}}(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
-	{{/if}}
-	{{else}}
-	{{#if nullable}}
-		{{{stringLiteral serializedName}}}: allowNullOrUndefined({{>frag/toJson schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
-	{{else}}
-		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/toJson schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
-	{{/if}}
-	{{/if}}
-	{{/unless}}
-	{{/each}}
-	{{#each discriminatorValues}}
-		{{{stringLiteral schema.discriminator.serializedName}}}: {{{literalValue}}},
-	{{/each}}
-	}
-
-	return result
-}
-
-export function model{{className nativeType.parentType}}FromMultipartFormData(name: string, value: any): {{nativeType}} {
+export function model{{className nativeType.parentType}}FromMultipart(name: string, value: {{#ifeq purpose 'REQUEST_BODY'}}Express.Request{{else}}any{{/ifeq}}): {{nativeType}} {
 	{{#if discriminator}}
 	const discriminatorValue = value.{{discriminator.serializedName}}
 	switch (discriminatorValue) {
@@ -100,31 +64,5 @@ export function model{{className nativeType.parentType}}FromMultipartFormData(na
 	{{/if}}
 }
 
-export function model{{className nativeType.parentType}}ToJson(name: string, value: {{nativeType}}): ToJson<{{nativeType}}> {
-	{{#if discriminator}}
-	const discriminatorValue = value.{{discriminator.serializedName}}
-	switch (discriminatorValue) {
-		{{#each discriminator.references}}
-		case {{{literalValue}}}:
-			return {{>frag/toJson schema prefix=''}}(name, value)
-		{{/each}}
-	}
-
-	throw `Invalid value for ${name}: didn't contain a known discriminator value: ${discriminatorValue}`
-	{{else}}
-	const knownKeys: Record<string, boolean> = {}
-	const result: ToJson<{{nativeType}}> = model{{className nativeType.parentType}}ToJsonContent(name, value, knownKeys)
-
-	/* Known keys */
-	if (__options?.failOnUnknownProperties) {
-		for (const key of Object.keys(value)) {
-			if (!knownKeys[key]) {
-				throw `Unexpected key in {{nativeType}}: ${key}`
-			}
-		}
-	}
-
-	return result
-	{{/if}}
-}
+{{>frag/toJsonFunctions}}
 {{>nestedValidation}}
