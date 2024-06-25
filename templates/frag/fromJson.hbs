@@ -14,7 +14,7 @@ Output a reference to a function to transform the JSON input value to a JavaScri
 {{~else if (isBinary)~}}
 {{prefix}}binaryFromJson
 {{~else if (isFile)~}}
-{{prefix}}fileFromMultipart
+{{prefix}}fileFromValue
 {{~else if (isObject)~}}
 {{prefix}}model{{className nativeType.parentType}}FromJson
 {{~else if (isArray)~}}

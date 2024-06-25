@@ -4,8 +4,6 @@ Extract the correct value from the multipart input for use with the function fro
 --}}
 {{#if (isFile schema)}}
 value
-{{~else if (isMetadataSchema schema)~}}
-value.files && !Array.isArray(value.files) && value.files[{{{stringLiteral serializedName}}}]
 {{~else~}}
-value.body[{{{stringLiteral serializedName}}}]
+value[{{{stringLiteral serializedName}}}]
 {{~/if}}

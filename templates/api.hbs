@@ -57,7 +57,14 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 						return undefined
 						{{else}}
 						{{#if (isContentMultipart .)}}
-						return {{>frag/fromMultipart schema prefix='v.'}}('body', req)
+						if (req.files && !Array.isArray(req.files)) {
+							{{#with (getFileUploadProperties ../../requestBody.defaultContent.schema.properties)}}
+							{{#each this}}
+							req.body[{{{stringLiteral name}}}] = req.files[{{{stringLiteral name}}}]
+							{{/each}}
+							{{/with}}
+						}
+						return {{>frag/fromJson schema prefix='v.'}}('body', req.body)
 						{{else if (isContentJson .)}}
 						return {{>frag/fromJson schema prefix='v.'}}('body', req.body)
 						{{else if (isBinary schema)}}
@@ -69,6 +76,7 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 						{{/if}}
 						{{/unless}}
 					}
+
 					{{/each}}
 					{{/with}}
 					console.error(`Invalid request content type: ${__contentType}`)
