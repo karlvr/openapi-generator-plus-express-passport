@@ -16,7 +16,7 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 		{{{stringLiteral (pathTemplate fullPath)}}},
 		{{>frag/apiSecurityRequirements}}
 		{{#if (hasOperationSupportingMultipart .)}}
-		{{#with (getFileUploadProperties requestBody.defaultContent.schema.properties)}}
+		{{#with (toFileUploadProperties requestBody.defaultContent.schema.properties)}}
 		(req, res, next) => {
 			const fileFields = [{{#each this}}{ name: {{{stringLiteral name}}}, maxCount: {{#if maxCount}}{{{maxCount}}}{{else}}1{{/if}} }{{#hasMore}}, {{/hasMore}}{{/each}}]
 			f.upload.fields(fileFields)(req, res, (error) => {
@@ -58,7 +58,7 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 						{{else}}
 						{{#if (isContentMultipart .)}}
 						if (req.files && !Array.isArray(req.files)) {
-							{{#with (getFileUploadProperties ../../requestBody.defaultContent.schema.properties)}}
+							{{#with (toFileUploadProperties ../../requestBody.defaultContent.schema.properties)}}
 							{{#each this}}
 							req.body[{{{stringLiteral name}}}] = req.files[{{{stringLiteral name}}}]
 							{{/each}}
