@@ -1,9 +1,0 @@
-{{!--
-Extract the correct value from the JavaScript object for use with the function from fromJson.
-@param <this> CodegenProperty or CodegenSchema
---}}
-{{#if (isFile schema)}}
-value
-{{~else~}}
-value[{{{stringLiteral serializedName}}}]
-{{~/if}}

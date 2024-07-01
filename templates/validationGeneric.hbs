@@ -1,6 +1,29 @@
+{{#ifneq purpose 'METADATA'}}
 const {{constantName (concat nativeType 'Keys')}}: string[] = [{{#each properties}}{{{stringLiteral serializedName}}}{{#hasMore}}, {{/hasMore}}{{/each}}]
 
+{{/ifneq}}
 function model{{className nativeType.parentType}}FromJsonContent(name: string, value: any, knownKeys: Record<string, boolean> = {}): {{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}} {
+{{#ifeq purpose 'METADATA'}}
+	const result: {{{nativeType}}} = {
+	{{#with properties.value}}
+	{{#unless readOnly}}
+	{{#if required}}
+	{{#if nullable}}
+		{{{stringLiteral serializedName}}}: allowNull({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, value),
+	{{else}}
+		{{{stringLiteral serializedName}}}: {{>frag/fromJson schema prefix=''}}(`${name}.{{serializedName}}`, value),
+	{{/if}}
+	{{else}}
+	{{#if nullable}}
+		{{{stringLiteral serializedName}}}: allowNullOrUndefined({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, value),
+	{{else}}
+		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, value),
+	{{/if}}
+	{{/if}}
+	{{/unless}}
+	{{/with}}
+	}
+{{else}}
 	if (typeof value !== 'object' || value === undefined || value === null) {
 		throw `Invalid type for ${name}: expected object got ${typeof value}`
 	}
@@ -15,15 +38,15 @@ function model{{className nativeType.parentType}}FromJsonContent(name: string, v
 	{{#unless readOnly}}
 	{{#if required}}
 	{{#if nullable}}
-		{{{stringLiteral serializedName}}}: allowNull({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, {{>frag/extractValue .}}),
+		{{{stringLiteral serializedName}}}: allowNull({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{else}}
-		{{{stringLiteral serializedName}}}: {{>frag/fromJson schema prefix=''}}(`${name}.{{serializedName}}`, {{>frag/extractValue .}}),
+		{{{stringLiteral serializedName}}}: {{>frag/fromJson schema prefix=''}}(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{/if}}
 	{{else}}
 	{{#if nullable}}
-		{{{stringLiteral serializedName}}}: allowNullOrUndefined({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, {{>frag/extractValue .}}),
+		{{{stringLiteral serializedName}}}: allowNullOrUndefined({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{else}}
-		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, {{>frag/extractValue .}}),
+		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{/if}}
 	{{/if}}
 	{{/unless}}
@@ -32,11 +55,15 @@ function model{{className nativeType.parentType}}FromJsonContent(name: string, v
 		{{{stringLiteral schema.discriminator.serializedName}}}: {{{literalValue}}},
 	{{/each}}
 	}
+{{/ifeq}}
 
 	return result
 }
 
 function model{{className nativeType.parentType}}ToJsonContent(name: string, value: {{nativeType}}, knownKeys: Record<string, boolean> = {}): ToJson<{{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}}> {
+{{#ifeq purpose 'METADATA'}}
+	throw 'toJson not supported for metadata schemas'
+{{else}}
 	if (typeof value !== 'object' || value === undefined || value === null) {
 		throw `Invalid type for ${name}: expected object got ${typeof value}`
 	}
@@ -70,6 +97,7 @@ function model{{className nativeType.parentType}}ToJsonContent(name: string, val
 	}
 
 	return result
+{{/ifeq}}
 }
 
 export function model{{className nativeType.parentType}}FromJson(name: string, value: any): {{nativeType}} {
