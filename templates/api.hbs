@@ -23,9 +23,9 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 				if (error?.code === 'LIMIT_UNEXPECTED_FILE') {
 					const field = fileFields.find(field => field.name === error.field)
 					if (field) {
-						res.status(400).send(`The field '${error.field}' allows a maximum of ${field.maxCount} file(s)`)
+						res.status(400).type('text/plain; charset=utf-8').send(`The field '${error.field}' allows a maximum of ${field.maxCount} file(s)`)
 					} else {
-						res.status(400).send(`Unexpected field '${error.field}' in multipart request`)
+						res.status(400).type('text/plain; charset=utf-8').send(`Unexpected field '${error.field}' in multipart request`)
 					}
 				} else {
 					next(error)
