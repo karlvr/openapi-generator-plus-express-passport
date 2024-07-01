@@ -16,9 +16,9 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 		{{{stringLiteral (pathTemplate fullPath)}}},
 		{{>frag/apiSecurityRequirements}}
 		{{#if (hasOperationSupportingMultipart .)}}
-		{{#with (toFileUploadProperties requestBody.defaultContent.schema.properties)}}
+		{{#with (fileUploadProperties requestBody.defaultContent.schema.properties)}}
 		(req, res, next) => {
-			const fileFields = [{{#each this}}{ name: {{{stringLiteral name}}}, maxCount: {{#if maxCount}}{{{maxCount}}}{{else}}1{{/if}} }{{#hasMore}}, {{/hasMore}}{{/each}}]
+			const fileFields = [{{#each this}}{ name: {{{stringLiteral name}}}, maxCount: {{{maxCount}}} }{{#hasMore}}, {{/hasMore}}{{/each}}]
 			f.upload.fields(fileFields)(req, res, (error) => {
 				if (error?.code === 'LIMIT_UNEXPECTED_FILE') {
 					res.status(400).send(`The field '${error.field}' allows a maximum of ${(fileFields.find(f => f.name === error.field))!.maxCount} file(s)`)
@@ -57,11 +57,9 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 						{{else}}
 						{{#if (isContentMultipart .)}}
 						if (req.files && !Array.isArray(req.files)) {
-							{{#with (toFileUploadProperties ../../requestBody.defaultContent.schema.properties)}}
-							{{#each this}}
+							{{#each (fileUploadProperties schema.properties)}}
 							req.body[{{{stringLiteral name}}}] = req.files[{{{stringLiteral name}}}]
 							{{/each}}
-							{{/with}}
 						}
 						return {{>frag/fromJson schema prefix='v.'}}('body', req.body)
 						{{else if (isContentJson .)}}

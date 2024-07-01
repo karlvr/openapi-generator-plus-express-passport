@@ -1,4 +1,5 @@
-import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation, isCodegenEnumSchema, isCodegenObjectSchema, isCodegenAnyOfSchema, isCodegenInterfaceSchema, isCodegenOneOfSchema, CodegenSchemaType, CodegenMediaType, CodegenContent, isCodegenOperation, CodegenSchemaPurpose, isCodegenArraySchema, CodegenProperties } from '@openapi-generator-plus/types'
+import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation, isCodegenEnumSchema, isCodegenObjectSchema, isCodegenAnyOfSchema, isCodegenInterfaceSchema, isCodegenOneOfSchema, CodegenSchemaType, CodegenMediaType, CodegenContent, isCodegenOperation, CodegenSchemaPurpose, isCodegenArraySchema, CodegenProperties, isCodegenObjectLikeSchema } from '@openapi-generator-plus/types'
+import { valueSchemaForMetadataSchema } from '@openapi-generator-plus/utils'
 import path from 'path'
 import { loadTemplates, emit } from '@openapi-generator-plus/handlebars-templates'
 import typescriptGenerator, { options as typescriptCommonOptions, TypeScriptGeneratorContext, chainTypeScriptGeneratorContext, DateApproach } from '@openapi-generator-plus/typescript-generator-common'
@@ -60,25 +61,28 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 			}
 		})
 
-		hbs.registerHelper('toFileUploadProperties', function(properties: CodegenProperties): FileUploadProperty[] {
+		hbs.registerHelper('fileUploadProperties', function(properties: CodegenProperties): FileUploadProperty[] {
 			const results: FileUploadProperty[] = []
 			for (const prop in properties) {
 				const property = properties[prop]
+
 				if (property.schema.purpose !== CodegenSchemaPurpose.METADATA) {
 					continue
 				}
 
-				if (isCodegenArraySchema(property.schema) && property.schema.component) {
+				const valueSchema = valueSchemaForMetadataSchema(property.schema)
+
+				if (isCodegenObjectLikeSchema(property.schema) && valueSchema?.schemaType === CodegenSchemaType.FILE) {
+					results.push({
+						name: prop,
+						minCount: null,
+						maxCount: 1,
+					})
+				} else if (isCodegenArraySchema(property.schema) && valueSchema?.schemaType === CodegenSchemaType.FILE) {
 					results.push({
 						name: prop,
 						minCount: property.schema.minItems,
 						maxCount: property.schema.maxItems,
-					})
-				} else {
-					results.push({
-						name: prop,
-						minCount: null,
-						maxCount: null,
 					})
 				}
 			}
