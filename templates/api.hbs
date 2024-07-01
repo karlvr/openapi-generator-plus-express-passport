@@ -15,7 +15,7 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 	app.{{lowerCase httpMethod}}(
 		{{{stringLiteral (pathTemplate fullPath)}}},
 		{{>frag/apiSecurityRequirements}}
-		{{#if (hasOperationSupportingMultipart .)}}
+		{{#if (operationSupportingMultipart .)}}
 		{{#with (fileUploadProperties requestBody.defaultContent.schema.properties)}}
 		(req, res, next) => {
 			const fileFields = [{{#each this}}{ name: {{{stringLiteral name}}}, maxCount: {{{maxCount}}} }{{#hasMore}}, {{/hasMore}}{{/each}}]
@@ -78,7 +78,6 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 						{{/if}}
 						{{/unless}}
 					}
-
 					{{/each}}
 					{{/with}}
 					console.error(`Invalid request content type: ${__contentType}`)

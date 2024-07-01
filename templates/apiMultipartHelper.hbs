@@ -3,4 +3,6 @@ import multer from 'multer'
 /**
  * File upload handling for multipart operations in the {{className name}} API endpoint.
  */
-export const upload = multer({storage: multer.memoryStorage()})
+export const upload = multer({
+    storage: multer.memoryStorage(),
+})

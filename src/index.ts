@@ -53,7 +53,7 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 			return !!value.mediaType.mimeType.match('\\bjson$')
 		})
 
-		hbs.registerHelper('hasOperationSupportingMultipart', function(value: CodegenOperation | CodegenOperation[]): boolean {
+		hbs.registerHelper('operationSupportingMultipart', function(value: CodegenOperation | CodegenOperation[]): boolean {
 			if (isCodegenOperation(value)) {
 				return containsMultipartOperation([value])
 			} else {
