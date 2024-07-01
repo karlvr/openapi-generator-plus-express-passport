@@ -1,5 +1,5 @@
 import * as t from '../api/{{identifier name}}/types'
-{{#if (hasOperationSupportingMultipart operations)}}
+{{#if containsMultipartOperation}}
 import * as f from './helpers/{{lowerCase name}}MultipartHelper'
 {{/if}}
 import { Api } from '../models'

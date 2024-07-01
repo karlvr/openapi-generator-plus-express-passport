@@ -92,17 +92,20 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 			if (!operations.length) {
 				continue
 			}
+
+			const apiContainsMultipartOperations = containsMultipartOperation(operations)
+
 			await emit('api', path.join(outputPath, relativeSourceOutputPath, 'api', context.generator().toIdentifier(group.name), 'index.ts'), 
-				{ ...rootContext, ...group, ...doc }, true, hbs)
+				{ ...rootContext, ...group, ...doc, containsMultipartOperation: apiContainsMultipartOperations }, true, hbs)
 			await emit('apiTypes', path.join(outputPath, relativeSourceOutputPath, 'api', context.generator().toIdentifier(group.name), 'types.ts'), 
 				{ ...rootContext, ...group, ...doc }, true, hbs)
 			await emit('apiReadme', path.join(outputPath, relativeSourceOutputPath, 'api', context.generator().toIdentifier(group.name), 'README.md'), 
 				{ ...rootContext, ...group, ...doc }, true, hbs)
 
 			await emit('apiImpl', path.join(outputPath, relativeSourceOutputPath, 'impl', `${context.generator().toIdentifier(group.name)}.ts`), 
-				{ ...rootContext, ...group, ...doc }, false, hbs)
+				{ ...rootContext, ...group, ...doc, containsMultipartOperation: apiContainsMultipartOperations }, false, hbs)
 
-			if (containsMultipartOperation(operations)) {
+			if (apiContainsMultipartOperations) {
 				await emit('apiMultipartHelper', path.join(outputPath, relativeSourceOutputPath, 'impl/helpers', `${context.generator().toIdentifier(group.name)}MultipartHelper.ts`),
 					{ ...rootContext, ...group, ...doc }, false, hbs)
 			}
