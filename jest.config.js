@@ -6,6 +6,7 @@ module.exports = {
 		'/node_modules/',
 		'/dist/',
 		'/test-output/',
+		'/test-input/',
 	],
 	/* Only run files with test or spec in their filename, so we can have support files in __tests__ */
 	testRegex: '(\\.|/)(test|spec)\\.[jt]sx?$',

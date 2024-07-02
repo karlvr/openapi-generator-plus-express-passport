@@ -21,10 +21,19 @@ describe('compile test cases', () => {
 	}
 
 	const basePath = path.join(__dirname, '..', '..', '__tests__', 'specs')
-	compileFiles(basePath, fs.readdirSync(basePath))
+	if (fs.existsSync(basePath)) {
+		compileFiles(basePath, fs.readdirSync(basePath))
+	} else {
+		console.warn(`Cannot find __tests__ in local repo: ${basePath}`)
+	}
 
 	const sharedBasePath = path.join(__dirname, '../../../openapi-generator-plus-generators/__tests__/specs')
 	if (fs.existsSync(sharedBasePath)) {
 		compileFiles(sharedBasePath, fs.readdirSync(sharedBasePath))
+	}
+
+	const ciSharedBasePath = path.join(__dirname, '../../test-input/__tests__/specs')
+	if (fs.existsSync(ciSharedBasePath)) {
+		compileFiles(ciSharedBasePath, fs.readdirSync(ciSharedBasePath))
 	}
 })
