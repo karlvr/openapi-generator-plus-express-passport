@@ -4,7 +4,7 @@ export function oneOf{{className nativeType.parentType}}FromJson(name: string, v
 	switch (value.{{discriminator.name}}) {
 		{{#each discriminator.references}}
 		case {{{literalValue}}}:
-			return {{>frag/fromJson schema prefix=''}}(name, value)
+			return {{>frag/fromRequest schema prefix=''}}(name, value)
 		{{/each}}
 	}
 
@@ -13,7 +13,7 @@ export function oneOf{{className nativeType.parentType}}FromJson(name: string, v
 	const errors: any[] = []
 	{{#each composes}}
 	try {
-		return {{>frag/fromJson . prefix=''}}(name, value as {{nativeType}})
+		return {{>frag/fromRequest . prefix=''}}(name, value as {{nativeType}})
 	} catch (error) {
 		errors.push(error)
 	}
@@ -29,7 +29,7 @@ export function oneOf{{className nativeType.parentType}}ToJson(name: string, val
 	switch (discriminatorValue) {
 		{{#each discriminator.references}}
 		case {{{literalValue}}}:
-			return {{>frag/toJson schema prefix=''}}(name, value)
+			return {{>frag/toResponse schema prefix=''}}(name, value)
 		{{/each}}
 	}
 
@@ -38,7 +38,7 @@ export function oneOf{{className nativeType.parentType}}ToJson(name: string, val
 	const errors: any[] = []
 	{{#each composes}}
 	try {
-		return {{>frag/toJson . prefix=''}}(name, value as {{nativeType}})
+		return {{>frag/toResponse . prefix=''}}(name, value as {{nativeType}})
 	} catch (error) {
 		errors.push(error)
 	}

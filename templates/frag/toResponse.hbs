@@ -1,5 +1,5 @@
 {{!--
-Output a reference to a FromJsonFunction function.
+Output a reference to a function to serialize the value to the form suitable for a response.
 @param <this> CodegenSchema
 @param prefix the import prefix for the functions
 --}}
@@ -16,7 +16,7 @@ Output a reference to a FromJsonFunction function.
 {{~else if (isObject)~}}
 {{prefix}}model{{className nativeType.parentType}}ToJson
 {{~else if (isArray)~}}
-{{prefix}}arrayToJson({{>frag/toJson component.schema prefix=prefix}})
+{{prefix}}arrayToJson({{>frag/toResponse component.schema prefix=prefix}})
 {{~else if (isEnum)~}}
 {{prefix}}enum{{className nativeType.parentType}}ToJson
 {{~else if (isDate)~}}
@@ -26,7 +26,7 @@ Output a reference to a FromJsonFunction function.
 {{~else if (isTime)~}}
 {{prefix}}timeToJson
 {{~else if (isMap)~}}
-{{prefix}}mapToJson({{>frag/toJson component.schema prefix=prefix}})
+{{prefix}}mapToJson({{>frag/toResponse component.schema prefix=prefix}})
 {{~else if (isInterface)~}}
 {{prefix}}model{{className nativeType.parentType}}ToJson
 {{~else if (isOneOf)~}}

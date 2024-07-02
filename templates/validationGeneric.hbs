@@ -9,15 +9,15 @@ function model{{className nativeType.parentType}}FromJsonContent(name: string, v
 	{{#unless readOnly}}
 	{{#if required}}
 	{{#if nullable}}
-		{{{stringLiteral serializedName}}}: allowNull({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, value),
+		{{{stringLiteral serializedName}}}: allowNull({{>frag/fromRequest schema prefix=''}})(`${name}.{{serializedName}}`, value),
 	{{else}}
-		{{{stringLiteral serializedName}}}: {{>frag/fromJson schema prefix=''}}(`${name}.{{serializedName}}`, value),
+		{{{stringLiteral serializedName}}}: {{>frag/fromRequest schema prefix=''}}(`${name}.{{serializedName}}`, value),
 	{{/if}}
 	{{else}}
 	{{#if nullable}}
-		{{{stringLiteral serializedName}}}: allowNullOrUndefined({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, value),
+		{{{stringLiteral serializedName}}}: allowNullOrUndefined({{>frag/fromRequest schema prefix=''}})(`${name}.{{serializedName}}`, value),
 	{{else}}
-		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, value),
+		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/fromRequest schema prefix=''}})(`${name}.{{serializedName}}`, value),
 	{{/if}}
 	{{/if}}
 	{{/unless}}
@@ -32,21 +32,21 @@ function model{{className nativeType.parentType}}FromJsonContent(name: string, v
 
 	const result: {{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}} = {
 	{{#each parents}}
-		...{{>frag/fromJson . prefix=''}}Content(name, value, knownKeys),
+		...{{>frag/fromRequest . prefix=''}}Content(name, value, knownKeys),
 	{{/each}}
 	{{#each properties}}
 	{{#unless readOnly}}
 	{{#if required}}
 	{{#if nullable}}
-		{{{stringLiteral serializedName}}}: allowNull({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
+		{{{stringLiteral serializedName}}}: allowNull({{>frag/fromRequest schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{else}}
-		{{{stringLiteral serializedName}}}: {{>frag/fromJson schema prefix=''}}(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
+		{{{stringLiteral serializedName}}}: {{>frag/fromRequest schema prefix=''}}(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{/if}}
 	{{else}}
 	{{#if nullable}}
-		{{{stringLiteral serializedName}}}: allowNullOrUndefined({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
+		{{{stringLiteral serializedName}}}: allowNullOrUndefined({{>frag/fromRequest schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{else}}
-		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
+		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/fromRequest schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{/if}}
 	{{/if}}
 	{{/unless}}
@@ -72,21 +72,21 @@ function model{{className nativeType.parentType}}ToJsonContent(name: string, val
 	
 	const result: ToJson<{{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}}> = {
 	{{#each parents}}
-		...{{>frag/toJson . prefix=''}}Content(name, value as unknown as {{{nativeType}}}, knownKeys),
+		...{{>frag/toResponse . prefix=''}}Content(name, value as unknown as {{{nativeType}}}, knownKeys),
 	{{/each}}
 	{{#each properties}}
 	{{#unless writeOnly}}
 	{{#if required}}
 	{{#if nullable}}
-		{{{stringLiteral serializedName}}}: allowNull({{>frag/toJson schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
+		{{{stringLiteral serializedName}}}: allowNull({{>frag/toResponse schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{else}}
-		{{{stringLiteral serializedName}}}: {{>frag/toJson schema prefix=''}}(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
+		{{{stringLiteral serializedName}}}: {{>frag/toResponse schema prefix=''}}(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{/if}}
 	{{else}}
 	{{#if nullable}}
-		{{{stringLiteral serializedName}}}: allowNullOrUndefined({{>frag/toJson schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
+		{{{stringLiteral serializedName}}}: allowNullOrUndefined({{>frag/toResponse schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{else}}
-		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/toJson schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
+		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/toResponse schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{/if}}
 	{{/if}}
 	{{/unless}}
@@ -106,7 +106,7 @@ export function model{{className nativeType.parentType}}FromJson(name: string, v
 	switch (discriminatorValue) {
 		{{#each discriminator.references}}
 		case {{{literalValue}}}:
-			return {{>frag/fromJson schema prefix=''}}(name, value)
+			return {{>frag/fromRequest schema prefix=''}}(name, value)
 		{{/each}}
 	}
 
@@ -134,7 +134,7 @@ export function model{{className nativeType.parentType}}ToJson(name: string, val
 	switch (discriminatorValue) {
 		{{#each discriminator.references}}
 		case {{{literalValue}}}:
-			return {{>frag/toJson schema prefix=''}}(name, value)
+			return {{>frag/toResponse schema prefix=''}}(name, value)
 		{{/each}}
 	}
 
