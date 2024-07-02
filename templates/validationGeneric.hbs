@@ -2,22 +2,22 @@
 const {{constantName (concat nativeType 'Keys')}}: string[] = [{{#each properties}}{{{stringLiteral serializedName}}}{{#hasMore}}, {{/hasMore}}{{/each}}]
 
 {{/ifneq}}
-function model{{className nativeType.parentType}}FromJsonContent(name: string, value: any, knownKeys: Record<string, boolean> = {}): {{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}} {
+function model{{className nativeType.parentType}}FromRequestContent(name: string, value: any, knownKeys: Record<string, boolean> = {}): {{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}} {
 {{#ifeq purpose 'METADATA'}}
 	const result: {{{nativeType}}} = {
 	{{#with properties.value}}
 	{{#unless readOnly}}
 	{{#if required}}
 	{{#if nullable}}
-		{{{stringLiteral serializedName}}}: allowNull({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, value),
+		{{{stringLiteral serializedName}}}: allowNull({{>frag/fromRequest schema prefix=''}})(`${name}.{{serializedName}}`, value),
 	{{else}}
-		{{{stringLiteral serializedName}}}: {{>frag/fromJson schema prefix=''}}(`${name}.{{serializedName}}`, value),
+		{{{stringLiteral serializedName}}}: {{>frag/fromRequest schema prefix=''}}(`${name}.{{serializedName}}`, value),
 	{{/if}}
 	{{else}}
 	{{#if nullable}}
-		{{{stringLiteral serializedName}}}: allowNullOrUndefined({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, value),
+		{{{stringLiteral serializedName}}}: allowNullOrUndefined({{>frag/fromRequest schema prefix=''}})(`${name}.{{serializedName}}`, value),
 	{{else}}
-		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, value),
+		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/fromRequest schema prefix=''}})(`${name}.{{serializedName}}`, value),
 	{{/if}}
 	{{/if}}
 	{{/unless}}
@@ -32,21 +32,21 @@ function model{{className nativeType.parentType}}FromJsonContent(name: string, v
 
 	const result: {{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}} = {
 	{{#each parents}}
-		...{{>frag/fromJson . prefix=''}}Content(name, value, knownKeys),
+		...{{>frag/fromRequest . prefix=''}}Content(name, value, knownKeys),
 	{{/each}}
 	{{#each properties}}
 	{{#unless readOnly}}
 	{{#if required}}
 	{{#if nullable}}
-		{{{stringLiteral serializedName}}}: allowNull({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
+		{{{stringLiteral serializedName}}}: allowNull({{>frag/fromRequest schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{else}}
-		{{{stringLiteral serializedName}}}: {{>frag/fromJson schema prefix=''}}(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
+		{{{stringLiteral serializedName}}}: {{>frag/fromRequest schema prefix=''}}(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{/if}}
 	{{else}}
 	{{#if nullable}}
-		{{{stringLiteral serializedName}}}: allowNullOrUndefined({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
+		{{{stringLiteral serializedName}}}: allowNullOrUndefined({{>frag/fromRequest schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{else}}
-		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/fromJson schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
+		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/fromRequest schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{/if}}
 	{{/if}}
 	{{/unless}}
@@ -60,9 +60,9 @@ function model{{className nativeType.parentType}}FromJsonContent(name: string, v
 	return result
 }
 
-function model{{className nativeType.parentType}}ToJsonContent(name: string, value: {{nativeType}}, knownKeys: Record<string, boolean> = {}): ToJson<{{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}}> {
+function model{{className nativeType.parentType}}ToResponseContent(name: string, value: {{nativeType}}, knownKeys: Record<string, boolean> = {}): ToResponse<{{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}}> {
 {{#ifeq purpose 'METADATA'}}
-	throw 'toJson not supported for metadata schemas'
+	throw 'toResponse not supported for metadata schemas'
 {{else}}
 	if (typeof value !== 'object' || value === undefined || value === null) {
 		throw `Invalid type for ${name}: expected object got ${typeof value}`
@@ -70,23 +70,23 @@ function model{{className nativeType.parentType}}ToJsonContent(name: string, val
 
 	{{constantName (concat nativeType 'Keys')}}.forEach(k => knownKeys[k] = true)
 	
-	const result: ToJson<{{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}}> = {
+	const result: ToResponse<{{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}}> = {
 	{{#each parents}}
-		...{{>frag/toJson . prefix=''}}Content(name, value as unknown as {{{nativeType}}}, knownKeys),
+		...{{>frag/toResponse . prefix=''}}Content(name, value as unknown as {{{nativeType}}}, knownKeys),
 	{{/each}}
 	{{#each properties}}
 	{{#unless writeOnly}}
 	{{#if required}}
 	{{#if nullable}}
-		{{{stringLiteral serializedName}}}: allowNull({{>frag/toJson schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
+		{{{stringLiteral serializedName}}}: allowNull({{>frag/toResponse schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{else}}
-		{{{stringLiteral serializedName}}}: {{>frag/toJson schema prefix=''}}(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
+		{{{stringLiteral serializedName}}}: {{>frag/toResponse schema prefix=''}}(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{/if}}
 	{{else}}
 	{{#if nullable}}
-		{{{stringLiteral serializedName}}}: allowNullOrUndefined({{>frag/toJson schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
+		{{{stringLiteral serializedName}}}: allowNullOrUndefined({{>frag/toResponse schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{else}}
-		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/toJson schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
+		{{{stringLiteral serializedName}}}: allowUndefined({{>frag/toResponse schema prefix=''}})(`${name}.{{serializedName}}`, value[{{{stringLiteral serializedName}}}]),
 	{{/if}}
 	{{/if}}
 	{{/unless}}
@@ -100,20 +100,20 @@ function model{{className nativeType.parentType}}ToJsonContent(name: string, val
 {{/ifeq}}
 }
 
-export function model{{className nativeType.parentType}}FromJson(name: string, value: any): {{nativeType}} {
+export function model{{className nativeType.parentType}}FromRequest(name: string, value: any): {{nativeType}} {
 	{{#if discriminator}}
 	const discriminatorValue = value.{{discriminator.serializedName}}
 	switch (discriminatorValue) {
 		{{#each discriminator.references}}
 		case {{{literalValue}}}:
-			return {{>frag/fromJson schema prefix=''}}(name, value)
+			return {{>frag/fromRequest schema prefix=''}}(name, value)
 		{{/each}}
 	}
 
 	throw `Invalid value for ${name}: didn't contain a known discriminator value: ${discriminatorValue}`
 	{{else}}
 	const knownKeys: Record<string, boolean> = {}
-	const result: {{nativeType}} = model{{className nativeType.parentType}}FromJsonContent(name, value, knownKeys)
+	const result: {{nativeType}} = model{{className nativeType.parentType}}FromRequestContent(name, value, knownKeys)
 
 	/* Known keys */
 	if (__options?.failOnUnknownProperties) {
@@ -128,20 +128,20 @@ export function model{{className nativeType.parentType}}FromJson(name: string, v
 	{{/if}}
 }
 
-export function model{{className nativeType.parentType}}ToJson(name: string, value: {{nativeType}}): ToJson<{{nativeType}}> {
+export function model{{className nativeType.parentType}}ToResponse(name: string, value: {{nativeType}}): ToResponse<{{nativeType}}> {
 	{{#if discriminator}}
 	const discriminatorValue = value.{{discriminator.serializedName}}
 	switch (discriminatorValue) {
 		{{#each discriminator.references}}
 		case {{{literalValue}}}:
-			return {{>frag/toJson schema prefix=''}}(name, value)
+			return {{>frag/toResponse schema prefix=''}}(name, value)
 		{{/each}}
 	}
 
 	throw `Invalid value for ${name}: didn't contain a known discriminator value: ${discriminatorValue}`
 	{{else}}
 	const knownKeys: Record<string, boolean> = {}
-	const result: ToJson<{{nativeType}}> = model{{className nativeType.parentType}}ToJsonContent(name, value, knownKeys)
+	const result: ToResponse<{{nativeType}}> = model{{className nativeType.parentType}}ToResponseContent(name, value, knownKeys)
 
 	/* Known keys */
 	if (__options?.failOnUnknownProperties) {

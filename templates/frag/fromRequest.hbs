@@ -1,0 +1,38 @@
+{{!--
+Output a reference to a function to transform the serialized request value to a JavaScript value.
+@param <this> CodegenSchema
+@param prefix the import prefix for the functions
+--}}
+{{#if (isBoolean)}}
+{{prefix}}booleanFromRequest
+{{~else if (isInteger)~}}
+{{prefix}}integerFromRequest
+{{~else if (isNumber)~}}
+{{prefix}}numberFromRequest
+{{~else if (isString)~}}
+{{prefix}}stringFromRequest
+{{~else if (isBinary)~}}
+{{prefix}}binaryFromRequest
+{{~else if (isFile)~}}
+{{prefix}}fileFromRequest
+{{~else if (isObject)~}}
+{{prefix}}model{{className nativeType.parentType}}FromRequest
+{{~else if (isArray)~}}
+{{prefix}}arrayFromRequest{{#if component.nullable}}WithNullable{{/if}}({{>frag/fromRequest component.schema prefix=prefix}})
+{{~else if (isEnum)~}}
+{{prefix}}enum{{className nativeType.parentType}}FromRequest
+{{~else if (isDate)~}}
+{{prefix}}dateFromRequest
+{{~else if (isDateTime)~}}
+{{prefix}}dateTimeFromRequest
+{{~else if (isTime)~}}
+{{prefix}}timeFromRequest
+{{~else if (isMap)~}}
+{{prefix}}mapFromRequest({{>frag/fromRequest component.schema prefix=prefix}})
+{{~else if (isInterface)~}}
+{{prefix}}model{{className nativeType.parentType}}FromRequest
+{{~else if (isOneOf)~}}
+{{prefix}}oneOf{{className nativeType.parentType}}FromRequest
+{{~else~}}
+{{prefix}}unsupportedFromRequest
+{{~/if}}

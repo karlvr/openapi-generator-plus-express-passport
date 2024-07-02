@@ -68,9 +68,9 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 							req.body[{{{stringLiteral name}}}] = req.files[{{{stringLiteral name}}}]{{#unless isArray}}[0]{{/unless}}
 							{{/each}}
 						}
-						return {{>frag/fromJson schema prefix='v.'}}('body', req.body)
+						return {{>frag/fromRequest schema prefix='v.'}}('body', req.body)
 						{{else if (isContentJson .)}}
-						return {{>frag/fromJson schema prefix='v.'}}('body', req.body)
+						return {{>frag/fromRequest schema prefix='v.'}}('body', req.body)
 						{{else if (isBinary schema)}}
 						return req.body as Buffer
 						{{else if (isString schema)}}
@@ -99,7 +99,7 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 						let body: any
 						try {
 							{{#if (isJson defaultContent)}}
-							body = {{>frag/toJson defaultContent.schema prefix='v.'}}('response', response.body)
+							body = {{>frag/toResponse defaultContent.schema prefix='v.'}}('response', response.body)
 							{{else}}
 							body = response.body
 							{{/if}}
@@ -140,7 +140,7 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 					{{#if defaultContent.schema}}
 					let body: any
 					try {
-						body = {{>frag/toJson defaultContent.schema prefix='v.'}}('response', response.body)
+						body = {{>frag/toResponse defaultContent.schema prefix='v.'}}('response', response.body)
 					} catch (error) {
 						console.error('Invalid response body in {{identifier ../../name}}.{{identifier ../name}}', error)
 						res.status(500)

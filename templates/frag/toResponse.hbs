@@ -1,0 +1,36 @@
+{{!--
+Output a reference to a function to serialize the value to the form suitable for a response.
+@param <this> CodegenSchema
+@param prefix the import prefix for the functions
+--}}
+{{#if (isBoolean)}}
+{{prefix}}booleanToResponse
+{{~else if (isInteger)~}}
+{{prefix}}integerToResponse
+{{~else if (isNumber)~}}
+{{prefix}}numberToResponse
+{{~else if (isString)~}}
+{{prefix}}stringToResponse
+{{~else if (isBinary)~}}
+{{prefix}}binaryToResponse
+{{~else if (isObject)~}}
+{{prefix}}model{{className nativeType.parentType}}ToResponse
+{{~else if (isArray)~}}
+{{prefix}}arrayToResponse({{>frag/toResponse component.schema prefix=prefix}})
+{{~else if (isEnum)~}}
+{{prefix}}enum{{className nativeType.parentType}}ToResponse
+{{~else if (isDate)~}}
+{{prefix}}dateToResponse
+{{~else if (isDateTime)~}}
+{{prefix}}dateTimeToResponse
+{{~else if (isTime)~}}
+{{prefix}}timeToResponse
+{{~else if (isMap)~}}
+{{prefix}}mapToResponse({{>frag/toResponse component.schema prefix=prefix}})
+{{~else if (isInterface)~}}
+{{prefix}}model{{className nativeType.parentType}}ToResponse
+{{~else if (isOneOf)~}}
+{{prefix}}oneOf{{className nativeType.parentType}}ToResponse
+{{~else~}}
+{{prefix}}unsupportedToResponse
+{{~/if}}

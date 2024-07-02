@@ -20,11 +20,11 @@ Parse input
 {{~else if (isDateTime)~}}
 {{prefix}}parseDateTime
 {{~else if (isObject)~}}
-{{prefix}}{{!--TODO--}}model{{className nativeType}}FromJson
+{{prefix}}{{!--TODO--}}model{{className nativeType}}FromRequest
 {{~else if (isArray)~}}
-{{prefix}}{{!--TODO--}}arrayFromJson{{#if schema.component.nullable}}WithNullable{{/if}}({{>frag/fromJson schema.component.schema prefix=prefix}})
+{{prefix}}{{!--TODO--}}arrayFromRequest{{#if schema.component.nullable}}WithNullable{{/if}}({{>frag/fromRequest schema.component.schema prefix=prefix}})
 {{~else if (isEnum)~}}
-{{prefix}}enum{{className nativeType}}FromJson
+{{prefix}}enum{{className nativeType}}FromRequest
 {{~else~}}
 {{prefix}}parseUnsupported{{/if~}}
 {{#unless required}}

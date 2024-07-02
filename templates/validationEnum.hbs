@@ -1,4 +1,4 @@
-export function enum{{className nativeType}}FromJson(name: string, value: any): {{nativeType}} {
+export function enum{{className nativeType}}FromRequest(name: string, value: any): {{nativeType}} {
 	if (typeof value !== 'string' || value === undefined || value === null) {
 		throw `Invalid type for ${name}: expected string got ${typeof value}`
 	}
@@ -12,7 +12,7 @@ export function enum{{className nativeType}}FromJson(name: string, value: any): 
 	throw `Unexpected enum value for {{nativeType}}: ${value}`
 }
 
-export function enum{{className nativeType}}ToJson(name: string, value: {{nativeType}}): {{nativeType}} {
+export function enum{{className nativeType}}ToResponse(name: string, value: {{nativeType}}): {{nativeType}} {
 	if (typeof value !== 'string' || value === undefined || value === null) {
 		throw `Invalid type for ${name}: expected string got ${typeof value}`
 	}
