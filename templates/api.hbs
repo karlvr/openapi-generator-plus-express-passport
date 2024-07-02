@@ -17,8 +17,9 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 		{{>frag/apiSecurityRequirements}}
 		{{#if (operationSupportingMultipart .)}}
 		{{#with (fileUploadProperties requestBody.defaultContent.schema.properties)}}
+		{{#if .}}
 		(req, res, next) => {
-			const fileFields = [{{#each this}}{ name: {{{stringLiteral name}}}, maxCount: {{{maxCount}}} }{{#hasMore}}, {{/hasMore}}{{/each}}]
+			const fileFields: multer.Field[] = [{{#each .}}{ name: {{{stringLiteral name}}}{{#if (isNotNull maxCount)}}, maxCount: {{{maxCount}}}{{/if}} }{{#hasMore}}, {{/hasMore}}{{/each}}]
 			f.upload.fields(fileFields)(req, res, (error) => {
 				if (error?.code === 'LIMIT_UNEXPECTED_FILE') {
 					const field = fileFields.find(field => field.name === error.field)
@@ -32,11 +33,12 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 				}
 			})
 		},
-		{{#each this}}
+		{{#each .}}
 		{{#if minCount}}
 		v.verifyMinimumFiles({{{stringLiteral name}}}, {{{minCount}}}),
 		{{/if}}
 		{{/each}}
+		{{/if}}
 		{{/with}}
 		{{/if}}
 		function (req: Request, res: Response) {
