@@ -1,4 +1,4 @@
-import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation, isCodegenEnumSchema, isCodegenObjectSchema, isCodegenAnyOfSchema, isCodegenInterfaceSchema, isCodegenOneOfSchema, CodegenSchemaType, CodegenMediaType, CodegenContent, isCodegenOperation, CodegenSchemaPurpose, isCodegenArraySchema, CodegenProperties, isCodegenObjectLikeSchema } from '@openapi-generator-plus/types'
+import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation, isCodegenEnumSchema, isCodegenObjectSchema, isCodegenAnyOfSchema, isCodegenInterfaceSchema, isCodegenOneOfSchema, CodegenSchemaType, CodegenMediaType, CodegenContent, CodegenSchemaPurpose, isCodegenArraySchema, CodegenProperties, isCodegenObjectLikeSchema } from '@openapi-generator-plus/types'
 import { valueSchemaForMetadataSchema } from '@openapi-generator-plus/utils'
 import path from 'path'
 import { loadTemplates, emit } from '@openapi-generator-plus/handlebars-templates'
@@ -53,12 +53,8 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 			return !!value.mediaType.mimeType.match('\\bjson$')
 		})
 
-		hbs.registerHelper('operationSupportingMultipart', function(value: CodegenOperation | CodegenOperation[]): boolean {
-			if (isCodegenOperation(value)) {
-				return containsMultipartOperation([value])
-			} else {
-				return containsMultipartOperation(value)
-			}
+		hbs.registerHelper('operationSupportingMultipart', function(value: CodegenOperation): boolean {
+			return containsMultipartOperation([value])
 		})
 
 		hbs.registerHelper('fileUploadProperties', function(properties: CodegenProperties): FileUploadProperty[] {
