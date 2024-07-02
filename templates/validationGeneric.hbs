@@ -62,7 +62,7 @@ function model{{className nativeType.parentType}}FromRequestContent(name: string
 
 function model{{className nativeType.parentType}}ToResponseContent(name: string, value: {{nativeType}}, knownKeys: Record<string, boolean> = {}): ToResponse<{{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}}> {
 {{#ifeq purpose 'METADATA'}}
-	throw 'toJson not supported for metadata schemas'
+	throw 'toResponse not supported for metadata schemas'
 {{else}}
 	if (typeof value !== 'object' || value === undefined || value === null) {
 		throw `Invalid type for ${name}: expected object got ${typeof value}`

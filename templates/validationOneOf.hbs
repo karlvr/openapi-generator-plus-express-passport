@@ -19,7 +19,7 @@ export function oneOf{{className nativeType.parentType}}FromRequest(name: string
 	}
 	{{/each}}
 	
-	throw `Failed to parse JSON for any member of ${name}: ${errors.join('\n')}`
+	throw `Failed to parse request for any member of ${name}: ${errors.join('\n')}`
 	{{/if}}
 }
 
@@ -44,7 +44,7 @@ export function oneOf{{className nativeType.parentType}}ToResponse(name: string,
 	}
 	{{/each}}
 
-	throw `Failed to create JSON for any member of ${name}: ${errors.join('\n')}`
+	throw `Failed to create response for any member of ${name}: ${errors.join('\n')}`
 	{{/if}}
 }
 {{>nestedValidation}}
