@@ -1,5 +1,11 @@
 # @openapi-generator-plus/typescript-express-passport-server-generator
 
+## 2.11.0
+
+### Minor Changes
+
+- ee61b2f: Add improved multipart support.
+
 ## 2.10.1
 
 ### Patch Changes
