@@ -2,7 +2,7 @@
 const {{constantName (concat nativeType 'Keys')}}: string[] = [{{#each properties}}{{{stringLiteral serializedName}}}{{#hasMore}}, {{/hasMore}}{{/each}}]
 
 {{/ifneq}}
-function model{{className nativeType.parentType}}FromJsonContent(name: string, value: any, knownKeys: Record<string, boolean> = {}): {{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}} {
+function model{{className nativeType.parentType}}FromRequestContent(name: string, value: any, knownKeys: Record<string, boolean> = {}): {{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}} {
 {{#ifeq purpose 'METADATA'}}
 	const result: {{{nativeType}}} = {
 	{{#with properties.value}}
@@ -60,7 +60,7 @@ function model{{className nativeType.parentType}}FromJsonContent(name: string, v
 	return result
 }
 
-function model{{className nativeType.parentType}}ToJsonContent(name: string, value: {{nativeType}}, knownKeys: Record<string, boolean> = {}): ToJson<{{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}}> {
+function model{{className nativeType.parentType}}ToResponseContent(name: string, value: {{nativeType}}, knownKeys: Record<string, boolean> = {}): ToResponse<{{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}}> {
 {{#ifeq purpose 'METADATA'}}
 	throw 'toJson not supported for metadata schemas'
 {{else}}
@@ -70,7 +70,7 @@ function model{{className nativeType.parentType}}ToJsonContent(name: string, val
 
 	{{constantName (concat nativeType 'Keys')}}.forEach(k => knownKeys[k] = true)
 	
-	const result: ToJson<{{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}}> = {
+	const result: ToResponse<{{#if discriminator}}Omit<{{nativeType.parentType}}, {{{stringLiteral discriminator.serializedName}}}>{{else}}{{nativeType}}{{/if}}> = {
 	{{#each parents}}
 		...{{>frag/toResponse . prefix=''}}Content(name, value as unknown as {{{nativeType}}}, knownKeys),
 	{{/each}}
@@ -100,7 +100,7 @@ function model{{className nativeType.parentType}}ToJsonContent(name: string, val
 {{/ifeq}}
 }
 
-export function model{{className nativeType.parentType}}FromJson(name: string, value: any): {{nativeType}} {
+export function model{{className nativeType.parentType}}FromRequest(name: string, value: any): {{nativeType}} {
 	{{#if discriminator}}
 	const discriminatorValue = value.{{discriminator.serializedName}}
 	switch (discriminatorValue) {
@@ -113,7 +113,7 @@ export function model{{className nativeType.parentType}}FromJson(name: string, v
 	throw `Invalid value for ${name}: didn't contain a known discriminator value: ${discriminatorValue}`
 	{{else}}
 	const knownKeys: Record<string, boolean> = {}
-	const result: {{nativeType}} = model{{className nativeType.parentType}}FromJsonContent(name, value, knownKeys)
+	const result: {{nativeType}} = model{{className nativeType.parentType}}FromRequestContent(name, value, knownKeys)
 
 	/* Known keys */
 	if (__options?.failOnUnknownProperties) {
@@ -128,7 +128,7 @@ export function model{{className nativeType.parentType}}FromJson(name: string, v
 	{{/if}}
 }
 
-export function model{{className nativeType.parentType}}ToJson(name: string, value: {{nativeType}}): ToJson<{{nativeType}}> {
+export function model{{className nativeType.parentType}}ToResponse(name: string, value: {{nativeType}}): ToResponse<{{nativeType}}> {
 	{{#if discriminator}}
 	const discriminatorValue = value.{{discriminator.serializedName}}
 	switch (discriminatorValue) {
@@ -141,7 +141,7 @@ export function model{{className nativeType.parentType}}ToJson(name: string, val
 	throw `Invalid value for ${name}: didn't contain a known discriminator value: ${discriminatorValue}`
 	{{else}}
 	const knownKeys: Record<string, boolean> = {}
-	const result: ToJson<{{nativeType}}> = model{{className nativeType.parentType}}ToJsonContent(name, value, knownKeys)
+	const result: ToResponse<{{nativeType}}> = model{{className nativeType.parentType}}ToResponseContent(name, value, knownKeys)
 
 	/* Known keys */
 	if (__options?.failOnUnknownProperties) {

@@ -4,33 +4,33 @@ Output a reference to a function to serialize the value to the form suitable for
 @param prefix the import prefix for the functions
 --}}
 {{#if (isBoolean)}}
-{{prefix}}booleanToJson
+{{prefix}}booleanToResponse
 {{~else if (isInteger)~}}
-{{prefix}}integerToJson
+{{prefix}}integerToResponse
 {{~else if (isNumber)~}}
-{{prefix}}numberToJson
+{{prefix}}numberToResponse
 {{~else if (isString)~}}
-{{prefix}}stringToJson
+{{prefix}}stringToResponse
 {{~else if (isBinary)~}}
-{{prefix}}binaryToJson
+{{prefix}}binaryToResponse
 {{~else if (isObject)~}}
-{{prefix}}model{{className nativeType.parentType}}ToJson
+{{prefix}}model{{className nativeType.parentType}}ToResponse
 {{~else if (isArray)~}}
-{{prefix}}arrayToJson({{>frag/toResponse component.schema prefix=prefix}})
+{{prefix}}arrayToResponse({{>frag/toResponse component.schema prefix=prefix}})
 {{~else if (isEnum)~}}
-{{prefix}}enum{{className nativeType.parentType}}ToJson
+{{prefix}}enum{{className nativeType.parentType}}ToResponse
 {{~else if (isDate)~}}
-{{prefix}}dateToJson
+{{prefix}}dateToResponse
 {{~else if (isDateTime)~}}
-{{prefix}}dateTimeToJson
+{{prefix}}dateTimeToResponse
 {{~else if (isTime)~}}
-{{prefix}}timeToJson
+{{prefix}}timeToResponse
 {{~else if (isMap)~}}
-{{prefix}}mapToJson({{>frag/toResponse component.schema prefix=prefix}})
+{{prefix}}mapToResponse({{>frag/toResponse component.schema prefix=prefix}})
 {{~else if (isInterface)~}}
-{{prefix}}model{{className nativeType.parentType}}ToJson
+{{prefix}}model{{className nativeType.parentType}}ToResponse
 {{~else if (isOneOf)~}}
-{{prefix}}oneOf{{className nativeType.parentType}}ToJson
+{{prefix}}oneOf{{className nativeType.parentType}}ToResponse
 {{~else~}}
-{{prefix}}unsupportedToJson
+{{prefix}}unsupportedToResponse
 {{~/if}}

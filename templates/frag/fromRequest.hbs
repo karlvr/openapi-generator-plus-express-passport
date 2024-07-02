@@ -4,35 +4,35 @@ Output a reference to a function to transform the serialized request value to a 
 @param prefix the import prefix for the functions
 --}}
 {{#if (isBoolean)}}
-{{prefix}}booleanFromJson
+{{prefix}}booleanFromRequest
 {{~else if (isInteger)~}}
-{{prefix}}integerFromJson
+{{prefix}}integerFromRequest
 {{~else if (isNumber)~}}
-{{prefix}}numberFromJson
+{{prefix}}numberFromRequest
 {{~else if (isString)~}}
-{{prefix}}stringFromJson
+{{prefix}}stringFromRequest
 {{~else if (isBinary)~}}
-{{prefix}}binaryFromJson
+{{prefix}}binaryFromRequest
 {{~else if (isFile)~}}
-{{prefix}}fileFromValue
+{{prefix}}fileFromRequest
 {{~else if (isObject)~}}
-{{prefix}}model{{className nativeType.parentType}}FromJson
+{{prefix}}model{{className nativeType.parentType}}FromRequest
 {{~else if (isArray)~}}
-{{prefix}}arrayFromJson{{#if component.nullable}}WithNullable{{/if}}({{>frag/fromRequest component.schema prefix=prefix}})
+{{prefix}}arrayFromRequest{{#if component.nullable}}WithNullable{{/if}}({{>frag/fromRequest component.schema prefix=prefix}})
 {{~else if (isEnum)~}}
-{{prefix}}enum{{className nativeType.parentType}}FromJson
+{{prefix}}enum{{className nativeType.parentType}}FromRequest
 {{~else if (isDate)~}}
-{{prefix}}dateFromJson
+{{prefix}}dateFromRequest
 {{~else if (isDateTime)~}}
-{{prefix}}dateTimeFromJson
+{{prefix}}dateTimeFromRequest
 {{~else if (isTime)~}}
-{{prefix}}timeFromJson
+{{prefix}}timeFromRequest
 {{~else if (isMap)~}}
-{{prefix}}mapFromJson({{>frag/fromRequest component.schema prefix=prefix}})
+{{prefix}}mapFromRequest({{>frag/fromRequest component.schema prefix=prefix}})
 {{~else if (isInterface)~}}
-{{prefix}}model{{className nativeType.parentType}}FromJson
+{{prefix}}model{{className nativeType.parentType}}FromRequest
 {{~else if (isOneOf)~}}
-{{prefix}}oneOf{{className nativeType.parentType}}FromJson
+{{prefix}}oneOf{{className nativeType.parentType}}FromRequest
 {{~else~}}
-{{prefix}}unsupportedFromJson
+{{prefix}}unsupportedFromRequest
 {{~/if}}

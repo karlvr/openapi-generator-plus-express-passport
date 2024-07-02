@@ -1,4 +1,4 @@
-export function oneOf{{className nativeType.parentType}}FromJson(name: string, value: any): {{nativeType}} {
+export function oneOf{{className nativeType.parentType}}FromRequest(name: string, value: any): {{nativeType}} {
 	{{#if discriminator}}
 	const discriminatorValue = value.{{discriminator.name}}
 	switch (value.{{discriminator.name}}) {
@@ -23,7 +23,7 @@ export function oneOf{{className nativeType.parentType}}FromJson(name: string, v
 	{{/if}}
 }
 
-export function oneOf{{className nativeType.parentType}}ToJson(name: string, value: {{nativeType}}): ToJson<{{nativeType}}> {
+export function oneOf{{className nativeType.parentType}}ToResponse(name: string, value: {{nativeType}}): ToResponse<{{nativeType}}> {
 	{{#if discriminator}}
 	const discriminatorValue = value.{{discriminator.serializedName}}
 	switch (discriminatorValue) {
