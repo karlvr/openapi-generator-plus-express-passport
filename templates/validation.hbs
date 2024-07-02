@@ -335,12 +335,23 @@ export function verifyMinimumFiles(fieldName: string, minFileCount: number): (re
 	}
 }
 
-export function fileFromValue(name: string, value: Express.Multer.File[] | Express.Multer.File): any {
-	if (Array.isArray(value)) {
-		return value[0]
-	} else {
-		return value
+export function fileFromValue(name: string, value: Express.Multer.File): any {
+	if (typeof value !== 'object') {
+		throw `Invalid type for ${name}: expected object got ${typeof value}`
 	}
+	if (typeof value.fieldname !== 'string') {
+		throw `Invalid type for ${name}.fieldname: expected string got ${typeof value.fieldname}`
+	}
+	if (typeof value.originalname !== 'string') {
+		throw `Invalid type for ${name}.originalname: expected string got ${typeof value.originalname}`
+	}
+	if (typeof value.mimetype !== 'string') {
+		throw `Invalid type for ${name}.mimetype: expected string got ${typeof value.mimetype}`
+	}
+	if (typeof value.size !== 'number') {
+		throw `Invalid type for ${name}.size: expected number got ${typeof value.size}`
+	}
+	return value
 }
 
 /* Model conversion functions */

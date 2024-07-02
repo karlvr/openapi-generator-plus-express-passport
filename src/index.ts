@@ -15,6 +15,8 @@ interface FileUploadProperty {
 	minCount: number | null
 	/** Maximum number of files required if the property takes an array of files. */
 	maxCount: number | null
+	/** Is the file upload property an array of files? */
+	isArray: boolean
 }
 
 const createGenerator: CodegenGeneratorConstructor = (config, context) => {
@@ -73,12 +75,14 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 						name: prop,
 						minCount: null,
 						maxCount: 1,
+						isArray: false,
 					})
 				} else if (isCodegenArraySchema(property.schema) && valueSchema?.schemaType === CodegenSchemaType.FILE) {
 					results.push({
 						name: prop,
 						minCount: property.schema.minItems,
 						maxCount: property.schema.maxItems,
+						isArray: true,
 					})
 				}
 			}
