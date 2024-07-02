@@ -1,5 +1,5 @@
 {{!--
-Output a reference to a FromJsonFunction function.
+Output a reference to a function to transform the JSON input value to a JavaScript value.
 @param <this> CodegenSchema
 @param prefix the import prefix for the functions
 --}}
@@ -13,10 +13,12 @@ Output a reference to a FromJsonFunction function.
 {{prefix}}stringFromJson
 {{~else if (isBinary)~}}
 {{prefix}}binaryFromJson
+{{~else if (isFile)~}}
+{{prefix}}fileFromValue
 {{~else if (isObject)~}}
 {{prefix}}model{{className nativeType.parentType}}FromJson
 {{~else if (isArray)~}}
-{{prefix}}arrayFromJson({{>frag/fromJson component.schema prefix=prefix}})
+{{prefix}}arrayFromJson{{#if component.nullable}}WithNullable{{/if}}({{>frag/fromJson component.schema prefix=prefix}})
 {{~else if (isEnum)~}}
 {{prefix}}enum{{className nativeType.parentType}}FromJson
 {{~else if (isDate)~}}

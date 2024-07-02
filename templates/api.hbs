@@ -1,9 +1,13 @@
 {{>header}}
 
-import { Express } from 'express'
+import { Express, Request, Response } from 'express'
 import passport from 'passport'
+import multer from 'multer'
 import * as t from './types'
 import * as v from '../../validation'
+{{#if containsMultipartOperation}}
+import * as f from '../../impl/helpers/{{lowerCase name}}MultipartHelper'
+{{/if}}
 import { Api } from '../../models'
 
 export default function(app: Express, impl: t.{{className name}}Api) {
@@ -11,7 +15,31 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 	app.{{lowerCase httpMethod}}(
 		{{{stringLiteral (pathTemplate fullPath)}}},
 		{{>frag/apiSecurityRequirements}}
-		function (req, res) {
+		{{#if (operationSupportingMultipart .)}}
+		{{#with (fileUploadProperties requestBody.defaultContent.schema.properties)}}
+		(req, res, next) => {
+			const fileFields = [{{#each this}}{ name: {{{stringLiteral name}}}, maxCount: {{{maxCount}}} }{{#hasMore}}, {{/hasMore}}{{/each}}]
+			f.upload.fields(fileFields)(req, res, (error) => {
+				if (error?.code === 'LIMIT_UNEXPECTED_FILE') {
+					const field = fileFields.find(field => field.name === error.field)
+					if (field) {
+						res.status(400).type('text/plain; charset=utf-8').send(`The field '${error.field}' allows a maximum of ${field.maxCount} file(s)`)
+					} else {
+						res.status(400).type('text/plain; charset=utf-8').send(`Unexpected field '${error.field}' in multipart request`)
+					}
+				} else {
+					next(error)
+				}
+			})
+		},
+		{{#each this}}
+		{{#if minCount}}
+		v.verifyMinimumFiles({{{stringLiteral name}}}, {{{minCount}}}),
+		{{/if}}
+		{{/each}}
+		{{/with}}
+		{{/if}}
+		function (req: Request, res: Response) {
 			try {
 				{{#if securityRequirements}}
 				const __user = req.user
@@ -32,7 +60,14 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 						{{#unless schema}}
 						return undefined
 						{{else}}
-						{{#ifmatch mediaType.mimeType '/json'}}
+						{{#if (isContentMultipart .)}}
+						if (req.files && !Array.isArray(req.files)) {
+							{{#each (fileUploadProperties schema.properties)}}
+							req.body[{{{stringLiteral name}}}] = req.files[{{{stringLiteral name}}}]{{#unless isArray}}[0]{{/unless}}
+							{{/each}}
+						}
+						return {{>frag/fromJson schema prefix='v.'}}('body', req.body)
+						{{else if (isContentJson .)}}
 						return {{>frag/fromJson schema prefix='v.'}}('body', req.body)
 						{{else if (isBinary schema)}}
 						return req.body as Buffer
@@ -40,7 +75,7 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 						return req.body as string
 						{{else}}
 						return req.body; /* Unsupported mimeType */
-						{{/ifmatch}}
+						{{/if}}
 						{{/unless}}
 					}
 					{{/each}}

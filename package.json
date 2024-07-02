@@ -16,6 +16,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.prod.json",
     "clean": "rimraf dist",
+    "clean:node": "rm -rf node_modules",
     "link-openapi-generator-plus": "pnpm link --global openapi-generator-plus $(cd node_modules && find @openapi-generator-plus -depth 1 -prune)",
     "release": "pnpm clean && pnpm build && pnpm test && pnpm changeset publish && pnpm install",
     "release:version": "pnpm changeset version && pnpm install",
@@ -30,7 +31,8 @@
     "@openapi-generator-plus/indexed-type": "^1.0.0",
     "@openapi-generator-plus/testing": "^2.15.0",
     "@openapi-generator-plus/types": "^2.13.0",
-    "@openapi-generator-plus/typescript-generator-common": "^1.7.1"
+    "@openapi-generator-plus/typescript-generator-common": "^1.7.1",
+    "@openapi-generator-plus/utils": "^1.0.3"
   },
   "peerDependencies": {
     "@openapi-generator-plus/core": "^2.15.0"

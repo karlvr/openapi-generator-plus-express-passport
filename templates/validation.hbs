@@ -1,6 +1,6 @@
 {{>header}}
 
-import { Express } from 'express'
+import { Express, Request, Response, NextFunction } from 'express'
 import { Api } from './models'
 import { ApiOptions } from './types'
 
@@ -40,8 +40,30 @@ export function arrayFromJson<T>(next: FromJsonFunction<T>): FromJsonFunction<T[
 	}
 }
 
+export function arrayFromJsonWithNullable<T>(next: FromJsonFunction<T | null>): FromJsonFunction<(T | null)[]> {
+	return function(name: string, value: any) {
+		if (typeof value !== 'object' || typeof value.length !== 'number') {
+			throw `Invalid type for ${name}: expected array got ${typeof value}`
+		}
+	
+		const result: (T | null)[] = []
+		for (const el of value) {
+			if (value === null) {
+				result.push(null)
+			} else {
+				result.push(next(name, el))
+			}
+		}
+		return result
+	}
+}
+
 export function arrayToJson<T>(next: FromJsonFunction<T>): FromJsonFunction<T[]> {
 	return arrayFromJson(next)
+}
+
+export function arrayToJsonWithNullable<T>(next: FromJsonFunction<T | null>): FromJsonFunction<(T | null)[]> {
+	return arrayFromJsonWithNullable(next)
 }
 
 export function mapFromJson<T>(next: FromJsonFunction<T>): FromJsonFunction<MapOf<T>> {
@@ -148,7 +170,7 @@ export function binaryFromJson(name: string, value: any): Buffer {
 	if (typeof value !== 'string') {
 		throw `Invalid type for ${name}: expected string got ${typeof value}`
 	}
-	return new Buffer(value, 'base64')
+	return Buffer.from(value, 'base64')
 }
 
 export function binaryToJson(name: string, value: string | Buffer): string {
@@ -301,6 +323,35 @@ export function parseTime(name: string, value: any): string {
 
 export function timeToJson(name: string, value: string): string {
 	return timeFromJson(name, value)
+}
+
+export function verifyMinimumFiles(fieldName: string, minFileCount: number): (req: Request, res: Response, next: NextFunction) => void {
+	return function(req: Request, res: Response, next: NextFunction) {
+		if (!req.files || Array.isArray(req.files) || (req.files[fieldName] && req.files[fieldName].length < minFileCount)) {
+			res.status(400).send(`The field '${fieldName}' requires a minimum of ${minFileCount} file(s)`)
+		} else {
+			next()
+		}
+	}
+}
+
+export function fileFromValue(name: string, value: Express.Multer.File): any {
+	if (typeof value !== 'object') {
+		throw `Invalid type for ${name}: expected object got ${typeof value}`
+	}
+	if (typeof value.fieldname !== 'string') {
+		throw `Invalid type for ${name}.fieldname: expected string got ${typeof value.fieldname}`
+	}
+	if (typeof value.originalname !== 'string') {
+		throw `Invalid type for ${name}.originalname: expected string got ${typeof value.originalname}`
+	}
+	if (typeof value.mimetype !== 'string') {
+		throw `Invalid type for ${name}.mimetype: expected string got ${typeof value.mimetype}`
+	}
+	if (typeof value.size !== 'number') {
+		throw `Invalid type for ${name}.size: expected number got ${typeof value.size}`
+	}
+	return value
 }
 
 /* Model conversion functions */

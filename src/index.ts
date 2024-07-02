@@ -1,8 +1,23 @@
-import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation, isCodegenEnumSchema, isCodegenObjectSchema, isCodegenAnyOfSchema, isCodegenInterfaceSchema, isCodegenOneOfSchema, CodegenSchemaType, CodegenMediaType, CodegenContent } from '@openapi-generator-plus/types'
+import { CodegenGeneratorConstructor, CodegenGeneratorType, CodegenOperation, isCodegenEnumSchema, isCodegenObjectSchema, isCodegenAnyOfSchema, isCodegenInterfaceSchema, isCodegenOneOfSchema, CodegenSchemaType, CodegenMediaType, CodegenContent, CodegenSchemaPurpose, isCodegenArraySchema, CodegenProperties, isCodegenObjectLikeSchema } from '@openapi-generator-plus/types'
+import { valueSchemaForMetadataSchema } from '@openapi-generator-plus/utils'
 import path from 'path'
 import { loadTemplates, emit } from '@openapi-generator-plus/handlebars-templates'
 import typescriptGenerator, { options as typescriptCommonOptions, TypeScriptGeneratorContext, chainTypeScriptGeneratorContext, DateApproach } from '@openapi-generator-plus/typescript-generator-common'
 import * as idx from '@openapi-generator-plus/indexed-type'
+
+/**
+ * An interface representing properties for uploading files in a multipart/form-data request.
+ */
+interface FileUploadProperty {
+	/** Name of the file upload property. */
+	name: string
+	/** Minimum number of files required if the property takes an array of files. */
+	minCount: number | null
+	/** Maximum number of files required if the property takes an array of files. */
+	maxCount: number | null
+	/** Is the file upload property an array of files? */
+	isArray: boolean
+}
 
 const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 	const myContext: TypeScriptGeneratorContext = chainTypeScriptGeneratorContext(context, {
@@ -40,21 +55,64 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 			return !!value.mediaType.mimeType.match('\\bjson$')
 		})
 
+		hbs.registerHelper('operationSupportingMultipart', function(value: CodegenOperation): boolean {
+			return containsMultipartOperation([value])
+		})
+
+		hbs.registerHelper('fileUploadProperties', function(properties: CodegenProperties): FileUploadProperty[] {
+			const results: FileUploadProperty[] = []
+			for (const prop in properties) {
+				const property = properties[prop]
+
+				if (property.schema.purpose !== CodegenSchemaPurpose.METADATA) {
+					continue
+				}
+
+				const valueSchema = valueSchemaForMetadataSchema(property.schema)
+
+				if (isCodegenObjectLikeSchema(property.schema) && valueSchema?.schemaType === CodegenSchemaType.FILE) {
+					results.push({
+						name: prop,
+						minCount: null,
+						maxCount: 1,
+						isArray: false,
+					})
+				} else if (isCodegenArraySchema(property.schema) && valueSchema?.schemaType === CodegenSchemaType.FILE) {
+					results.push({
+						name: prop,
+						minCount: property.schema.minItems,
+						maxCount: property.schema.maxItems,
+						isArray: true,
+					})
+				}
+			}
+
+			return results
+		})
+
 		const relativeSourceOutputPath = generatorOptions.relativeSourceOutputPath
 		for (const group of doc.groups) {
 			const operations = group.operations
 			if (!operations.length) {
 				continue
 			}
+
+			const apiContainsMultipartOperations = containsMultipartOperation(operations)
+
 			await emit('api', path.join(outputPath, relativeSourceOutputPath, 'api', context.generator().toIdentifier(group.name), 'index.ts'), 
-				{ ...rootContext, ...group, ...doc }, true, hbs)
+				{ ...rootContext, ...group, ...doc, containsMultipartOperation: apiContainsMultipartOperations }, true, hbs)
 			await emit('apiTypes', path.join(outputPath, relativeSourceOutputPath, 'api', context.generator().toIdentifier(group.name), 'types.ts'), 
 				{ ...rootContext, ...group, ...doc }, true, hbs)
 			await emit('apiReadme', path.join(outputPath, relativeSourceOutputPath, 'api', context.generator().toIdentifier(group.name), 'README.md'), 
 				{ ...rootContext, ...group, ...doc }, true, hbs)
 
 			await emit('apiImpl', path.join(outputPath, relativeSourceOutputPath, 'impl', `${context.generator().toIdentifier(group.name)}.ts`), 
-				{ ...rootContext, ...group, ...doc }, false, hbs)
+				{ ...rootContext, ...group, ...doc, containsMultipartOperation: apiContainsMultipartOperations }, false, hbs)
+
+			if (apiContainsMultipartOperations) {
+				await emit('apiMultipartHelper', path.join(outputPath, relativeSourceOutputPath, 'impl/helpers', `${context.generator().toIdentifier(group.name)}MultipartHelper.ts`),
+					{ ...rootContext, ...group, ...doc }, false, hbs)
+			}
 		}
 
 		await emit('models', path.join(outputPath, relativeSourceOutputPath, 'models.ts'), {
@@ -107,6 +165,8 @@ const createGenerator: CodegenGeneratorConstructor = (config, context) => {
 			if (schemaType === CodegenSchemaType.DATETIME && generatorOptions.dateApproach === DateApproach.Native) {
 				// TODO we need to override the default date type in typescript-generator-common which has a serialized type of string
 				return new context.NativeType('Date')
+			} else if (schemaType === CodegenSchemaType.FILE) {
+				return new context.NativeType('Express.Multer.File')
 			} else if (schemaType === CodegenSchemaType.BINARY) {
 				return new context.NativeType('string | Buffer')
 			} else {
@@ -148,6 +208,19 @@ function compareOperations(a: CodegenOperation, b: CodegenOperation): number {
 		return -1
 	}
 	return 0
+}
+
+/**
+ * Loop over an array of CodegenOperation and return true if it contains an operation with a multipart/form-data request.
+ * @param operations
+ */
+function containsMultipartOperation(operations: CodegenOperation[]): boolean {
+	for (const operation of operations) {
+		if (operation.requestBody?.defaultContent.mediaType.mimeType.match('^multipart/.*')) {
+			return true
+		}
+	}
+	return false
 }
 
 export default createGenerator
