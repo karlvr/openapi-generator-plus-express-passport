@@ -1,5 +1,11 @@
 # @openapi-generator-plus/typescript-express-passport-server-generator
 
+## 2.11.1
+
+### Patch Changes
+
+- e99c0d8: Check if file in req.files is undefined before indexing.
+
 ## 2.11.0
 
 ### Minor Changes
