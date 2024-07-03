@@ -65,7 +65,7 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 						{{#if (isContentMultipart .)}}
 						if (req.files && !Array.isArray(req.files)) {
 							{{#each (fileUploadProperties schema.properties)}}
-							req.body[{{{stringLiteral name}}}] = req.files[{{{stringLiteral name}}}]{{#unless isArray}}[0]{{/unless}}
+							req.body[{{{stringLiteral name}}}] = req.files[{{{stringLiteral name}}}] ? req.files[{{{stringLiteral name}}}]{{#unless isArray}}[0]{{/unless}} : undefined
 							{{/each}}
 						}
 						return {{>frag/fromRequest schema prefix='v.'}}('body', req.body)
