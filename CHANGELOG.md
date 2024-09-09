@@ -1,5 +1,11 @@
 # @openapi-generator-plus/typescript-express-passport-server-generator
 
+## 2.12.0
+
+### Minor Changes
+
+- 77fcc91: Update to latest core
+
 ## 2.11.1
 
 ### Patch Changes
