@@ -1,5 +1,11 @@
 # @openapi-generator-plus/typescript-express-passport-server-generator
 
+## 2.13.1
+
+### Patch Changes
+
+- 185edeb: Upgrade dependencies including eslint 9 and updated linting rules
+
 ## 2.13.0
 
 ### Minor Changes
