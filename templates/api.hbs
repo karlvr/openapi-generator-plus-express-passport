@@ -56,6 +56,11 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 					const __contentType = req.get('Content-Type')
 					const __mimeType = __contentType ? __contentType.replace(/;.*/, '') : undefined
 
+					{{#unless requestBody.required}}
+					if (!__mimeType) {
+						return undefined
+					}
+					{{/unless}}
 					{{#with requestBody}}
 					{{#each contents}}
 					if (__mimeType === '{{{mediaType.mimeType}}}') {
