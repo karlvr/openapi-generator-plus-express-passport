@@ -1,0 +1,21 @@
+openapi: 3.0.3
+info:
+  title: Multipart operation in a group whose identifier is not all lower-case
+  version: 1.0.0
+paths:
+  /file-uploads:
+    post:
+      operationId: uploadFile
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        200:
+          description: OK

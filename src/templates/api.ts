@@ -48,7 +48,7 @@ import passport from 'passport'
 import multer from 'multer'
 import * as t from './types'
 import * as v from '../../validation'
-${when(ctx.containsMultipartOperation, () => `import * as f from '../../impl/helpers/${lowerCase(ctx.name)}MultipartHelper'`)}
+${when(ctx.containsMultipartOperation, () => `import * as f from '../../impl/helpers/${identifier(generator, ctx.name)}MultipartHelper'`)}
 import { Api } from '../../models'
 
 export default function(app: Express, impl: t.${className(generator, ctx.name)}Api) {
