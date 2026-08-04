@@ -1,1 +1,0 @@
-{{#if isHeaderParam}}{{>frag/parseType prefix='v.'}}({{{stringLiteral (concat 'header.' serializedName)}}}, req.get({{{stringLiteral serializedName}}})){{/if}}

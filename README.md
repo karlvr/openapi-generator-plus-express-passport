@@ -60,16 +60,11 @@ A `tsconfig.json` file will be output if you specify any of the TypeScript confi
 |`version`|`string`|The package version|`0.0.1`|
 |`repository`|`string`|The URL to the package repository|`undefined`|
 
-### Overrides
-
-|Property|Type|Description|Default|
-|--------|----|-----------|-------|
-|`customTemplates`|`string`|The path to a directory containing custom Handlebars templates, relative to the config file. See Customising below.|`undefined`|
-
 ## Customising
 
-This generator supports a `customTemplates` config file property to specify a directory containing Handlebars templates that will be used to override built-in templates.
+The templates are TypeScript, in `src/templates`. They are composed from the `ts` tagged template
+literal in [`@openapi-generator-plus/template-utils`](https://github.com/karlvr/openapi-generator-plus-generators/tree/master/packages/template-utils),
+so customising the output means changing those templates.
 
-Any custom template will have the original template available as a partial named by prefixing the template name with `original`, and then upper-casing the first letter, e.g. `originalModelEnum`.
-
-Some of the templates in the generator are designed to support overriding for custom requirements. Please inspect the templates in the `templates` directory.
+The `customTemplates` config file property, which used to point at a directory of Handlebars
+overrides, is no longer supported and logs a warning if it is set.

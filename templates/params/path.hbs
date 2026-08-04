@@ -1,1 +1,0 @@
-{{#if isPathParam}}{{>frag/parseType prefix='v.'}}({{{stringLiteral (concat 'params.' serializedName)}}}, req.params[{{{stringLiteral serializedName}}}]){{/if}}

@@ -1,1 +1,0 @@
-{{#if isCookieParam}}{{>frag/parseType prefix='v.'}}({{{stringLiteral (concat 'header.' serializedName)}}}, req.cookies[{{{stringLiteral serializedName}}}]){{/if}}

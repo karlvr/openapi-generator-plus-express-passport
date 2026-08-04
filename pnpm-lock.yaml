@@ -12,23 +12,23 @@ importers:
         specifier: ^2.15.0
         version: 2.17.0(openapi-types@12.1.3)
       '@openapi-generator-plus/generator-common':
-        specifier: ^1.7.1
-        version: 1.7.1(openapi-types@12.1.3)
-      '@openapi-generator-plus/handlebars-templates':
-        specifier: ^1.11.3
-        version: 1.11.3(openapi-types@12.1.3)
+        specifier: ^1.8.1
+        version: 1.8.1(openapi-types@12.1.3)
       '@openapi-generator-plus/indexed-type':
         specifier: ^1.0.0
         version: 1.0.0
+      '@openapi-generator-plus/template-utils':
+        specifier: ^0.2.0
+        version: 0.2.0(openapi-types@12.1.3)
       '@openapi-generator-plus/testing':
-        specifier: ^2.23.1
-        version: 2.23.1(openapi-types@12.1.3)
+        specifier: ^2.31.3
+        version: 2.31.3(openapi-types@12.1.3)
       '@openapi-generator-plus/types':
-        specifier: ^2.19.0
-        version: 2.19.0
+        specifier: ^2.22.2
+        version: 2.22.2
       '@openapi-generator-plus/typescript-generator-common':
-        specifier: ^1.12.2
-        version: 1.12.2(openapi-types@12.1.3)
+        specifier: ^2.0.0
+        version: 2.0.0(openapi-types@12.1.3)
       '@openapi-generator-plus/utils':
         specifier: ^1.1.5
         version: 1.1.5
@@ -647,23 +647,20 @@ packages:
   '@openapi-generator-plus/core@2.17.0':
     resolution: {integrity: sha512-KSKsmhzZJc1JkVRDAgENO5dCvF+TWvo0chyrodyTDZD4mFsc5BF2K2FQaOXjp9s8aYG9DyFf22GlISZ1Ev5wqA==}
 
-  '@openapi-generator-plus/core@2.23.0':
-    resolution: {integrity: sha512-S8btMFVuuOxp4AU+lIi9lPc2DCDoH1ieEBU5FZyLCO20lLaxKuVLQN1ChyLQj6eB8dn6OmV7LObgpo/GerVTMg==}
+  '@openapi-generator-plus/core@2.31.3':
+    resolution: {integrity: sha512-IGZDWV0ehnMAXLEAbFs/v5x45mKmhKItn1DHmb3//fzFzOuK2CLBnSQPNZdtzwy7tJ2Rzno/i4SwkbjK6QjhlQ==}
 
-  '@openapi-generator-plus/core@2.23.1':
-    resolution: {integrity: sha512-eFUjBeAt/p1p502TkkNeMoRIMMdboW17o/ar/DLyJ5nFsp7dDY/yd56ykef+l4rsEd0P1CzxxECH0jWUgZz1hg==}
-
-  '@openapi-generator-plus/generator-common@1.7.1':
-    resolution: {integrity: sha512-A0o8Pe/FzWh3OUXi8IYXIxO61F146HrdlvYgwdgD/RiiRjsYYWChxKo1OIOLnqN1FnNWvlPXoG1nC4vz8cZZ8g==}
-
-  '@openapi-generator-plus/handlebars-templates@1.11.3':
-    resolution: {integrity: sha512-Z04pNAWjy17pCpFYyIr8xX6TfKYR5hggKcl7K8UTBA5VdDFerWyVI80vCg/K5heffNkMofQ8X15SBp+W3/8Row==}
+  '@openapi-generator-plus/generator-common@1.8.1':
+    resolution: {integrity: sha512-yzEEalamBqgSnpWd9RRlhIKro95lnwrkB8evbyBi7BC0bUshBOh2fhmyM08J/QXc+Aq8GNfKaGG3skKFgQZy1g==}
 
   '@openapi-generator-plus/indexed-type@1.0.0':
     resolution: {integrity: sha512-RGUrlulyLoH7+V6wDalDGD9bfwTyDgIMZnfPo5GmaQs3CGOZ2aSHYAsB78gVTz2KWTyc5Ov4doi2lPENeUarZQ==}
 
-  '@openapi-generator-plus/java-like-generator-helper@2.6.1':
-    resolution: {integrity: sha512-ayF6CVFVpkse4Pl0TXd6Ci0TnDIYqnnbljvkiYR86+qGKqNCRVGg5n14au/yX4mcbE0uEishcQMmIZM6NHdBvA==}
+  '@openapi-generator-plus/indexed-type@1.0.1':
+    resolution: {integrity: sha512-pGy+mo2kSk7BE5zqY7nTqAnJq5FT9oMGJh4euwUjXgG9KKdOm2PeWvlaHfgM6pqKSCOm5Jo9Mc9CPtJ+Kq7wIw==}
+
+  '@openapi-generator-plus/java-like-generator-helper@2.6.7':
+    resolution: {integrity: sha512-AsiW6bkOUyyXM9te4ZlIX/fVvOBN2LYc6qTuDWv6Lx7BgSTVb1R8Hvva4l9uCL0wsDhAr3s5305qQJ0Jv0akbQ==}
 
   '@openapi-generator-plus/json-schema-ref-parser@9.0.11':
     resolution: {integrity: sha512-SJbsXJgQozq86V2ImkLuthI9d7esDIPjG/MUw2BEVa3HLIi/lHMmAVpUvBGNIpK4+yvUGmZSpgLOLmW3R9XoTA==}
@@ -673,8 +670,11 @@ packages:
     peerDependencies:
       openapi-types: '>=7'
 
-  '@openapi-generator-plus/testing@2.23.1':
-    resolution: {integrity: sha512-w57L7Zd9mOjIeX9DCsJTFth8IaRGArogZw4tmivLitYfdSprPEDstOR3x/8ihkyOPA87FnA9aweWdNE/l9VV0Q==}
+  '@openapi-generator-plus/template-utils@0.2.0':
+    resolution: {integrity: sha512-KfM9ZhaWwqsYaOPdRvq18pxvwm4YIv0hqSaM6R2xHCm81PNzJ59j3vaYljxnPev6iXx3Vpx/Fas0/YkQHpYkEg==}
+
+  '@openapi-generator-plus/testing@2.31.3':
+    resolution: {integrity: sha512-yTbPS8KzVqMpVtP3G1TSMg+pY3wzjX+KtNGcFIgPbnxS0ZU4hMpwlCkSCNcao0eUDXiRelkfGS+taCjXM8kH1w==}
 
   '@openapi-generator-plus/types@2.15.0':
     resolution: {integrity: sha512-etSGESdUXgKjQ2KXfaQUkNsHYDUv8gdKKp7UlSplKyubRVimPOmxwpOItNkkV2ixY2UIEFJkZ1g8Kc9h41kQ2Q==}
@@ -682,14 +682,17 @@ packages:
   '@openapi-generator-plus/types@2.19.0':
     resolution: {integrity: sha512-nw4CboqusBIn3ybXzYDhYGMxW58YybfWIx/56VNgM1brYsgcpdbwjqtsanm5HnjA8gR7NyQEjk1Nq5eJBQ85ww==}
 
-  '@openapi-generator-plus/typescript-generator-common@1.12.2':
-    resolution: {integrity: sha512-e7Th2oIQ2xgOccBbzRg//b1KTyiR7G1TkCKJkGnZ5A1mhStIXJ/1ec9rvXDkrol28FcDBfuCyA2BPXH/wuyZ2A==}
+  '@openapi-generator-plus/types@2.22.2':
+    resolution: {integrity: sha512-7KM/zelS4vyHbHes0CE6gookIUsGx764Ngth7H36Orviz+jkwu0QmrAdBdUzq7s7oJP72rtodgV5qbCoooW8Mw==}
+
+  '@openapi-generator-plus/typescript-generator-common@2.0.0':
+    resolution: {integrity: sha512-0ZTfJxBbx9Su2eL/XiwsLIOst36HzuJo2SZS99k3AsxV0RwCZapZjSkYgJHB/YmkQ6+Cvs7tCQ5+vQ50qgWYjg==}
 
   '@openapi-generator-plus/utils@1.1.0':
     resolution: {integrity: sha512-YrQKHjDHA4ECv3Hw7b7bwawVJT32qVCs8PNkoyT6MxKe/xSwDjutWUKT/n91QrOigklX8+5+fJKy6OMEEbzIlA==}
 
-  '@openapi-generator-plus/utils@1.1.4':
-    resolution: {integrity: sha512-He0atAw3HIIGZPsNhP6N+pXSkYh/ebdh/FMAduXnuhTHz8V8qPXyI/EBIACCuPNJXuIaSNhbqR5HRn2iUG5/jQ==}
+  '@openapi-generator-plus/utils@1.1.10':
+    resolution: {integrity: sha512-zCq/4FNffkAWG5tSxuuMKyADo49+Vb6+LL4aqzt535qLdGo2/hd36BdA83i8TDLowiAdXanNlMTXrxuH76faAw==}
 
   '@openapi-generator-plus/utils@1.1.5':
     resolution: {integrity: sha512-+7CIjpuskb+qMEjyyoDpV1RVcViPjte9ZmdaGpYKyt1DQSfcERnNjQ8zgJPaC5bqVECdGolP7d6zeonYME5q+w==}
@@ -893,41 +896,49 @@ packages:
     resolution: {integrity: sha512-34gw7PjDGB9JgePJEmhEqBhWvCiiWCuXsL9hYphDF7crW7UgI05gyBAi6MF58uGcMOiOqSJ2ybEeCvHcq0BCmQ==}
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   '@unrs/resolver-binding-linux-arm64-musl@1.11.1':
     resolution: {integrity: sha512-RyMIx6Uf53hhOtJDIamSbTskA99sPHS96wxVE/bJtePJJtpdKGXO1wY90oRdXuYOGOTuqjT8ACccMc4K6QmT3w==}
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   '@unrs/resolver-binding-linux-ppc64-gnu@1.11.1':
     resolution: {integrity: sha512-D8Vae74A4/a+mZH0FbOkFJL9DSK2R6TFPC9M+jCWYia/q2einCubX10pecpDiTmkJVUH+y8K3BZClycD8nCShA==}
     cpu: [ppc64]
     os: [linux]
+    libc: [glibc]
 
   '@unrs/resolver-binding-linux-riscv64-gnu@1.11.1':
     resolution: {integrity: sha512-frxL4OrzOWVVsOc96+V3aqTIQl1O2TjgExV4EKgRY09AJ9leZpEg8Ak9phadbuX0BA4k8U5qtvMSQQGGmaJqcQ==}
     cpu: [riscv64]
     os: [linux]
+    libc: [glibc]
 
   '@unrs/resolver-binding-linux-riscv64-musl@1.11.1':
     resolution: {integrity: sha512-mJ5vuDaIZ+l/acv01sHoXfpnyrNKOk/3aDoEdLO/Xtn9HuZlDD6jKxHlkN8ZhWyLJsRBxfv9GYM2utQ1SChKew==}
     cpu: [riscv64]
     os: [linux]
+    libc: [musl]
 
   '@unrs/resolver-binding-linux-s390x-gnu@1.11.1':
     resolution: {integrity: sha512-kELo8ebBVtb9sA7rMe1Cph4QHreByhaZ2QEADd9NzIQsYNQpt9UkM9iqr2lhGr5afh885d/cB5QeTXSbZHTYPg==}
     cpu: [s390x]
     os: [linux]
+    libc: [glibc]
 
   '@unrs/resolver-binding-linux-x64-gnu@1.11.1':
     resolution: {integrity: sha512-C3ZAHugKgovV5YvAMsxhq0gtXuwESUKc5MhEtjBpLoHPLYM+iuwSj3lflFwK3DPm68660rZ7G8BMcwSro7hD5w==}
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   '@unrs/resolver-binding-linux-x64-musl@1.11.1':
     resolution: {integrity: sha512-rV0YSoyhK2nZ4vEswT/QwqzqQXw5I6CjoaYMOX0TqBlWhojUf8P94mvI7nuJTeaCkkds3QE4+zS8Ko+GdXuZtA==}
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   '@unrs/resolver-binding-wasm32-wasi@1.11.1':
     resolution: {integrity: sha512-5u4RkfxJm+Ng7IWgkzi3qrFOvLvQYnPBmjmZQ8+szTK/b31fQCnleNl1GgEt7nIsZRIf5PLhPwT0WM+q45x/UQ==}
@@ -1788,6 +1799,9 @@ packages:
 
   lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+
+  lodash@4.18.1:
+    resolution: {integrity: sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==}
 
   lower-case@2.0.2:
     resolution: {integrity: sha512-7fm3l3NAF9WfN6W3JOmf5drwpVqX78JtoGJ3A6W0a6ZnldM41w2fV5D490psKFTpMds8TJse/eHLFFsNHHjHgg==}
@@ -3229,56 +3243,36 @@ snapshots:
     transitivePeerDependencies:
       - openapi-types
 
-  '@openapi-generator-plus/core@2.23.0(openapi-types@12.1.3)':
+  '@openapi-generator-plus/core@2.31.3(openapi-types@12.1.3)':
     dependencies:
-      '@openapi-generator-plus/indexed-type': 1.0.0
+      '@openapi-generator-plus/indexed-type': 1.0.1
       '@openapi-generator-plus/swagger-parser': 10.1.0(openapi-types@12.1.3)
-      '@openapi-generator-plus/types': 2.19.0
-      '@openapi-generator-plus/utils': 1.1.4
-      lodash: 4.17.21
+      '@openapi-generator-plus/types': 2.22.2
+      '@openapi-generator-plus/utils': 1.1.10
+      lodash: 4.18.1
+      minimatch: 10.0.3
       pluralize: 8.0.0
     transitivePeerDependencies:
       - openapi-types
 
-  '@openapi-generator-plus/core@2.23.1(openapi-types@12.1.3)':
+  '@openapi-generator-plus/generator-common@1.8.1(openapi-types@12.1.3)':
     dependencies:
-      '@openapi-generator-plus/indexed-type': 1.0.0
-      '@openapi-generator-plus/swagger-parser': 10.1.0(openapi-types@12.1.3)
-      '@openapi-generator-plus/types': 2.19.0
-      '@openapi-generator-plus/utils': 1.1.5
-      lodash: 4.17.21
-      pluralize: 8.0.0
-    transitivePeerDependencies:
-      - openapi-types
-
-  '@openapi-generator-plus/generator-common@1.7.1(openapi-types@12.1.3)':
-    dependencies:
-      '@openapi-generator-plus/core': 2.23.0(openapi-types@12.1.3)
-      '@openapi-generator-plus/types': 2.19.0
-      '@openapi-generator-plus/utils': 1.1.5
+      '@openapi-generator-plus/core': 2.31.3(openapi-types@12.1.3)
+      '@openapi-generator-plus/types': 2.22.2
+      '@openapi-generator-plus/utils': 1.1.10
       pluralize: 8.0.0
       url-parse: 1.5.10
     transitivePeerDependencies:
       - openapi-types
 
-  '@openapi-generator-plus/handlebars-templates@1.11.3(openapi-types@12.1.3)':
-    dependencies:
-      '@openapi-generator-plus/generator-common': 1.7.1(openapi-types@12.1.3)
-      '@openapi-generator-plus/indexed-type': 1.0.0
-      '@openapi-generator-plus/types': 2.19.0
-      change-case: 4.1.2
-      handlebars: 4.7.8
-      marked: 12.0.2
-      pluralize: 8.0.0
-    transitivePeerDependencies:
-      - openapi-types
-
   '@openapi-generator-plus/indexed-type@1.0.0': {}
 
-  '@openapi-generator-plus/java-like-generator-helper@2.6.1(openapi-types@12.1.3)':
+  '@openapi-generator-plus/indexed-type@1.0.1': {}
+
+  '@openapi-generator-plus/java-like-generator-helper@2.6.7(openapi-types@12.1.3)':
     dependencies:
-      '@openapi-generator-plus/generator-common': 1.7.1(openapi-types@12.1.3)
-      '@openapi-generator-plus/types': 2.19.0
+      '@openapi-generator-plus/generator-common': 1.8.1(openapi-types@12.1.3)
+      '@openapi-generator-plus/types': 2.22.2
       change-case: 4.1.2
     transitivePeerDependencies:
       - openapi-types
@@ -3301,11 +3295,22 @@ snapshots:
       call-me-maybe: 1.0.2
       openapi-types: 12.1.3
 
-  '@openapi-generator-plus/testing@2.23.1(openapi-types@12.1.3)':
+  '@openapi-generator-plus/template-utils@0.2.0(openapi-types@12.1.3)':
     dependencies:
-      '@openapi-generator-plus/core': 2.23.1(openapi-types@12.1.3)
+      '@openapi-generator-plus/generator-common': 1.8.1(openapi-types@12.1.3)
       '@openapi-generator-plus/indexed-type': 1.0.0
-      '@openapi-generator-plus/types': 2.19.0
+      '@openapi-generator-plus/types': 2.22.2
+      change-case: 4.1.2
+      marked: 12.0.2
+      pluralize: 8.0.0
+    transitivePeerDependencies:
+      - openapi-types
+
+  '@openapi-generator-plus/testing@2.31.3(openapi-types@12.1.3)':
+    dependencies:
+      '@openapi-generator-plus/core': 2.31.3(openapi-types@12.1.3)
+      '@openapi-generator-plus/indexed-type': 1.0.1
+      '@openapi-generator-plus/types': 2.22.2
     transitivePeerDependencies:
       - openapi-types
 
@@ -3313,13 +3318,14 @@ snapshots:
 
   '@openapi-generator-plus/types@2.19.0': {}
 
-  '@openapi-generator-plus/typescript-generator-common@1.12.2(openapi-types@12.1.3)':
+  '@openapi-generator-plus/types@2.22.2': {}
+
+  '@openapi-generator-plus/typescript-generator-common@2.0.0(openapi-types@12.1.3)':
     dependencies:
-      '@openapi-generator-plus/generator-common': 1.7.1(openapi-types@12.1.3)
-      '@openapi-generator-plus/handlebars-templates': 1.11.3(openapi-types@12.1.3)
-      '@openapi-generator-plus/java-like-generator-helper': 2.6.1(openapi-types@12.1.3)
-      '@openapi-generator-plus/types': 2.19.0
-      handlebars: 4.7.8
+      '@openapi-generator-plus/generator-common': 1.8.1(openapi-types@12.1.3)
+      '@openapi-generator-plus/java-like-generator-helper': 2.6.7(openapi-types@12.1.3)
+      '@openapi-generator-plus/template-utils': 0.2.0(openapi-types@12.1.3)
+      '@openapi-generator-plus/types': 2.22.2
       pluralize: 8.0.0
     transitivePeerDependencies:
       - openapi-types
@@ -3329,10 +3335,10 @@ snapshots:
       '@openapi-generator-plus/indexed-type': 1.0.0
       '@openapi-generator-plus/types': 2.15.0
 
-  '@openapi-generator-plus/utils@1.1.4':
+  '@openapi-generator-plus/utils@1.1.10':
     dependencies:
-      '@openapi-generator-plus/indexed-type': 1.0.0
-      '@openapi-generator-plus/types': 2.19.0
+      '@openapi-generator-plus/indexed-type': 1.0.1
+      '@openapi-generator-plus/types': 2.22.2
 
   '@openapi-generator-plus/utils@1.1.5':
     dependencies:
@@ -4645,6 +4651,8 @@ snapshots:
   lodash.startcase@4.4.0: {}
 
   lodash@4.17.21: {}
+
+  lodash@4.18.1: {}
 
   lower-case@2.0.2:
     dependencies:

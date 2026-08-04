@@ -1,1 +1,0 @@
-{{#if isFormParam}}{{>frag/parseType prefix='v.'}}({{{stringLiteral (concat 'form.' serializedName)}}}, req.body[{{{stringLiteral serializedName}}}]){{/if}}
