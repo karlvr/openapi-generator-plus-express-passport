@@ -1,5 +1,11 @@
 # @openapi-generator-plus/typescript-express-passport-server-generator
 
+## 2.13.2
+
+### Patch Changes
+
+- deb45f2: Fix generated body validation throwing "Invalid request content type" when a request has no body and `requestBody.required` is `false`.
+
 ## 2.13.1
 
 ### Patch Changes
