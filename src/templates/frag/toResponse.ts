@@ -1,4 +1,4 @@
-import { CodegenGeneratorContext, CodegenSchema } from '@openapi-generator-plus/types'
+import { CodegenGeneratorContext, CodegenSchema, CodegenSchemaType } from '@openapi-generator-plus/types'
 import {
 	className,
 	isArray,
@@ -34,6 +34,8 @@ export function toResponse(generatorContext: CodegenGeneratorContext, schema: Co
 		return `${prefix}stringToResponse`
 	} else if (isBinary(schema)) {
 		return `${prefix}binaryToResponse`
+	} else if (schema.schemaType === CodegenSchemaType.NULL) {
+		return `${prefix}nullToResponse`
 	} else if (isObject(schema)) {
 		return `${prefix}model${className(generator, schema.nativeType.parentType)}ToResponse`
 	} else if (isArray(schema)) {

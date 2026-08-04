@@ -146,6 +146,17 @@ export function parseUnsupported(name: string, value: any): unknown {
 	return value
 }
 
+export function nullFromRequest(name: string, value: any): null {
+	if (value !== null) {
+		throw \`Invalid type for \${name}: expected null got \${typeof value}\`
+	}
+	return null
+}
+
+export function nullToResponse(name: string, value: null): null {
+	return nullFromRequest(name, value)
+}
+
 export function booleanFromRequest(name: string, value: any): boolean {
 	if (typeof value !== 'boolean') {
 		throw \`Invalid type for \${name}: expected boolean got \${typeof value}\`
