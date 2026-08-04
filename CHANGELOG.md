@@ -1,5 +1,38 @@
 # @openapi-generator-plus/typescript-express-passport-server-generator
 
+## 3.0.0
+
+### Major Changes
+
+- b42d012: Replace the Handlebars templates with TypeScript templates
+
+  The generator's templates now live in `src/templates` as TypeScript functions composed from the `ts`
+  tagged template literal in `@openapi-generator-plus/template-utils`, replacing the `templates`
+  directory of `.hbs` files. This follows `@openapi-generator-plus/typescript-generator-common` 2.0.0,
+  which no longer loads Handlebars templates.
+
+  The generated output is unchanged, other than the indentation of the closing brace of an unsupported
+  request-body media type branch, which Handlebars over-indented.
+
+  The `customTemplates` config option is no longer supported and logs a warning if it is set.
+
+### Minor Changes
+
+- 9be1c38: Support `null` schemas in the generated validation
+
+  A property with a `null` type was converted with `unsupportedFromRequest`, whose `unknown` return
+  type is not assignable to `null`, so the generated code did not compile. `null` schemas now use the
+  new `nullFromRequest` and `nullToResponse` functions.
+
+### Patch Changes
+
+- 34962a5: Fix the case of the multipart helper import
+
+  The multipart helper is written to `impl/helpers/<identifier>MultipartHelper.ts`, but the API and
+  implementation files imported it by lower-casing the group name. For a group whose identifier is not
+  all lower-case, such as `fileUploads`, the import did not resolve on a case-sensitive filesystem.
+  Both imports now use the group identifier, matching the emitted filename.
+
 ## 2.13.2
 
 ### Patch Changes
